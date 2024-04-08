@@ -31,24 +31,11 @@ class NetworkHandler {
     }
   }
 
-  Future<dynamic> post(String url, Map<String, String> body) async {
+  Future<http.Response> post(String url, Map<String, String> body) async {
     url = formatter(url);
-    try {
-      var response = await http.post(Uri.parse(url),
-          headers: {"Content-type": "application/json"},
-          body: json.encode(body));
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        log.i(response.body);
-        return response.body;
-      }
-      log.d(response.body);
-      log.d(response.statusCode);
-      return response
-          .body; // Return response body even if status code is not 200 or 201
-    } catch (e) {
-      log.e("Error: $e"); // Log any error that occurs
-      return null; // Return null in case of error
-    }
+    var response = await http.post(Uri.parse(url),
+        headers: {"Content-type": "application/json"}, body: json.encode(body));
+    return response;
   }
 
   String formatter(String url) {

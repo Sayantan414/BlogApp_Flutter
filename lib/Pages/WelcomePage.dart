@@ -1,3 +1,4 @@
+import 'package:blogapp/Pages/SignInPage.dart';
 import 'package:blogapp/Pages/SignUpPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -107,7 +108,7 @@ class _WelcomePageState extends State<WelcomePage>
               ),
               SlideTransition(
                 position: animation2,
-                child: const Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
@@ -120,12 +121,19 @@ class _WelcomePageState extends State<WelcomePage>
                     SizedBox(
                       width: 10,
                     ),
-                    Text(
-                      "Sign In",
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
+                    InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => SignInPage(),
+                        ));
+                      },
+                      child: Text(
+                        "Sign In",
+                        style: TextStyle(
+                          color: Colors.green,
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
@@ -153,6 +161,7 @@ class _WelcomePageState extends State<WelcomePage>
           height: 60,
           width: MediaQuery.of(context).size.width - 140,
           child: Card(
+            color: Colors.white,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Row(

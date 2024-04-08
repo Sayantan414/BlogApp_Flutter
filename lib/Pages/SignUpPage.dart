@@ -1,7 +1,10 @@
 import 'dart:convert';
 
 import 'package:blogapp/NetworkHandler.dart';
+import 'package:blogapp/Pages/HomePage.dart';
 import "package:flutter/material.dart";
+import '../NetworkHandler.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -20,6 +23,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String? errorText = null;
   bool validate = false;
   bool circular = false;
+  final storage = new FlutterSecureStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -68,14 +72,50 @@ class _SignUpPageState extends State<SignUpPage> {
                       "password": _passwordController.text,
                     };
                     print(data);
-                    await networkHandler.post("/user/register", data);
-                    setState(() {
-                      circular = false;
-                    });
-                  } else {
-                    setState(() {
-                      circular = false;
-                    });
+                    var responseRegister =
+                        await networkHandler.post("/user/register", data);
+
+                    if (responseRegister.statusCode == 200 ||
+                        responseRegister.statusCode == 201) {
+                      Map<String, String> data = {
+                        "username": _usernameController.text,
+                        "password": _passwordController.text,
+                      };
+                      var response =
+                          await networkHandler.post("/user/login", data);
+
+                      if (response.statusCode == 200 ||
+                          response.statusCode == 201) {
+                        Map<String, dynamic> output =
+                            json.decode(response.body);
+                        print(output["token"]);
+                        await storage.write(
+                            key: "token", value: output["token"]);
+                        setState(() {
+                          validate = true;
+                          circular = false;
+                        });
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HomePage(),
+                            ),
+                            (route) => false);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Network error!'),
+                          ),
+                        );
+                      }
+                      setState(() {
+                        circular = false;
+                      });
+                    } else {
+                      setState(() {
+                        circular = false;
+                      });
+                    }
                   }
                 },
                 child: circular
