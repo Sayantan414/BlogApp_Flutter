@@ -47,9 +47,11 @@ class _SignInPageState extends State<SignInPage> {
                 const Text(
                   "Sign In",
                   style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2),
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2,
+                    color: Color.fromARGB(255, 36, 100, 39),
+                  ),
                 ),
                 const SizedBox(
                   height: 20,
@@ -70,7 +72,7 @@ class _SignInPageState extends State<SignInPage> {
                       child: Text(
                         "Forgot Password ?",
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: Colors.blue[900],
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),
@@ -84,10 +86,10 @@ class _SignInPageState extends State<SignInPage> {
                             MaterialPageRoute(
                                 builder: (context) => SignUpPage()));
                       },
-                      child: Text(
+                      child: const Text(
                         "New User?",
                         style: TextStyle(
-                          color: Colors.blue[900],
+                          color: Colors.blue,
                           fontSize: 15,
                           fontWeight: FontWeight.bold,
                         ),
@@ -141,13 +143,16 @@ class _SignInPageState extends State<SignInPage> {
                     height: 50,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Color(0xff00A86B),
+                      color: const Color(0xff00A86B),
                     ),
                     child: Center(
                       child: circular
-                          ? CircularProgressIndicator()
-                          : Text(
-                              "Sign In",
+                          ? const CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            )
+                          : const Text(
+                              "Log In",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
@@ -167,14 +172,46 @@ class _SignInPageState extends State<SignInPage> {
 
   Widget usernameTextField() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Username"),
+        const Text(
+          "Username",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+        const SizedBox(height: 8), // Add spacing between Text and TextFormField
         TextFormField(
           controller: _usernameController,
+          style: TextStyle(color: Colors.black), // Set text color to black
           decoration: InputDecoration(
-              errorText: validate ? null : errorText,
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black, width: 2))),
+            hintText: "Enter your username",
+            hintStyle: TextStyle(color: Colors.grey), // Set hint text color
+            errorText: validate ? null : errorText,
+            filled: true, // Set to true to fill the box with color
+            fillColor:
+                Color.fromARGB(255, 226, 241, 221), // Set box color to white
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blue, width: 2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey[400]!, width: 1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red, width: 2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red, width: 2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            // You can add more customizations as needed
+          ),
         )
       ],
     );
@@ -182,24 +219,56 @@ class _SignInPageState extends State<SignInPage> {
 
   Widget passwordTextField() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Password"),
+        const Text(
+          "Password",
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+        SizedBox(height: 8), // Add spacing between Text and TextFormField
         TextFormField(
           controller: _passwordController,
           obscureText: vis,
+          style: TextStyle(color: Colors.black), // Set text color to black
           decoration: InputDecoration(
-              errorText: validate ? null : errorText,
-              suffixIcon: IconButton(
-                icon: Icon(vis ? Icons.visibility_off : Icons.visibility),
-                onPressed: () {
-                  setState(() {
-                    vis = !vis;
-                  });
-                },
-              ),
-              helperStyle: TextStyle(fontSize: 14),
-              focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black, width: 2))),
+            hintText: "Enter your password",
+            hintStyle: TextStyle(color: Colors.grey),
+            filled: true,
+            fillColor:
+                Color.fromARGB(255, 226, 241, 221), // Set hint text color
+            errorText: validate ? null : errorText,
+            suffixIcon: IconButton(
+              icon: Icon(vis ? Icons.visibility_off : Icons.visibility),
+              onPressed: () {
+                setState(() {
+                  vis = !vis;
+                });
+              },
+            ),
+            helperStyle: TextStyle(fontSize: 14),
+            focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.blue, width: 2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey[400]!, width: 1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red, width: 2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red, width: 2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            // You can add more customizations as needed
+          ),
         )
       ],
     );

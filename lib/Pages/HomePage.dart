@@ -1,6 +1,6 @@
 import 'package:blogapp/Pages/WelcomePage.dart';
 import 'package:blogapp/Screen/HomeScreen.dart';
-import 'package:blogapp/Screen/ProfileScreen.dart';
+import 'package:blogapp/Profile/ProfileScreen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -69,6 +69,9 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           children: <Widget>[
             DrawerHeader(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 147, 222, 151),
+              ),
               child: Column(
                 children: <Widget>[
                   profilePhoto,
@@ -122,7 +125,7 @@ class _HomePageState extends State<HomePage> {
           // Navigator.of(context)
           //     .push(MaterialPageRoute(builder: (context) => AddBlog()));
         },
-        child: Text(
+        child: const Text(
           "+",
           style: TextStyle(fontSize: 40),
         ),

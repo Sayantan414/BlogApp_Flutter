@@ -20,6 +20,7 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  // ignore: avoid_init_to_null
   String? errorText = null;
   bool validate = false;
   bool circular = false;
@@ -46,9 +47,11 @@ class _SignUpPageState extends State<SignUpPage> {
               const Text(
                 "Sign up with email",
                 style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 2),
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 2,
+                  color: Color.fromARGB(255, 36, 100, 39),
+                ),
               ),
               const SizedBox(
                 height: 20,
@@ -173,15 +176,43 @@ class _SignUpPageState extends State<SignUpPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Username"),
+          const Text(
+            "Username",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(height: 8), // Add spacing between Text and TextFormField
           TextFormField(
             controller: _usernameController,
             decoration: InputDecoration(
-                errorText: validate ? null : errorText,
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 2))),
-          )
+              filled: true,
+              fillColor: Color.fromARGB(255, 226, 241, 221),
+              errorText: validate ? null : errorText,
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black, width: 2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[400]!, width: 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red, width: 2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red, width: 2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            ),
+          ),
         ],
       ),
     );
@@ -191,8 +222,17 @@ class _SignUpPageState extends State<SignUpPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Email"),
+          const Text(
+            "Email",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(height: 8), // Add spacing between Text and TextFormField
           TextFormField(
             controller: _emailController,
             validator: (value) {
@@ -205,9 +245,28 @@ class _SignUpPageState extends State<SignUpPage> {
               return null;
             },
             decoration: InputDecoration(
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 2))),
-          )
+              filled: true,
+              fillColor: Color.fromARGB(255, 226, 241, 221),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black, width: 2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[400]!, width: 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red, width: 2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red, width: 2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            ),
+          ),
         ],
       ),
     );
@@ -217,8 +276,17 @@ class _SignUpPageState extends State<SignUpPage> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Password"),
+          const Text(
+            "Password",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(height: 8), // Add spacing between Text and TextFormField
           TextFormField(
             controller: _passwordController,
             validator: (value) {
@@ -232,19 +300,38 @@ class _SignUpPageState extends State<SignUpPage> {
             },
             obscureText: vis,
             decoration: InputDecoration(
-                suffixIcon: IconButton(
-                  icon: Icon(vis ? Icons.visibility_off : Icons.visibility),
-                  onPressed: () {
-                    setState(() {
-                      vis = !vis;
-                    });
-                  },
-                ),
-                helperText: "Password length should have >= 4",
-                helperStyle: TextStyle(fontSize: 14),
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black, width: 2))),
-          )
+              filled: true,
+              fillColor: Color.fromARGB(255, 226, 241, 221),
+              suffixIcon: IconButton(
+                icon: Icon(vis ? Icons.visibility_off : Icons.visibility),
+                onPressed: () {
+                  setState(() {
+                    vis = !vis;
+                  });
+                },
+              ),
+              helperText: "**Password length should have >= 4",
+              helperStyle: TextStyle(fontSize: 14),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black, width: 2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[400]!, width: 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red, width: 2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red, width: 2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            ),
+          ),
         ],
       ),
     );
