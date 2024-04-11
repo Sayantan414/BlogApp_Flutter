@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
 class NetworkHandler {
   String baseurl = "https://cerulean-mite-suit.cyclic.app/";
+  FlutterSecureStorage storage = FlutterSecureStorage();
   var log = Logger(
     printer: PrettyPrinter(),
   );
@@ -15,7 +18,7 @@ class NetworkHandler {
   );
 
   Future get(String url) async {
-    url = formatter(url);
+    url = formater(url);
     try {
       var response = await http.get(Uri.parse(url));
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -32,13 +35,69 @@ class NetworkHandler {
   }
 
   Future<http.Response> post(String url, Map<String, String> body) async {
-    url = formatter(url);
-    var response = await http.post(Uri.parse(url),
-        headers: {"Content-type": "application/json"}, body: json.encode(body));
+    String? token = await storage.read(key: "token");
+    url = formater(url);
+    log.d(body);
+    var response = await http.post(
+      url as Uri,
+      headers: {
+        "Content-type": "application/json",
+        "Authorization": "Bearer $token"
+      },
+      body: json.encode(body),
+    );
     return response;
   }
 
-  String formatter(String url) {
+  Future<http.Response> patch(String url, Map<String, String> body) async {
+    String? token = await storage.read(key: "token");
+    url = formater(url);
+    log.d(body);
+    var response = await http.patch(
+      url as Uri,
+      headers: {
+        "Content-type": "application/json",
+        "Authorization": "Bearer $token"
+      },
+      body: json.encode(body),
+    );
+    return response;
+  }
+
+  Future<http.Response> post1(String url, var body) async {
+    String? token = await storage.read(key: "token");
+    url = formater(url);
+    log.d(body);
+    var response = await http.post(
+      url as Uri,
+      headers: {
+        "Content-type": "application/json",
+        "Authorization": "Bearer $token"
+      },
+      body: json.encode(body),
+    );
+    return response;
+  }
+
+  Future<http.StreamedResponse> patchImage(String url, String filepath) async {
+    url = formater(url);
+    String? token = await storage.read(key: "token");
+    var request = http.MultipartRequest('PATCH', Uri.parse(url));
+    request.files.add(await http.MultipartFile.fromPath("img", filepath));
+    request.headers.addAll({
+      "Content-type": "multipart/form-data",
+      "Authorization": "Bearer $token"
+    });
+    var response = request.send();
+    return response;
+  }
+
+  String formater(String url) {
     return baseurl + url;
+  }
+
+  NetworkImage getImage(String imageName) {
+    String url = formater("/uploads//$imageName.jpg");
+    return NetworkImage(url);
   }
 }
