@@ -1,4 +1,3 @@
-import 'package:blogapp/Model/profileModel.dart';
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:flutter/material.dart';
 
@@ -12,28 +11,29 @@ class MainProfile extends StatefulWidget {
 class _MainProfileState extends State<MainProfile> {
   bool circular = true;
   NetworkHandler networkHandler = NetworkHandler();
-  ProfileModel profileModel = ProfileModel(
-    DOB: "Your DOB value",
-    about: "Your about value",
-    name: "Your name value",
-    profession: "Your profession value",
-    titleline: "Your titleline value",
-    username: "Your username value",
-  );
 
+  late Map<String, dynamic>? responseData;
   @override
   void initState() {
     super.initState();
-
     fetchData();
   }
 
   void fetchData() async {
-    var response = await networkHandler.get("/profile/getData");
-    setState(() {
-      profileModel = ProfileModel.fromJson(response["data"]);
-      circular = false;
-    });
+    try {
+      var response = await networkHandler.get("/profile/getData");
+      if (response != null && response["data"] != null) {
+        responseData = response["data"] as Map<String, dynamic>?;
+
+        setState(() {
+          circular = false;
+        });
+      } else {
+        print("Response is null or doesn't contain data");
+      }
+    } catch (e) {
+      print("Error fetching data: $e");
+    }
   }
 
   @override
@@ -64,10 +64,10 @@ class _MainProfileState extends State<MainProfile> {
                 Divider(
                   thickness: 0.8,
                 ),
-                otherDetails("About", profileModel.about),
-                otherDetails("Name", profileModel.name),
-                otherDetails("Profession", profileModel.profession),
-                otherDetails("DOB", profileModel.DOB),
+                otherDetails("About", responseData?['about'] ?? ""),
+                otherDetails("Name", responseData?['name'] ?? ""),
+                otherDetails("Profession", responseData?['profession'] ?? ""),
+                otherDetails("DOB", responseData?['DOB'] ?? ""),
                 Divider(
                   thickness: 0.8,
                 ),
@@ -88,17 +88,18 @@ class _MainProfileState extends State<MainProfile> {
           Center(
             child: CircleAvatar(
               radius: 50,
-              backgroundImage: NetworkHandler().getImage(profileModel.username),
+              backgroundImage:
+                  NetworkHandler().getImage(responseData?['username'] ?? ""),
             ),
           ),
           Text(
-            profileModel.username,
+            responseData?['username'] ?? "",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           SizedBox(
             height: 10,
           ),
-          Text(profileModel.titleline)
+          Text(responseData?['titleline'] ?? "")
         ],
       ),
     );

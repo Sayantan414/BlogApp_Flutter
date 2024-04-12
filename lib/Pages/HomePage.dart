@@ -3,7 +3,6 @@ import 'package:blogapp/Screen/HomeScreen.dart';
 import 'package:blogapp/Profile/ProfileScreen.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:blogapp/NetworkHandler.dart';
 
 class HomePage extends StatefulWidget {
@@ -17,7 +16,7 @@ class _HomePageState extends State<HomePage> {
   int currentState = 0;
   List<Widget> widgets = [HomeScreen(), ProfileScreen()];
   List<String> titleString = ["Home Page", "Profile Page"];
-  final storage = FlutterSecureStorage();
+  // final storage = FlutterSecureStorage();
   NetworkHandler networkHandler = NetworkHandler();
   String username = "";
   Widget profilePhoto = Container(
@@ -171,7 +170,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void logout() async {
-    await storage.delete(key: "token");
+    // await storage.delete(key: "token");
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => WelcomePage()),

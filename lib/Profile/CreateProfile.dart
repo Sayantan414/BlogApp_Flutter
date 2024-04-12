@@ -100,7 +100,7 @@ class _CreatProfileState extends State<CreatProfile> {
                   width: 200,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: Colors.teal,
+                    color: Colors.green,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(

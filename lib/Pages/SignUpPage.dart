@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:blogapp/Pages/HomePage.dart';
 import "package:flutter/material.dart";
-import '../NetworkHandler.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -24,7 +22,7 @@ class _SignUpPageState extends State<SignUpPage> {
   String? errorText = null;
   bool validate = false;
   bool circular = false;
-  final storage = new FlutterSecureStorage();
+  // final storage = new FlutterSecureStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -92,8 +90,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         Map<String, dynamic> output =
                             json.decode(response.body);
                         print(output["token"]);
-                        await storage.write(
-                            key: "token", value: output["token"]);
+                        saveToken(output["token"]);
+                        // await storage.write(
+                        //     key: "token", value: output["token"]);
                         setState(() {
                           validate = true;
                           circular = false;

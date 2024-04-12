@@ -22,12 +22,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void checkProfile() async {
-    var response = await networkHandler.get("/profile/checkProfile");
-    if (response["status"] == true) {
-      setState(() {
-        page = MainProfile();
-      });
-    } else {
+    try {
+      var response = await networkHandler.get("/profile/checkProfile");
+      print(response);
+      bool status = response["status"];
+      print(status);
+      if (status == true) {
+        setState(() {
+          page = MainProfile();
+        });
+      } else {
+        setState(() {
+          page = button();
+        });
+      }
+    } catch (e) {
       setState(() {
         page = button();
       });
@@ -54,10 +63,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text(
-            "Tap to button to add profile data",
+            "Tap the button to add profile data",
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.deepOrange,
+              color: Color.fromARGB(255, 13, 149, 61),
               fontSize: 18,
             ),
           ),
@@ -78,7 +87,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               child: Center(
                 child: Text(
-                  "Add Proile",
+                  "Add Profile",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 18,

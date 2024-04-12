@@ -4,7 +4,6 @@ import 'package:blogapp/NetworkHandler.dart';
 import 'package:blogapp/Pages/HomePage.dart';
 import 'package:blogapp/Pages/SignUpPage.dart';
 import "package:flutter/material.dart";
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -22,7 +21,7 @@ class _SignInPageState extends State<SignInPage> {
   String? errorText = null;
   bool validate = false;
   bool circular = false;
-  final storage = new FlutterSecureStorage();
+  // final storage = new FlutterSecureStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -111,29 +110,36 @@ class _SignInPageState extends State<SignInPage> {
                       "username": _usernameController.text,
                       "password": _passwordController.text,
                     };
-                    var response =
-                        await networkHandler.post("/user/login", data);
+                    try {
+                      var response =
+                          await networkHandler.post("/user/login", data);
 
-                    if (response.statusCode == 200 ||
-                        response.statusCode == 201) {
-                      Map<String, dynamic> output = json.decode(response.body);
-                      print(output["token"]);
-                      await storage.write(key: "token", value: output["token"]);
-                      setState(() {
-                        validate = true;
-                        circular = false;
-                      });
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                          ((route) => false));
-                    } else {
-                      String output = json.decode(response.body);
-                      setState(() {
-                        validate = false;
-                        errorText = output;
-                        circular = false;
-                      });
+                      if (response.statusCode == 200 ||
+                          response.statusCode == 201) {
+                        Map<String, dynamic> output =
+                            json.decode(response.body);
+                        print(output["token"]);
+
+                        saveToken(output["token"]);
+                        // await storage.write(key: "token", value: output["token"]);
+                        setState(() {
+                          validate = true;
+                          circular = false;
+                        });
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomePage()),
+                            ((route) => false));
+                      } else {
+                        String output = json.decode(response.body);
+                        setState(() {
+                          validate = false;
+                          errorText = output;
+                          circular = false;
+                        });
+                      }
+                    } catch (e) {
+                      print(e);
                     }
 
                     // login logic End here
