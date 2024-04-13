@@ -107,8 +107,8 @@ class _SignInPageState extends State<SignInPage> {
 
                     //Login Logic start here
                     Map<String, String> data = {
-                      "username": _usernameController.text,
-                      "password": _passwordController.text,
+                      "username": "sayan",
+                      "password": "1234",
                     };
                     try {
                       var response =

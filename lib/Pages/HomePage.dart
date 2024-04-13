@@ -1,3 +1,4 @@
+import 'package:blogapp/Blog/addBlog.dart';
 import 'package:blogapp/Pages/WelcomePage.dart';
 import 'package:blogapp/Screen/HomeScreen.dart';
 import 'package:blogapp/Profile/ProfileScreen.dart';
@@ -18,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   List<String> titleString = ["Home Page", "Profile Page"];
   // final storage = FlutterSecureStorage();
   NetworkHandler networkHandler = NetworkHandler();
-  String username = "";
+  String? username = "";
   Widget profilePhoto = Container(
     height: 100,
     width: 100,
@@ -32,34 +33,35 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // checkProfile();
+    checkProfile();
   }
 
-  // void checkProfile() async {
-  //   var response = await networkHandler.get("/profile/checkProfile");
-  //   setState(() {
-  //     username = response['username'];
-  //   });
-  //   if (response["status"] == true) {
-  //     setState(() {
-  //       profilePhoto = CircleAvatar(
-  //         radius: 50,
-  //         backgroundImage: NetworkHandler().getImage(response['username']),
-  //       );
-  //     });
-  //   } else {
-  //     setState(() {
-  //       profilePhoto = Container(
-  //         height: 100,
-  //         width: 100,
-  //         decoration: BoxDecoration(
-  //           color: Colors.black,
-  //           borderRadius: BorderRadius.circular(50),
-  //         ),
-  //       );
-  //     });
-  //   }
-  // }
+  void checkProfile() async {
+    var response = await networkHandler.get("/profile/checkProfile");
+    print("drawer details: " + response);
+    setState(() {
+      username = response['username'];
+    });
+    if (response["status"] == true) {
+      setState(() {
+        profilePhoto = CircleAvatar(
+          radius: 50,
+          backgroundImage: NetworkHandler().getImage(response['username']),
+        );
+      });
+    } else {
+      setState(() {
+        profilePhoto = Container(
+          height: 100,
+          width: 100,
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(50),
+          ),
+        );
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -121,8 +123,8 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color.fromARGB(255, 147, 222, 151),
         onPressed: () {
-          // Navigator.of(context)
-          //     .push(MaterialPageRoute(builder: (context) => AddBlog()));
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => AddBlog()));
         },
         child: const Text(
           "+",
