@@ -111,7 +111,7 @@ class _WelcomePageState extends State<WelcomePage>
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       "Already have an account?",
                       style: TextStyle(
                         color: Color.fromARGB(255, 241, 241, 241),
@@ -127,7 +127,7 @@ class _WelcomePageState extends State<WelcomePage>
                           builder: (context) => SignInPage(),
                         ));
                       },
-                      child: Text(
+                      child: const Text(
                         "Sign In",
                         style: TextStyle(
                           color: Colors.green,

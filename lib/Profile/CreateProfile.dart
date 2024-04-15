@@ -27,6 +27,7 @@ class _CreatProfileState extends State<CreatProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color.fromARGB(236, 211, 238, 196),
       body: Form(
         key: _globalkey,
         child: ListView(
@@ -136,7 +137,7 @@ class _CreatProfileState extends State<CreatProfile> {
             onTap: () {
               showModalBottomSheet(
                 context: context,
-                builder: ((builder) => bottomSheet()),
+                builder: ((builder) => bottomSheet1()),
               );
             },
             child: Icon(
@@ -190,6 +191,65 @@ class _CreatProfileState extends State<CreatProfile> {
     );
   }
 
+  Widget bottomSheet1() {
+    return Container(
+        height: 160,
+        color: Color.fromARGB(98, 197, 222, 184),
+        width: MediaQuery.of(context).size.width,
+        child: Card(
+            color: Color.fromARGB(255, 222, 241, 222),
+            margin: const EdgeInsets.all(18),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      iconCreation(Icons.camera_alt, Colors.pink, "Camera"),
+                      const SizedBox(
+                        width: 80,
+                      ),
+                      iconCreation(Icons.insert_photo, Colors.purple, "Gallery")
+                    ],
+                  ),
+                ],
+              ),
+            )));
+  }
+
+  Widget iconCreation(IconData icon, Color color, String text) {
+    return InkWell(
+      onTap: () {
+        if (text == "Camera") {
+          print("Camera Clicked");
+        } else {
+          print("Gallery Clicked");
+        }
+      },
+      child: Column(
+        children: [
+          CircleAvatar(
+            radius: 40,
+            backgroundColor: color,
+            child: Icon(
+              icon,
+              size: 39,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          Text(
+            text,
+            style: const TextStyle(fontSize: 12),
+          ),
+        ],
+      ),
+    );
+  }
+
   void takePhoto(ImageSource source) async {
     final pickedFile = await _picker.pickImage(
       source: source,
@@ -209,22 +269,35 @@ class _CreatProfileState extends State<CreatProfile> {
         return null;
       },
       decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.grey[200],
         border: OutlineInputBorder(
-            borderSide: BorderSide(
-          color: Colors.teal,
-        )),
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(
+            color: Color.fromARGB(255, 232, 250, 222), // Custom border color
+          ),
+        ),
         focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-          color: Colors.orange,
-          width: 2,
-        )),
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(
+            color: Colors
+                .orange, // Change this to your desired color for focused state
+            width: 2,
+          ),
+        ),
         prefixIcon: Icon(
           Icons.person,
           color: Colors.green,
         ),
         labelText: "Name",
-        helperText: "Name can't be empty",
-        hintText: "Dev Stack",
+        labelStyle: TextStyle(color: Colors.black),
+        hintText: "Enter your name",
+        hintStyle: TextStyle(color: Colors.grey),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(color: Colors.red, width: 1),
+        ),
+        errorStyle: TextStyle(color: Colors.red),
       ),
     );
   }
@@ -238,22 +311,35 @@ class _CreatProfileState extends State<CreatProfile> {
         return null;
       },
       decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.grey[200],
         border: OutlineInputBorder(
-            borderSide: BorderSide(
-          color: Colors.teal,
-        )),
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(
+            color: Colors.teal,
+          ),
+        ),
         focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-          color: Colors.orange,
-          width: 2,
-        )),
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(
+            color: Colors.orange,
+            width: 2,
+          ),
+        ),
         prefixIcon: Icon(
-          Icons.person,
+          Icons.work,
           color: Colors.green,
         ),
         labelText: "Profession",
+        labelStyle: TextStyle(color: Colors.black),
+        hintText: "Enter your profession",
+        hintStyle: TextStyle(color: Colors.grey),
         helperText: "Profession can't be empty",
-        hintText: "Full Stack Developer",
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(color: Colors.red, width: 1),
+        ),
+        errorStyle: TextStyle(color: Colors.red),
       ),
     );
   }
@@ -267,22 +353,35 @@ class _CreatProfileState extends State<CreatProfile> {
         return null;
       },
       decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.grey[200],
         border: OutlineInputBorder(
-            borderSide: BorderSide(
-          color: Colors.teal,
-        )),
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(
+            color: Colors.teal,
+          ),
+        ),
         focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-          color: Colors.orange,
-          width: 2,
-        )),
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(
+            color: Colors.orange,
+            width: 2,
+          ),
+        ),
         prefixIcon: Icon(
-          Icons.person,
+          Icons.calendar_today,
           color: Colors.green,
         ),
         labelText: "Date Of Birth",
-        helperText: "Provide DOB on dd/mm/yyyy",
-        hintText: "01/01/2020",
+        labelStyle: TextStyle(color: Colors.black),
+        hintText: "Provide DOB on dd/mm/yyyy",
+        hintStyle: TextStyle(color: Colors.grey),
+        helperText: "DOB can't be empty",
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(color: Colors.red, width: 1),
+        ),
+        errorStyle: TextStyle(color: Colors.red),
       ),
     );
   }
@@ -296,22 +395,35 @@ class _CreatProfileState extends State<CreatProfile> {
         return null;
       },
       decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.grey[200],
         border: OutlineInputBorder(
-            borderSide: BorderSide(
-          color: Colors.teal,
-        )),
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(
+            color: Colors.teal,
+          ),
+        ),
         focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-          color: Colors.orange,
-          width: 2,
-        )),
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(
+            color: Colors.orange,
+            width: 2,
+          ),
+        ),
         prefixIcon: Icon(
-          Icons.person,
+          Icons.title,
           color: Colors.green,
         ),
         labelText: "Title",
-        helperText: "It can't be empty",
-        hintText: "Flutter Developer",
+        labelStyle: TextStyle(color: Colors.black),
+        hintText: "Enter your title",
+        hintStyle: TextStyle(color: Colors.grey),
+        helperText: "Title can't be empty",
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(color: Colors.red, width: 1),
+        ),
+        errorStyle: TextStyle(color: Colors.red),
       ),
     );
   }
@@ -326,18 +438,31 @@ class _CreatProfileState extends State<CreatProfile> {
       },
       maxLines: 4,
       decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.grey[200],
         border: OutlineInputBorder(
-            borderSide: BorderSide(
-          color: Colors.teal,
-        )),
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(
+            color: Colors.teal,
+          ),
+        ),
         focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-          color: Colors.orange,
-          width: 2,
-        )),
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(
+            color: Colors.orange,
+            width: 2,
+          ),
+        ),
         labelText: "About",
-        helperText: "Write about yourself",
-        hintText: "I am Dev Stack",
+        labelStyle: TextStyle(color: Colors.black),
+        hintText: "Write about yourself",
+        hintStyle: TextStyle(color: Colors.grey),
+        helperText: "About can't be empty",
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(color: Colors.red, width: 1),
+        ),
+        errorStyle: TextStyle(color: Colors.red),
       ),
     );
   }

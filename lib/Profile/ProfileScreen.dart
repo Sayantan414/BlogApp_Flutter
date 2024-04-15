@@ -46,7 +46,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffEEEEFF),
+      backgroundColor: Color.fromARGB(98, 197, 222, 184),
       body: page,
     );
   }

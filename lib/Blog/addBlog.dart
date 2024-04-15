@@ -23,7 +23,7 @@ class _AddBlogState extends State<AddBlog> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(224, 255, 255, 255),
+      backgroundColor: Color.fromARGB(236, 211, 238, 196),
       appBar: AppBar(
         backgroundColor: Colors.white54,
         elevation: 0,
@@ -108,18 +108,23 @@ class _AddBlogState extends State<AddBlog> {
           return null;
         },
         decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.grey[200],
           border: OutlineInputBorder(
             borderSide: BorderSide(
               color: Color.fromARGB(255, 45, 183, 52),
             ),
+            borderRadius: BorderRadius.circular(10),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Colors.blue,
               width: 2,
             ),
+            borderRadius: BorderRadius.circular(10),
           ),
           labelText: "Add Image and Title",
+          labelStyle: TextStyle(color: Colors.black),
           prefixIcon: IconButton(
             icon: Icon(
               iconphoto,
@@ -138,6 +143,7 @@ class _AddBlogState extends State<AddBlog> {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 10,
+        vertical: 10,
       ),
       child: TextFormField(
         controller: _body,
@@ -148,18 +154,23 @@ class _AddBlogState extends State<AddBlog> {
           return null;
         },
         decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.grey[200],
           border: OutlineInputBorder(
             borderSide: BorderSide(
               color: Color.fromARGB(255, 147, 222, 151),
             ),
+            borderRadius: BorderRadius.circular(10),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Colors.blue,
               width: 2,
             ),
+            borderRadius: BorderRadius.circular(10),
           ),
           labelText: "Provide Body Your Blog",
+          labelStyle: TextStyle(color: Colors.black),
         ),
         maxLines: null,
       ),
