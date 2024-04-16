@@ -20,6 +20,8 @@ class _HomePageState extends State<HomePage> {
   // final storage = FlutterSecureStorage();
   NetworkHandler networkHandler = NetworkHandler();
   String? username = "";
+  late Map<String, dynamic> responseData;
+
   Widget profilePhoto = Container(
     height: 100,
     width: 100,
@@ -37,29 +39,57 @@ class _HomePageState extends State<HomePage> {
   }
 
   void checkProfile() async {
-    var response = await networkHandler.get("/profile/checkProfile");
-    print("drawer details: " + response);
-    setState(() {
-      username = response['username'];
-    });
-    if (response["status"] == true) {
-      setState(() {
-        profilePhoto = CircleAvatar(
-          radius: 50,
-          backgroundImage: NetworkHandler().getImage(response['username']),
-        );
-      });
-    } else {
-      setState(() {
-        profilePhoto = Container(
-          height: 100,
-          width: 100,
-          decoration: BoxDecoration(
-            color: Colors.black,
-            borderRadius: BorderRadius.circular(50),
-          ),
-        );
-      });
+    try {
+      var response = await networkHandler.get("/profile/checkProfile");
+      print(response);
+      bool status = response["status"];
+      print(status);
+      if (status == true) {
+        setState(() {
+          fetchData();
+        });
+      } else {
+        setState(() {
+          profilePhoto = Container(
+            height: 100,
+            width: 100,
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(50),
+            ),
+          );
+        });
+      }
+    } catch (e) {
+      profilePhoto = Container(
+        height: 100,
+        width: 100,
+        decoration: BoxDecoration(
+          color: Colors.black,
+          borderRadius: BorderRadius.circular(50),
+        ),
+      );
+    }
+  }
+
+  void fetchData() async {
+    try {
+      var response = await networkHandler.get("/profile/getData");
+      if (response != null && response["data"] != null) {
+        responseData = response["data"];
+        print(responseData);
+        setState(() {
+          profilePhoto = CircleAvatar(
+            radius: 50,
+            backgroundImage:
+                NetworkHandler().getImage(responseData['username']),
+          );
+        });
+      } else {
+        print("Response is null or doesn't contain data");
+      }
+    } catch (e) {
+      print("Error fetching data: $e");
     }
   }
 
@@ -79,7 +109,13 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     height: 10,
                   ),
-                  Text("@$username"),
+                  Text(
+                    responseData['name'],
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ],
               ),
             ),

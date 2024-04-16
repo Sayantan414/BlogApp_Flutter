@@ -15,7 +15,7 @@ class CreatProfile extends StatefulWidget {
 class _CreatProfileState extends State<CreatProfile> {
   final networkHandler = NetworkHandler();
   bool circular = false;
-  PickedFile? _imageFile;
+  XFile? _imageFile;
 
   final _globalkey = GlobalKey<FormState>();
   TextEditingController _name = TextEditingController();
@@ -222,9 +222,9 @@ class _CreatProfileState extends State<CreatProfile> {
     return InkWell(
       onTap: () {
         if (text == "Camera") {
-          print("Camera Clicked");
+          takePhoto(ImageSource.camera);
         } else {
-          print("Gallery Clicked");
+          takePhoto(ImageSource.gallery);
         }
       },
       child: Column(
@@ -256,7 +256,7 @@ class _CreatProfileState extends State<CreatProfile> {
     );
     setState(() {
       _imageFile =
-          (pickedFile != null ? File(pickedFile.path) : null) as PickedFile;
+          (pickedFile != null ? File(pickedFile.path) : null) as XFile?;
     });
   }
 

@@ -12,7 +12,7 @@ class _MainProfileState extends State<MainProfile> {
   bool circular = true;
   NetworkHandler networkHandler = NetworkHandler();
 
-  late Map<String, dynamic>? responseData;
+  late Map<String, dynamic> responseData;
   @override
   void initState() {
     super.initState();
@@ -23,7 +23,7 @@ class _MainProfileState extends State<MainProfile> {
     try {
       var response = await networkHandler.get("/profile/getData");
       if (response != null && response["data"] != null) {
-        responseData = response["data"] as Map<String, dynamic>?;
+        responseData = response["data"];
 
         setState(() {
           circular = false;
@@ -39,7 +39,7 @@ class _MainProfileState extends State<MainProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffEEEEFF),
+      backgroundColor: Color.fromARGB(98, 197, 222, 184),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white10,
@@ -64,10 +64,10 @@ class _MainProfileState extends State<MainProfile> {
                 Divider(
                   thickness: 0.8,
                 ),
-                otherDetails("About", responseData?['about'] ?? ""),
-                otherDetails("Name", responseData?['name'] ?? ""),
-                otherDetails("Profession", responseData?['profession'] ?? ""),
-                otherDetails("DOB", responseData?['DOB'] ?? ""),
+                otherDetails("About", responseData['about'] ?? ""),
+                otherDetails("Name", responseData['name'] ?? ""),
+                otherDetails("Profession", responseData['profession'] ?? ""),
+                otherDetails("DOB", responseData['DOB'] ?? ""),
                 Divider(
                   thickness: 0.8,
                 ),

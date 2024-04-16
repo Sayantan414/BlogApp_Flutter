@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:blogapp/CustumWidget/OverlayCard.dart';
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:blogapp/Pages/HomePage.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +18,7 @@ class _AddBlogState extends State<AddBlog> {
   final _globalkey = GlobalKey<FormState>();
   TextEditingController _title = TextEditingController();
   TextEditingController _body = TextEditingController();
-  ImagePicker _picker = ImagePicker();
-  late PickedFile _imageFile;
+  late XFile _imageFile;
   IconData iconphoto = Icons.image;
   NetworkHandler networkHandler = NetworkHandler();
   @override
@@ -38,33 +39,13 @@ class _AddBlogState extends State<AddBlog> {
         actions: <Widget>[
           ElevatedButton(
             onPressed: () {
-              if (_imageFile.path != null &&
-                  _globalkey.currentState!.validate()) {
-                showDialog(
+              if (_imageFile != null && _globalkey.currentState!.validate()) {
+                showModalBottomSheet(
                   context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text('Preview'),
-                      content: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            // Add your preview content here
-                            Image.file(_imageFile as File),
-                            Text(_title.text),
-                            // Add more preview content as needed
-                          ],
-                        ),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text('Close'),
-                        ),
-                      ],
-                    );
-                  },
+                  builder: ((builder) => OverlayCard(
+                        imagefile: _imageFile,
+                        title: _title.text,
+                      )),
                 );
               }
             },
@@ -72,7 +53,7 @@ class _AddBlogState extends State<AddBlog> {
               "Preview",
               style: TextStyle(fontSize: 18),
             ),
-          )
+          ),
         ],
       ),
       body: Form(
@@ -180,29 +161,31 @@ class _AddBlogState extends State<AddBlog> {
   Widget addButton() {
     return InkWell(
       onTap: () async {
-        // if (_imageFile != null && _globalkey.currentState!.validate()) {
-        Map<String, String> data = {
-          "title": _title.text,
-          "body": _body.text,
-        };
+        if (_globalkey.currentState!.validate()) {
+          Map<String, String> data = {
+            "title": _title.text,
+            "body": _body.text,
+          };
 
-        var response = await networkHandler.post1("/blogpost/Add", data);
-        print(response.body);
+          var response = await networkHandler.post1("/blogpost/Add", data);
+          print("Data : " + response.body);
 
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          // String id = json.decode(response.body)["data"];
-          // var imageResponse = await networkHandler.patchImage(
-          //     "/blogpost/add/coverImage/$id", _imageFile.path);
-          // print(imageResponse.statusCode);
-          // if (imageResponse.statusCode == 200 ||
-          //     imageResponse.statusCode == 201) {
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => HomePage()),
-              (route) => false);
+          if (response.statusCode == 200 || response.statusCode == 201) {
+            Map<String, dynamic> data = jsonDecode(response.body);
+            String id = data['data']['_id'];
+            print(id);
+            var imageResponse = await networkHandler.patchImage(
+                "/blogpost/add/coverImage/$id", _imageFile.path);
+            print(imageResponse.statusCode);
+            if (imageResponse.statusCode == 200 ||
+                imageResponse.statusCode == 201) {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                  (route) => false);
+            }
+          }
         }
-        // }
-        // }
       },
       child: Center(
         child: Container(
@@ -224,9 +207,11 @@ class _AddBlogState extends State<AddBlog> {
   }
 
   void takeCoverPhoto() async {
-    final coverPhoto = await _picker.pickImage(source: ImageSource.gallery);
+    final imagePicker = ImagePicker();
+    final pickedImage =
+        await imagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
-      _imageFile = coverPhoto as PickedFile;
+      _imageFile = pickedImage!;
       iconphoto = Icons.check_box;
     });
   }
