@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class OverlayCard extends StatelessWidget {
-  final XFile imagefile;
   final String title;
+  final String body;
 
-  const OverlayCard({super.key, required this.imagefile, required this.title});
+  const OverlayCard({super.key, required this.body, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -19,19 +19,19 @@ class OverlayCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           SizedBox(height: 10), // Add some gap at the top
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: FileImage(
-                    File(imagefile.path),
-                  ),
-                  fit: BoxFit.cover, // Fit the image to cover the container
-                ),
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ),
+          // Expanded(
+          //   child: Container(
+          //     decoration: BoxDecoration(
+          //       image: DecorationImage(
+          //         image: FileImage(
+          //           File(imagefile.path),
+          //         ),
+          //         fit: BoxFit.cover, // Fit the image to cover the container
+          //       ),
+          //       borderRadius: BorderRadius.circular(8),
+          //     ),
+          //   ),
+          // ),
           Container(
             padding: EdgeInsets.all(8),
             height: 55,

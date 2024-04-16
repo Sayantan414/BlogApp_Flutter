@@ -39,11 +39,11 @@ class _AddBlogState extends State<AddBlog> {
         actions: <Widget>[
           ElevatedButton(
             onPressed: () {
-              if (_imageFile != null && _globalkey.currentState!.validate()) {
+              if (_globalkey.currentState!.validate()) {
                 showModalBottomSheet(
                   context: context,
                   builder: ((builder) => OverlayCard(
-                        imagefile: _imageFile,
+                        body: _body.text,
                         title: _title.text,
                       )),
                 );
@@ -104,15 +104,15 @@ class _AddBlogState extends State<AddBlog> {
             ),
             borderRadius: BorderRadius.circular(10),
           ),
-          labelText: "Add Image and Title",
+          labelText: "Add Blog Title",
           labelStyle: TextStyle(color: Colors.black),
-          prefixIcon: IconButton(
-            icon: Icon(
-              iconphoto,
-              color: Color.fromARGB(255, 147, 222, 151),
-            ),
-            onPressed: takeCoverPhoto,
-          ),
+          // prefixIcon: IconButton(
+          //   icon: Icon(
+          //     iconphoto,
+          //     color: Color.fromARGB(255, 147, 222, 151),
+          //   ),
+          //   onPressed: takeCoverPhoto,
+          // ),
         ),
         maxLength: 100,
         maxLines: null,
@@ -170,21 +170,21 @@ class _AddBlogState extends State<AddBlog> {
           var response = await networkHandler.post1("/blogpost/Add", data);
           print("Data : " + response.body);
 
-          if (response.statusCode == 200 || response.statusCode == 201) {
-            Map<String, dynamic> data = jsonDecode(response.body);
-            String id = data['data']['_id'];
-            print(id);
-            var imageResponse = await networkHandler.patchImage(
-                "/blogpost/add/coverImage/$id", _imageFile.path);
-            print(imageResponse.statusCode);
-            if (imageResponse.statusCode == 200 ||
-                imageResponse.statusCode == 201) {
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => HomePage()),
-                  (route) => false);
-            }
-          }
+          // if (response.statusCode == 200 || response.statusCode == 201) {
+          //   Map<String, dynamic> data = jsonDecode(response.body);
+          //   String id = data['data']['_id'];
+          //   print(id);
+          //   var imageResponse = await networkHandler.patchImage(
+          //       "/blogpost/add/coverImage/$id", _imageFile.path);
+          //   print(imageResponse.statusCode);
+          //   if (imageResponse.statusCode == 200 ||
+          //       imageResponse.statusCode == 201) {
+          //     Navigator.pushAndRemoveUntil(
+          //         context,
+          //         MaterialPageRoute(builder: (context) => HomePage()),
+          //         (route) => false);
+          //   }
+          // }
         }
       },
       child: Center(

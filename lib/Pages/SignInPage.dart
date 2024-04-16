@@ -107,7 +107,7 @@ class _SignInPageState extends State<SignInPage> {
 
                     //Login Logic start here
                     Map<String, String> data = {
-                      "username": "sayan",
+                      "username": _usernameController.text,
                       "password": "1234",
                     };
                     try {
@@ -121,6 +121,7 @@ class _SignInPageState extends State<SignInPage> {
                         print(output["token"]);
 
                         saveToken(output["token"]);
+                        saveUsername(_usernameController.text);
                         // await storage.write(key: "token", value: output["token"]);
                         setState(() {
                           validate = true;

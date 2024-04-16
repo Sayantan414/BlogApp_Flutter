@@ -14,6 +14,15 @@ getToken() {
   return token;
 }
 
+var username;
+saveUsername(name) {
+  username = name;
+}
+
+getUsername() {
+  return username;
+}
+
 class NetworkHandler {
   String baseurl = "https://cerulean-mite-suit.cyclic.app/";
 

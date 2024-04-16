@@ -140,11 +140,11 @@ class _CreatProfileState extends State<CreatProfile> {
                 builder: ((builder) => bottomSheet1()),
               );
             },
-            child: Icon(
-              Icons.camera_alt,
-              color: Colors.teal,
-              size: 28.0,
-            ),
+            // child: Icon(
+            //   Icons.camera_alt,
+            //   color: Colors.teal,
+            //   size: 28.0,
+            // ),
           ),
         ),
       ]),

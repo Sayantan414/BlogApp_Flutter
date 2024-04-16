@@ -88,12 +88,11 @@ class _MainProfileState extends State<MainProfile> {
           Center(
             child: CircleAvatar(
               radius: 50,
-              backgroundImage:
-                  NetworkHandler().getImage(responseData?['username'] ?? ""),
+              backgroundImage: NetworkHandler().getImage('sayan'),
             ),
           ),
           Text(
-            responseData?['username'] ?? "",
+            responseData['username'] ?? "",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           SizedBox(

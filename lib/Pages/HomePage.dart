@@ -35,7 +35,8 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    checkProfile();
+    username = getUsername();
+    // checkProfile();
   }
 
   void checkProfile() async {
@@ -105,12 +106,15 @@ class _HomePageState extends State<HomePage> {
               ),
               child: Column(
                 children: <Widget>[
-                  profilePhoto,
+                  profilePhoto = CircleAvatar(
+                    radius: 50,
+                    backgroundImage: NetworkHandler().getImage('sayan'),
+                  ),
                   SizedBox(
                     height: 10,
                   ),
                   Text(
-                    responseData['name'],
+                    username!,
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
