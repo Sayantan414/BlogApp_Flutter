@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:blogapp/Blog/Blog.dart';
 import 'package:blogapp/CustumWidget/BlogCard.dart';
 
@@ -14,7 +16,7 @@ class Blogs extends StatefulWidget {
 
 class _BlogsState extends State<Blogs> {
   NetworkHandler networkHandler = NetworkHandler();
-  dynamic data = [];
+  List<dynamic> data = [];
 
   @override
   void initState() {
@@ -26,9 +28,10 @@ class _BlogsState extends State<Blogs> {
   void fetchData() async {
     print("object");
     var response = await networkHandler.get(widget.url);
+    var responseData = json.decode(response);
     print(response);
     setState(() {
-      data = response;
+      data = responseData;
       print(data);
     });
   }

@@ -44,7 +44,7 @@ class NetworkHandler {
     if (response.statusCode == 200 || response.statusCode == 201) {
       // log.i(response.body);
 
-      return json.decode(response.body);
+      return response;
     }
     // log.i(response.body);
     // log.i(response.statusCode);
