@@ -42,12 +42,12 @@ class NetworkHandler {
       headers: {"Authorization": "Bearer $token"},
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
-      log.i(response.body);
+      // log.i(response.body);
 
       return json.decode(response.body);
     }
-    log.i(response.body);
-    log.i(response.statusCode);
+    // log.i(response.body);
+    // log.i(response.statusCode);
   }
 
   Future<http.Response> post(String url, Map<String, String> body) async {
