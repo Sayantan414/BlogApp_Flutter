@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:blogapp/Profile/CreateProfile.dart';
 import 'package:flutter/material.dart';
@@ -24,8 +26,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void checkProfile() async {
     try {
       var response = await networkHandler.get("/profile/checkProfile");
-      print(response);
-      bool status = response["status"];
+      print("data" + response);
+      var responseData = json.decode(response);
+      bool status = responseData["status"];
       print(status);
       if (status == true) {
         setState(() {

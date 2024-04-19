@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:blogapp/Blog/Blogs.dart';
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +25,10 @@ class _MainProfileState extends State<MainProfile> {
   void fetchData() async {
     try {
       var response = await networkHandler.get("/profile/getData");
-      if (response != null && response["data"] != null) {
-        responseData = response["data"];
+      var data = json.decode(response);
+      print(data);
+      if (data != null && data["data"] != null) {
+        responseData = data["data"];
 
         setState(() {
           circular = false;
@@ -40,15 +44,10 @@ class _MainProfileState extends State<MainProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(98, 197, 222, 184),
+      backgroundColor: Color.fromARGB(255, 225, 235, 225),
       appBar: AppBar(
+        backgroundColor: Color.fromARGB(255, 225, 235, 225),
         elevation: 0,
-        backgroundColor: Colors.white10,
-        // leading: IconButton(
-        //   icon: Icon(Icons.arrow_back),
-        //   onPressed: () {},
-        //   color: Colors.black,
-        // ),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.edit),
@@ -102,7 +101,7 @@ class _MainProfileState extends State<MainProfile> {
           SizedBox(
             height: 10,
           ),
-          Text(responseData?['titleline'] ?? "")
+          Text(responseData['titleline'] ?? "")
         ],
       ),
     );

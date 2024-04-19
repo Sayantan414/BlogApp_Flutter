@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 class BlogCard extends StatelessWidget {
   const BlogCard({super.key, required this.data, required this.networkHandler});
@@ -12,6 +9,7 @@ class BlogCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(data);
     return Container(
       height: 280,
       padding: EdgeInsets.symmetric(horizontal: 13, vertical: 8),
