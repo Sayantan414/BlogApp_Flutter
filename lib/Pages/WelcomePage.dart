@@ -114,9 +114,9 @@ class _WelcomePageState extends State<WelcomePage>
                     const Text(
                       "Already have an account?",
                       style: TextStyle(
-                        color: Color.fromARGB(255, 241, 241, 241),
-                        fontSize: 17,
-                      ),
+                          color: Color.fromARGB(255, 135, 131, 131),
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold),
                     ),
                     SizedBox(
                       width: 10,

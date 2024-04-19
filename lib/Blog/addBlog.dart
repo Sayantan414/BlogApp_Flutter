@@ -1,11 +1,6 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:blogapp/CustumWidget/OverlayCard.dart';
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:blogapp/Pages/HomePage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 class AddBlog extends StatefulWidget {
   const AddBlog({super.key});
@@ -18,7 +13,7 @@ class _AddBlogState extends State<AddBlog> {
   final _globalkey = GlobalKey<FormState>();
   TextEditingController _title = TextEditingController();
   TextEditingController _body = TextEditingController();
-  late XFile _imageFile;
+  // late XFile _imageFile;
   IconData iconphoto = Icons.image;
   NetworkHandler networkHandler = NetworkHandler();
   @override
@@ -29,32 +24,32 @@ class _AddBlogState extends State<AddBlog> {
         backgroundColor: Colors.white54,
         elevation: 0,
         leading: IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.clear,
               color: Colors.black,
             ),
             onPressed: () {
               Navigator.pop(context);
             }),
-        actions: <Widget>[
-          ElevatedButton(
-            onPressed: () {
-              if (_globalkey.currentState!.validate()) {
-                showModalBottomSheet(
-                  context: context,
-                  builder: ((builder) => OverlayCard(
-                        body: _body.text,
-                        title: _title.text,
-                      )),
-                );
-              }
-            },
-            child: Text(
-              "Preview",
-              style: TextStyle(fontSize: 18),
-            ),
-          ),
-        ],
+        // actions: <Widget>[
+        //   ElevatedButton(
+        //     onPressed: () {
+        //       if (_globalkey.currentState!.validate()) {
+        //         showModalBottomSheet(
+        //           context: context,
+        //           builder: ((builder) => OverlayCard(
+        //                 body: _body.text,
+        //                 title: _title.text,
+        //               )),
+        //         );
+        //       }
+        //     },
+        //     child: Text(
+        //       "Preview",
+        //       style: TextStyle(fontSize: 18),
+        //     ),
+        //   ),
+        // ],
       ),
       body: Form(
         key: _globalkey,
@@ -92,20 +87,20 @@ class _AddBlogState extends State<AddBlog> {
           filled: true,
           fillColor: Colors.grey[200],
           border: OutlineInputBorder(
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
               color: Color.fromARGB(255, 45, 183, 52),
             ),
             borderRadius: BorderRadius.circular(10),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
               color: Colors.blue,
               width: 2,
             ),
             borderRadius: BorderRadius.circular(10),
           ),
           labelText: "Add Blog Title",
-          labelStyle: TextStyle(color: Colors.black),
+          labelStyle: const TextStyle(color: Colors.black),
           // prefixIcon: IconButton(
           //   icon: Icon(
           //     iconphoto,
@@ -138,13 +133,13 @@ class _AddBlogState extends State<AddBlog> {
           filled: true,
           fillColor: Colors.grey[200],
           border: OutlineInputBorder(
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
               color: Color.fromARGB(255, 147, 222, 151),
             ),
             borderRadius: BorderRadius.circular(10),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
+            borderSide: const BorderSide(
               color: Colors.blue,
               width: 2,
             ),
@@ -170,21 +165,12 @@ class _AddBlogState extends State<AddBlog> {
           var response = await networkHandler.post1("/blogpost/Add", data);
           print("Data : " + response.body);
 
-          // if (response.statusCode == 200 || response.statusCode == 201) {
-          //   Map<String, dynamic> data = jsonDecode(response.body);
-          //   String id = data['data']['_id'];
-          //   print(id);
-          //   var imageResponse = await networkHandler.patchImage(
-          //       "/blogpost/add/coverImage/$id", _imageFile.path);
-          //   print(imageResponse.statusCode);
-          //   if (imageResponse.statusCode == 200 ||
-          //       imageResponse.statusCode == 201) {
-          //     Navigator.pushAndRemoveUntil(
-          //         context,
-          //         MaterialPageRoute(builder: (context) => HomePage()),
-          //         (route) => false);
-          //   }
-          // }
+          if (response.statusCode == 200 || response.statusCode == 201) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+                (route) => false);
+          }
         }
       },
       child: Center(
@@ -195,7 +181,7 @@ class _AddBlogState extends State<AddBlog> {
             borderRadius: BorderRadius.circular(10),
             color: Color.fromARGB(255, 45, 183, 52),
           ),
-          child: Center(
+          child: const Center(
               child: Text(
             "Add Blog",
             style: TextStyle(
@@ -206,13 +192,13 @@ class _AddBlogState extends State<AddBlog> {
     );
   }
 
-  void takeCoverPhoto() async {
-    final imagePicker = ImagePicker();
-    final pickedImage =
-        await imagePicker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _imageFile = pickedImage!;
-      iconphoto = Icons.check_box;
-    });
-  }
+  // void takeCoverPhoto() async {
+  //   final imagePicker = ImagePicker();
+  //   final pickedImage =
+  //       await imagePicker.pickImage(source: ImageSource.gallery);
+  //   setState(() {
+  //     _imageFile = pickedImage!;
+  //     iconphoto = Icons.check_box;
+  //   });
+  // }
 }

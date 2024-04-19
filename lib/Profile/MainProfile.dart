@@ -57,7 +57,12 @@ class _MainProfileState extends State<MainProfile> {
         ],
       ),
       body: circular
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(
+              child: CircularProgressIndicator(
+              value: null,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                  Colors.green), // Color of the progress indicator
+            ))
           : ListView(
               children: <Widget>[
                 head(),

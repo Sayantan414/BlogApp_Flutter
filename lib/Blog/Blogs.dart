@@ -18,6 +18,8 @@ class _BlogsState extends State<Blogs> {
   NetworkHandler networkHandler = NetworkHandler();
   List<dynamic> data = [];
   bool isLoading = true;
+  String trimmedText = '';
+  String text = '';
 
   @override
   void initState() {
@@ -60,12 +62,11 @@ class _BlogsState extends State<Blogs> {
                           child: ListTile(
                             title: Row(
                               // Create a Row for username and CircleAvatar
-
                               children: [
                                 CircleAvatar(
                                   radius: 17,
                                   backgroundColor:
-                                      const Color.fromARGB(255, 147, 222, 151),
+                                      Color.fromARGB(255, 128, 38, 206),
                                   child: Text(
                                     item["username"][0]
                                         .toUpperCase(), // Display first letter of username
@@ -107,7 +108,7 @@ class _BlogsState extends State<Blogs> {
                                   ),
                                 ),
                                 Text(
-                                  item["body"],
+                                  _truncateText(item["body"], 100),
                                   style: const TextStyle(
                                     fontSize: 14,
                                     color: Color.fromARGB(
@@ -135,6 +136,14 @@ class _BlogsState extends State<Blogs> {
             ),
           )
         : _noData();
+  }
+
+  String _truncateText(String text, int maxLength) {
+    if (text.length <= maxLength) {
+      return text;
+    } else {
+      return text.substring(0, maxLength) + ' more...';
+    }
   }
 
   _noData() {

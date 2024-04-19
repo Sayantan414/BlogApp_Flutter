@@ -106,8 +106,11 @@ class _CreatProfileState extends State<CreatProfile> {
                   ),
                   child: Center(
                     child: circular
-                        ? CircularProgressIndicator()
-                        : Text(
+                        ? const CircularProgressIndicator(
+                            backgroundColor: Colors
+                                .green, // Background color of the progress indicator
+                          )
+                        : const Text(
                             "Submit",
                             style: TextStyle(
                               color: Colors.white,

@@ -49,7 +49,7 @@ class _SignInPageState extends State<SignInPage> {
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 2,
-                    color: Color.fromARGB(255, 36, 100, 39),
+                    color: Color(0xff00A86B),
                   ),
                 ),
                 const SizedBox(
@@ -107,7 +107,7 @@ class _SignInPageState extends State<SignInPage> {
 
                     //Login Logic start here
                     Map<String, String> data = {
-                      "username": "Deep",
+                      "username": "sayan",
                       "password": "1234",
                     };
                     try {

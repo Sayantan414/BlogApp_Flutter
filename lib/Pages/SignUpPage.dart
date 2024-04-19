@@ -48,7 +48,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 2,
-                  color: Color.fromARGB(255, 36, 100, 39),
+                  color: Color(0xff00A86B),
                 ),
               ),
               const SizedBox(
