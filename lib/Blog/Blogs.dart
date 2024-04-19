@@ -56,17 +56,40 @@ class _BlogsState extends State<Blogs> {
                             borderRadius: BorderRadius.circular(10),
                           ),
                           color: Color.fromARGB(
-                              255, 195, 239, 195), // Set card background color
+                              255, 206, 240, 206), // Set card background color
                           child: ListTile(
-                            title: Text(
-                              item[
-                                  "username"], // Show the name at the top of the card
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: Color.fromARGB(255, 85, 85,
-                                    85), // Set username color to black
-                              ),
+                            title: Row(
+                              // Create a Row for username and CircleAvatar
+
+                              children: [
+                                CircleAvatar(
+                                  radius: 17,
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 147, 222, 151),
+                                  child: Text(
+                                    item["username"][0]
+                                        .toUpperCase(), // Display first letter of username
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(
+                                    width:
+                                        8), // Add some space between CircleAvatar and username
+                                Text(
+                                  item[
+                                      "username"], // Show the name at the top of the card
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    color: Color.fromARGB(255, 85, 85,
+                                        85), // Set username color to black
+                                  ),
+                                ),
+                              ],
                             ),
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,9 +121,10 @@ class _BlogsState extends State<Blogs> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => Blog(
-                                      title: item["title"],
-                                      body: item["body"],
-                                      username: item["username"]),
+                                    title: item["title"],
+                                    body: item["body"],
+                                    username: item["username"],
+                                  ),
                                 ),
                               );
                             },
