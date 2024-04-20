@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           children: <Widget>[
             DrawerHeader(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Color.fromARGB(255, 147, 222, 151),
               ),
               child: Column(
@@ -111,12 +111,12 @@ class _HomePageState extends State<HomePage> {
                     radius: 50,
                     backgroundImage: NetworkHandler().getImage('sayan'),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10,
                   ),
                   Text(
                     username!,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                     ),
@@ -157,15 +157,15 @@ class _HomePageState extends State<HomePage> {
         title: Text(titleString[currentState]),
         centerTitle: true,
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.notifications), onPressed: () {}),
+          IconButton(icon: Icon(Icons.search), onPressed: () {}),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color.fromARGB(255, 147, 222, 151),
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => AddBlog()));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => AddBlog(type: "Add", data: const {})));
         },
         child: const Text(
           "+",

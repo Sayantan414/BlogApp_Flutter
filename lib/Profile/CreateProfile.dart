@@ -6,7 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CreatProfile extends StatefulWidget {
-  const CreatProfile({super.key});
+  const CreatProfile({super.key, required this.type, required this.data});
+
+  final String type;
+  final Map<String, dynamic> data;
 
   @override
   _CreatProfileState createState() => _CreatProfileState();
@@ -21,12 +24,40 @@ class _CreatProfileState extends State<CreatProfile> {
   TextEditingController _name = TextEditingController();
   TextEditingController _profession = TextEditingController();
   TextEditingController _dob = TextEditingController();
-  TextEditingController _title = TextEditingController();
+  TextEditingController _titleline = TextEditingController();
   TextEditingController _about = TextEditingController();
   final ImagePicker _picker = ImagePicker();
+
+  @override
+  void initState() {
+    super.initState();
+    // print(widget.data);
+
+    if (widget.data.isNotEmpty) {
+      print(widget.data);
+      _name.text = widget.data["name"] ?? "";
+      _profession.text = widget.data["profession"] ?? "";
+      _dob.text = widget.data["DOB"] ?? "";
+      _titleline.text = widget.data["titleline"] ?? "";
+      _about.text = widget.data["about"] ?? "";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Color.fromARGB(236, 211, 238, 196),
+        elevation: 0,
+        leading: IconButton(
+            icon: const Icon(
+              Icons.clear,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            }),
+      ),
       backgroundColor: Color.fromARGB(236, 211, 238, 196),
       body: Form(
         key: _globalkey,
@@ -57,71 +88,142 @@ class _CreatProfileState extends State<CreatProfile> {
             SizedBox(
               height: 20,
             ),
-            InkWell(
-              onTap: () async {
-                setState(() {
-                  circular = true;
-                });
-                if (_globalkey.currentState!.validate()) {
-                  Map<String, String> data = {
-                    "name": _name.text,
-                    "profession": _profession.text,
-                    "DOB": _dob.text,
-                    "titleline": _title.text,
-                    "about": _about.text,
-                  };
-                  var response =
-                      await networkHandler.post("/profile/add", data);
-                  if (response.statusCode == 200 ||
-                      response.statusCode == 201) {
-                    if (_imageFile?.path != null) {
-                      var imageResponse = await networkHandler.patchImage(
-                          "/profile/add/image", _imageFile!.path);
-                      if (imageResponse.statusCode == 200) {
-                        setState(() {
-                          circular = false;
-                        });
-                        Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                            (route) => false);
-                      }
-                    } else {
+            widget.type == "Add"
+                ? InkWell(
+                    onTap: () async {
                       setState(() {
-                        circular = false;
+                        circular = true;
                       });
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                          (route) => false);
-                    }
-                  }
-                }
-              },
-              child: Center(
-                child: Container(
-                  width: 200,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: Colors.green,
-                    borderRadius: BorderRadius.circular(10),
+                      if (_globalkey.currentState!.validate()) {
+                        Map<String, String> data = {
+                          "name": _name.text,
+                          "profession": _profession.text,
+                          "DOB": _dob.text,
+                          "titleline": _titleline.text,
+                          "about": _about.text,
+                        };
+                        var response =
+                            await networkHandler.post("/profile/add", data);
+                        if (response.statusCode == 200 ||
+                            response.statusCode == 201) {
+                          // if (_imageFile?.path != null) {
+                          //   var imageResponse = await networkHandler.patchImage(
+                          //       "/profile/add/image", _imageFile!.path);
+                          //   if (imageResponse.statusCode == 200) {
+                          //     setState(() {
+                          //       circular = false;
+                          //     });
+                          //     Navigator.of(context).pushAndRemoveUntil(
+                          //         MaterialPageRoute(
+                          //             builder: (context) => HomePage()),
+                          //         (route) => false);
+                          //   }
+                          // } else {
+                          setState(() {
+                            circular = false;
+                          });
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage()),
+                              (route) => false);
+                          // }
+                        }
+                      }
+                    },
+                    child: Center(
+                      child: Container(
+                        width: 200,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: circular
+                              ? const CircularProgressIndicator(
+                                  backgroundColor: Colors
+                                      .green, // Background color of the progress indicator
+                                )
+                              : const Text(
+                                  "Submit",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ),
+                  )
+                : InkWell(
+                    onTap: () async {
+                      setState(() {
+                        circular = true;
+                      });
+                      if (_globalkey.currentState!.validate()) {
+                        Map<String, String> data = {
+                          "name": _name.text,
+                          "profession": _profession.text,
+                          "DOB": _dob.text,
+                          "titleline": _titleline.text,
+                          "about": _about.text,
+                        };
+                        var response = await networkHandler.put(
+                            "/profile/update/${widget.data["_id"]}", data);
+                        print(data);
+                        if (response.statusCode == 200 ||
+                            response.statusCode == 201) {
+                          // if (_imageFile?.path != null) {
+                          //   var imageResponse = await networkHandler.patchImage(
+                          //       "/profile/update/image", _imageFile!.path);
+                          //   if (imageResponse.statusCode == 200) {
+                          //     setState(() {
+                          //       circular = false;
+                          //     });
+                          //     Navigator.of(context).pushAndRemoveUntil(
+                          //         MaterialPageRoute(
+                          //             builder: (context) => HomePage()),
+                          //         (route) => false);
+                          //   }
+                          // } else {
+                          setState(() {
+                            circular = false;
+                          });
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (context) => HomePage()),
+                              (route) => false);
+                          // }
+                        }
+                      }
+                    },
+                    child: Center(
+                      child: Container(
+                        width: 200,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Center(
+                          child: circular
+                              ? const CircularProgressIndicator(
+                                  backgroundColor: Colors
+                                      .green, // Background color of the progress indicator
+                                )
+                              : const Text(
+                                  "Update",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                        ),
+                      ),
+                    ),
                   ),
-                  child: Center(
-                    child: circular
-                        ? const CircularProgressIndicator(
-                            backgroundColor: Colors
-                                .green, // Background color of the progress indicator
-                          )
-                        : const Text(
-                            "Submit",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
@@ -130,27 +232,31 @@ class _CreatProfileState extends State<CreatProfile> {
 
   Widget imageProfile() {
     return Center(
-      child: Stack(children: <Widget>[
-        CircleAvatar(
-            radius: 80.0, backgroundImage: AssetImage("assets/profile.jpeg")),
-        Positioned(
-          bottom: 20.0,
-          right: 20.0,
-          child: InkWell(
-            onTap: () {
-              showModalBottomSheet(
-                context: context,
-                builder: ((builder) => bottomSheet1()),
-              );
-            },
-            // child: Icon(
-            //   Icons.camera_alt,
-            //   color: Colors.teal,
-            //   size: 28.0,
-            // ),
+      child: Stack(
+        children: <Widget>[
+          CircleAvatar(
+            radius: 80.0,
+            backgroundImage: AssetImage("assets/profile.jpeg"),
           ),
-        ),
-      ]),
+          Positioned(
+            bottom: 20.0,
+            right: 20.0,
+            child: InkWell(
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: ((builder) => bottomSheet1()),
+                );
+              },
+              child: Icon(
+                Icons.camera_alt,
+                color: Colors.teal,
+                size: 28.0,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -391,7 +497,7 @@ class _CreatProfileState extends State<CreatProfile> {
 
   Widget titleTextField() {
     return TextFormField(
-      controller: _title,
+      controller: _titleline,
       validator: (value) {
         if (value!.isEmpty) return "Title can't be empty";
 

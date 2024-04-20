@@ -3,7 +3,10 @@ import 'package:blogapp/Pages/HomePage.dart';
 import 'package:flutter/material.dart';
 
 class AddBlog extends StatefulWidget {
-  const AddBlog({super.key});
+  const AddBlog({super.key, required this.type, required this.data});
+
+  final Map<String, dynamic> data;
+  final String type;
 
   @override
   _AddBlogState createState() => _AddBlogState();
@@ -16,6 +19,19 @@ class _AddBlogState extends State<AddBlog> {
   // late XFile _imageFile;
   IconData iconphoto = Icons.image;
   NetworkHandler networkHandler = NetworkHandler();
+
+  @override
+  void initState() {
+    super.initState();
+    print(widget.data);
+
+    if (widget.data.isNotEmpty) {
+      print(widget.data);
+      _title.text = widget.data["title"] ?? "";
+      _body.text = widget.data["body"] ?? "";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +76,7 @@ class _AddBlogState extends State<AddBlog> {
             SizedBox(
               height: 20,
             ),
-            addButton(),
+            widget.type == "Add" ? addButton() : updateButton(),
           ],
         ),
       ),
@@ -184,6 +200,46 @@ class _AddBlogState extends State<AddBlog> {
           child: const Center(
               child: Text(
             "Add Blog",
+            style: TextStyle(
+                color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+          )),
+        ),
+      ),
+    );
+  }
+
+  Widget updateButton() {
+    return InkWell(
+      onTap: () async {
+        if (_globalkey.currentState!.validate()) {
+          Map<String, String> data = {
+            "title": _title.text,
+            "body": _body.text,
+          };
+
+          var response = await networkHandler.put(
+              "/blogpost/update/${widget.data["_id"]}", data);
+          print("Data : " + response.body);
+
+          if (response.statusCode == 200 || response.statusCode == 201) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+                (route) => false);
+          }
+        }
+      },
+      child: Center(
+        child: Container(
+          height: 50,
+          width: 200,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Color.fromARGB(255, 45, 183, 52),
+          ),
+          child: const Center(
+              child: Text(
+            "Update Blog",
             style: TextStyle(
                 color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
           )),

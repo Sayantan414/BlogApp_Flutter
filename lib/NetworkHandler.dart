@@ -75,6 +75,34 @@ class NetworkHandler {
       },
       body: json.encode(body),
     );
+    log.i(response);
+    return response;
+  }
+
+  Future<http.Response> put(String url, Map<String, String> body) async {
+    url = formater(url);
+    log.d(body);
+    var response = await http.put(
+      Uri.parse(url),
+      headers: {
+        "Content-type": "application/json",
+        "Authorization": "Bearer $token"
+      },
+      body: json.encode(body),
+    );
+    log.i(response.body);
+    return response;
+  }
+
+  Future<http.Response> delete(String url) async {
+    url = formater(url);
+    var response = await http.delete(
+      Uri.parse(url),
+      headers: {
+        "Content-type": "application/json",
+        "Authorization": "Bearer $token"
+      },
+    );
     return response;
   }
 

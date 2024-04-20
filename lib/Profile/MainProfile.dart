@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:blogapp/Blog/Blogs.dart';
 import 'package:blogapp/NetworkHandler.dart';
+import 'package:blogapp/Profile/CreateProfile.dart';
 import 'package:flutter/material.dart';
 
 class MainProfile extends StatefulWidget {
@@ -51,7 +52,11 @@ class _MainProfileState extends State<MainProfile> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.edit),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) =>
+                      CreatProfile(type: "Edit", data: responseData)));
+            },
             color: Colors.black,
           ),
         ],
@@ -73,14 +78,15 @@ class _MainProfileState extends State<MainProfile> {
                 otherDetails("Name", responseData['name'] ?? ""),
                 otherDetails("Profession", responseData['profession'] ?? ""),
                 otherDetails("DOB", responseData['DOB'] ?? ""),
-                Divider(
+                const Divider(
                   thickness: 0.8,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
-                Blogs(
+                const Blogs(
                   url: "/blogpost/getOwnBlog",
+                  type: "Own",
                 ),
               ],
             ),
@@ -101,9 +107,9 @@ class _MainProfileState extends State<MainProfile> {
           ),
           Text(
             responseData['username'] ?? "",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Text(responseData['titleline'] ?? "")
@@ -120,17 +126,17 @@ class _MainProfileState extends State<MainProfile> {
         children: <Widget>[
           Text(
             "$label :",
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 5,
           ),
           Text(
             value,
-            style: TextStyle(fontSize: 15),
+            style: const TextStyle(fontSize: 15),
           )
         ],
       ),

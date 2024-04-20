@@ -55,7 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget showProfile() {
-    return Center(child: Text("Profile Data is Avalable"));
+    return const Center(child: Text("Profile Data is Avalable"));
   }
 
   Widget button() {
@@ -65,7 +65,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Text(
+          const Text(
             "Tap the button to add profile data",
             textAlign: TextAlign.center,
             style: TextStyle(
@@ -73,13 +73,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               fontSize: 18,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
           InkWell(
             onTap: () => {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => CreatProfile()))
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          CreatProfile(type: "Add", data: const {})))
             },
             child: Container(
               height: 60,
@@ -88,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: Colors.blueGrey,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Center(
+              child: const Center(
                 child: Text(
                   "Add Profile",
                   style: TextStyle(

@@ -48,10 +48,13 @@ class _BlogState extends State<Blog> {
               Text(
                 '• By ' + widget.username,
                 style: const TextStyle(
-                  color: Color.fromARGB(255, 110, 108, 108),
+                  color: Color.fromARGB(255, 30, 30, 30),
                   fontSize: 16, // Large font size for the title
                   fontWeight: FontWeight.bold,
                 ),
+              ),
+              const Divider(
+                thickness: 0.8,
               ),
               const SizedBox(height: 16),
               // Body
