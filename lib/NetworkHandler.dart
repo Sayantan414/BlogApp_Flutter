@@ -6,21 +6,25 @@ import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 
 var token = "";
-saveToken(t) {
+var username = "";
+var pic = "";
+
+saveCurruser(t, username, dp) {
   token = t;
+  username = username;
+  pic = dp;
 }
 
 getToken() {
   return token;
 }
 
-var username;
-saveUsername(name) {
-  username = name;
-}
-
 getUsername() {
   return username;
+}
+
+getDp() {
+  return pic;
 }
 
 class NetworkHandler {
@@ -52,8 +56,8 @@ class NetworkHandler {
 
   Future<http.Response> post(String url, Map<String, String> body) async {
     url = formater(url);
-    log.i(url);
-    log.d(body);
+    // log.i(url);
+    // log.d(body);
     var response = await http.post(
       Uri.parse(url),
       headers: {
@@ -62,6 +66,7 @@ class NetworkHandler {
       },
       body: json.encode(body),
     );
+    log.i(response.body);
     return response;
   }
 

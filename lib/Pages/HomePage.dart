@@ -20,6 +20,7 @@ class _HomePageState extends State<HomePage> {
   // final storage = FlutterSecureStorage();
   NetworkHandler networkHandler = NetworkHandler();
   String? username = "";
+  String dp = "";
   late Map<String, dynamic> responseData;
 
   Widget profilePhoto = Container(
@@ -35,7 +36,9 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    dp = getDp();
     username = getUsername();
+    print("Data: " + username!);
     // checkProfile();
   }
 
@@ -110,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                 children: <Widget>[
                   profilePhoto = CircleAvatar(
                     radius: 50,
-                    backgroundImage: NetworkHandler().getImage('sayan'),
+                    backgroundImage: AssetImage("assets/${dp}"),
                   ),
                   const SizedBox(
                     height: 10,

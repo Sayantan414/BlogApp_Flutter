@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:blogapp/Pages/HomePage.dart';
@@ -22,10 +23,26 @@ class _SignUpPageState extends State<SignUpPage> {
   String? errorText = null;
   bool validate = false;
   bool circular = false;
-  // final storage = new FlutterSecureStorage();
+  String pic = "";
+
+  List<String> strings = [
+    'angry.webp',
+    'cat.webp',
+    'crocodile.webp',
+    'dog.png',
+    'lion.webp',
+    'nkn.webp',
+    'owl.webp',
+    'panda.webp',
+    'tiger.webp'
+  ];
+  Random random = Random();
 
   @override
   Widget build(BuildContext context) {
+    int randomIndex = random.nextInt(strings.length);
+    String randomString = strings[randomIndex];
+
     return Scaffold(
       body: Container(
         // height: MediaQuery.of(context).size.height,
@@ -71,6 +88,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       "username": _usernameController.text,
                       "email": _emailController.text,
                       "password": _passwordController.text,
+                      "dp": randomString
                     };
                     print(data);
                     var responseRegister =
@@ -78,6 +96,8 @@ class _SignUpPageState extends State<SignUpPage> {
 
                     if (responseRegister.statusCode == 200 ||
                         responseRegister.statusCode == 201) {
+                      // print(responseRegister.body);
+
                       Map<String, String> data = {
                         "username": _usernameController.text,
                         "password": _passwordController.text,
@@ -85,14 +105,17 @@ class _SignUpPageState extends State<SignUpPage> {
                       var response =
                           await networkHandler.post("/user/login", data);
 
+                      // print(response.body);
+
                       if (response.statusCode == 200 ||
                           response.statusCode == 201) {
                         Map<String, dynamic> output =
                             json.decode(response.body);
-                        print(output["token"]);
-                        saveToken(output["token"]);
-                        // await storage.write(
-                        //     key: "token", value: output["token"]);
+                        print(output);
+
+                        saveCurruser(
+                            output["token"], output["username"], output["dp"]);
+
                         setState(() {
                           validate = true;
                           circular = false;
@@ -156,7 +179,8 @@ class _SignUpPageState extends State<SignUpPage> {
     } else {
       var response = await networkHandler
           .get("/user/checkusername/${_usernameController.text}");
-      if (response['Status']) {
+      var responseData = json.decode(response);
+      if (responseData['Status']) {
         setState(() {
           // circular = false;
           validate = false;
@@ -165,6 +189,7 @@ class _SignUpPageState extends State<SignUpPage> {
       } else {
         setState(() {
           // circular = false;
+          print("object");
           validate = true;
         });
       }

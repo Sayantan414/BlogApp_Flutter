@@ -21,6 +21,7 @@ class _SignInPageState extends State<SignInPage> {
   String? errorText = null;
   bool validate = false;
   bool circular = false;
+  String pic = "";
   // final storage = new FlutterSecureStorage();
 
   @override
@@ -107,8 +108,8 @@ class _SignInPageState extends State<SignInPage> {
 
                     //Login Logic start here
                     Map<String, String> data = {
-                      "username": "sayan",
-                      "password": "1234",
+                      "username": _usernameController.text,
+                      "password": _passwordController.text,
                     };
                     try {
                       var response =
@@ -118,10 +119,13 @@ class _SignInPageState extends State<SignInPage> {
                           response.statusCode == 201) {
                         Map<String, dynamic> output =
                             json.decode(response.body);
-                        print(output["token"]);
-
-                        saveToken(output["token"]);
-                        saveUsername(_usernameController.text);
+                        print(output);
+                        // if (output["dp"]) {
+                        //   pic = output["dp"];
+                        // }
+                        saveCurruser(
+                            output["token"], output["username"], output["dp"]);
+                        // saveUsername(_usernameController.text);
                         // await storage.write(key: "token", value: output["token"]);
                         setState(() {
                           validate = true;
