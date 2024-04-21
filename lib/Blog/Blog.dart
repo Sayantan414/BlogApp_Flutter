@@ -1,5 +1,6 @@
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Blog extends StatefulWidget {
   const Blog(
@@ -38,20 +39,22 @@ class _BlogState extends State<Blog> {
               // Title
               Text(
                 widget.title,
-                style: const TextStyle(
-                  color: Color.fromARGB(255, 4, 88, 36),
-                  fontSize: 24, // Large font size for the title
+                style: GoogleFonts.specialElite(
+                    textStyle: TextStyle(
                   fontWeight: FontWeight.bold,
-                ),
+                  fontSize: 20,
+                  color: Color.fromARGB(255, 4, 88, 36),
+                )),
               ),
               const SizedBox(height: 12), // Add some vertical space
               Text(
                 '• By ' + widget.username,
-                style: const TextStyle(
-                  color: Color.fromARGB(255, 30, 30, 30),
-                  fontSize: 16, // Large font size for the title
-                  fontWeight: FontWeight.bold,
-                ),
+                style: GoogleFonts.coveredByYourGrace(
+                    textStyle: TextStyle(
+                  // fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.black,
+                )),
               ),
               const Divider(
                 thickness: 0.8,
@@ -60,10 +63,12 @@ class _BlogState extends State<Blog> {
               // Body
               Text(
                 widget.body,
-                style: const TextStyle(
+                style: GoogleFonts.specialElite(
+                    textStyle: TextStyle(
+                  // fontWeight: FontWeight.bold,
                   fontSize: 16,
-                  color: Color.fromARGB(221, 85, 84, 84),
-                ),
+                  color: Color.fromARGB(221, 75, 75, 75),
+                )),
               ),
             ],
           ),

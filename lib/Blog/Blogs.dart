@@ -118,11 +118,13 @@ class _BlogsState extends State<Blogs> {
                                       ),
                                       Text(
                                         _truncateText(item["body"], 100),
-                                        style: const TextStyle(
+                                        style: GoogleFonts.specialElite(
+                                            textStyle: TextStyle(
+                                          // fontWeight: FontWeight.bold,
                                           fontSize: 14,
                                           color:
                                               Color.fromARGB(221, 75, 75, 75),
-                                        ),
+                                        )),
                                       ),
                                     ],
                                   ),
@@ -197,28 +199,31 @@ class _BlogsState extends State<Blogs> {
   }
 
   _noData() {
-    return Center(
-      child: isLoading
-          ? LoadingAnimationWidget.fourRotatingDots(
-              // LoadingAnimationwidget that call the
-              color: Color.fromARGB(
-                  230, 80, 208, 142), // staggereddotwave animation
-              size: 50,
-            )
-          : const Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  "We don't have any Blog Yet",
-                  style: TextStyle(
-                      // color: myColors["desabled"],
-                      ),
-                )
-              ],
-            ),
+    return Padding(
+      padding: const EdgeInsets.all(50),
+      child: Center(
+        child: isLoading
+            ? LoadingAnimationWidget.fourRotatingDots(
+                // LoadingAnimationwidget that call the
+                color: Color.fromARGB(
+                    230, 80, 208, 142), // staggereddotwave animation
+                size: 50,
+              )
+            : const Column(
+                // mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "We don't have any Blog Yet",
+                    style: TextStyle(
+                        // color: myColors["desabled"],
+                        ),
+                  )
+                ],
+              ),
+      ),
     );
   }
 }

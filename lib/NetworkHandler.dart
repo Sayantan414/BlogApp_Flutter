@@ -24,7 +24,7 @@ getUsername() {
 }
 
 class NetworkHandler {
-  String baseurl = "https://cerulean-mite-suit.cyclic.app/";
+  String baseurl = "https://blog-server-saed.onrender.com";
 
   var log = Logger(
     printer: PrettyPrinter(),
@@ -52,6 +52,7 @@ class NetworkHandler {
 
   Future<http.Response> post(String url, Map<String, String> body) async {
     url = formater(url);
+    log.i(url);
     log.d(body);
     var response = await http.post(
       Uri.parse(url),

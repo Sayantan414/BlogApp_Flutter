@@ -15,7 +15,8 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   NetworkHandler networkHandler = NetworkHandler();
-  Widget page = CircularProgressIndicator();
+  Widget page = const CircularProgressIndicator(
+      value: null, valueColor: AlwaysStoppedAnimation<Color>(Colors.green));
   @override
   void initState() {
     // TODO: implement initState
@@ -50,7 +51,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromARGB(98, 197, 222, 184),
-      body: page,
+      body: Padding(
+        padding: const EdgeInsets.all(2),
+        child: page,
+      ),
     );
   }
 

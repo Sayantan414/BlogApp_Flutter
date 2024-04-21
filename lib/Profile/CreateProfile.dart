@@ -302,7 +302,7 @@ class _CreatProfileState extends State<CreatProfile> {
 
   Widget bottomSheet1() {
     return Container(
-        height: 160,
+        height: 400,
         color: Color.fromARGB(98, 197, 222, 184),
         width: MediaQuery.of(context).size.width,
         child: Card(
@@ -315,11 +315,50 @@ class _CreatProfileState extends State<CreatProfile> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      iconCreation(Icons.camera_alt, Colors.pink, "Camera"),
+                      iconCreation(AssetImage("assets/lion.webp"), "Document"),
                       const SizedBox(
-                        width: 80,
+                        width: 40,
                       ),
-                      iconCreation(Icons.insert_photo, Colors.purple, "Gallery")
+                      iconCreation(AssetImage("assets/nkn.webp"), "Camera"),
+                      const SizedBox(
+                        width: 40,
+                      ),
+                      iconCreation(AssetImage("assets/angry.webp"), "Gallery")
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      iconCreation(AssetImage("assets/cat.webp"), "Audio"),
+                      const SizedBox(
+                        width: 40,
+                      ),
+                      iconCreation(
+                          AssetImage("assets/crocodile.webp"), "Location"),
+                      const SizedBox(
+                        width: 40,
+                      ),
+                      iconCreation(AssetImage("assets/tiger.webp"), "Contact")
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      iconCreation(AssetImage("assets/panda.webp"), "Audio"),
+                      const SizedBox(
+                        width: 40,
+                      ),
+                      iconCreation(AssetImage("assets/owl.webp"), "Location"),
+                      const SizedBox(
+                        width: 40,
+                      ),
+                      iconCreation(AssetImage("assets/dog.png"), "Contact")
                     ],
                   ),
                 ],
@@ -327,7 +366,7 @@ class _CreatProfileState extends State<CreatProfile> {
             )));
   }
 
-  Widget iconCreation(IconData icon, Color color, String text) {
+  Widget iconCreation(AssetImage image, String text) {
     return InkWell(
       onTap: () {
         if (text == "Camera") {
@@ -340,20 +379,21 @@ class _CreatProfileState extends State<CreatProfile> {
         children: [
           CircleAvatar(
             radius: 40,
-            backgroundColor: color,
-            child: Icon(
-              icon,
-              size: 39,
-              color: Colors.white,
+            // backgroundColor: color,
+            child: ClipOval(
+              child: Image(
+                image: image,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
-          const SizedBox(
-            height: 5,
-          ),
-          Text(
-            text,
-            style: const TextStyle(fontSize: 12),
-          ),
+          // const SizedBox(
+          //   height: 5,
+          // ),
+          // Text(
+          //   text,
+          //   style: const TextStyle(fontSize: 12),
+          // ),
         ],
       ),
     );
