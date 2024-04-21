@@ -27,11 +27,13 @@ class _CreatProfileState extends State<CreatProfile> {
   TextEditingController _titleline = TextEditingController();
   TextEditingController _about = TextEditingController();
   final ImagePicker _picker = ImagePicker();
+  String dp = "";
 
   @override
   void initState() {
     super.initState();
     // print(widget.data);
+    dp = getDp();
 
     if (widget.data.isNotEmpty) {
       print(widget.data);
@@ -236,7 +238,7 @@ class _CreatProfileState extends State<CreatProfile> {
         children: <Widget>[
           CircleAvatar(
             radius: 80.0,
-            backgroundImage: AssetImage("assets/angry.webp"),
+            backgroundImage: AssetImage("assets/${dp}"),
           ),
           Positioned(
             bottom: 20.0,
@@ -315,33 +317,16 @@ class _CreatProfileState extends State<CreatProfile> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      iconCreation(AssetImage("assets/lion.webp"), "Document"),
+                      iconCreation(AssetImage("assets/lion.webp"), "lion.webp"),
                       const SizedBox(
                         width: 40,
                       ),
-                      iconCreation(AssetImage("assets/nkn.webp"), "Camera"),
-                      const SizedBox(
-                        width: 40,
-                      ),
-                      iconCreation(AssetImage("assets/angry.webp"), "Gallery")
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      iconCreation(AssetImage("assets/cat.webp"), "Audio"),
+                      iconCreation(AssetImage("assets/nkn.webp"), "nkn.webp"),
                       const SizedBox(
                         width: 40,
                       ),
                       iconCreation(
-                          AssetImage("assets/crocodile.webp"), "Location"),
-                      const SizedBox(
-                        width: 40,
-                      ),
-                      iconCreation(AssetImage("assets/tiger.webp"), "Contact")
+                          AssetImage("assets/angry.webp"), "angry.webp")
                     ],
                   ),
                   const SizedBox(
@@ -350,15 +335,35 @@ class _CreatProfileState extends State<CreatProfile> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      iconCreation(AssetImage("assets/panda.webp"), "Audio"),
+                      iconCreation(AssetImage("assets/cat.webp"), "cat.webp"),
                       const SizedBox(
                         width: 40,
                       ),
-                      iconCreation(AssetImage("assets/owl.webp"), "Location"),
+                      iconCreation(AssetImage("assets/crocodile.webp"),
+                          "crocodile.webp"),
                       const SizedBox(
                         width: 40,
                       ),
-                      iconCreation(AssetImage("assets/dog.png"), "Contact")
+                      iconCreation(
+                          AssetImage("assets/tiger.webp"), "tiger.webp")
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      iconCreation(
+                          AssetImage("assets/panda.webp"), "panda.webp"),
+                      const SizedBox(
+                        width: 40,
+                      ),
+                      iconCreation(AssetImage("assets/owl.webp"), "owl.webp"),
+                      const SizedBox(
+                        width: 40,
+                      ),
+                      iconCreation(AssetImage("assets/dog.png"), "dog.png")
                     ],
                   ),
                 ],
@@ -369,11 +374,7 @@ class _CreatProfileState extends State<CreatProfile> {
   Widget iconCreation(AssetImage image, String text) {
     return InkWell(
       onTap: () {
-        if (text == "Camera") {
-          takePhoto(ImageSource.camera);
-        } else {
-          takePhoto(ImageSource.gallery);
-        }
+        print(text);
       },
       child: Column(
         children: [

@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   List<String> titleString = ["Home Page", "Profile Page"];
   // final storage = FlutterSecureStorage();
   NetworkHandler networkHandler = NetworkHandler();
-  String? username = "";
+  String username = "";
   String dp = "";
   late Map<String, dynamic> responseData;
 
@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     dp = getDp();
     username = getUsername();
-    print("Data: " + username!);
+    print("Data: " + username);
     // checkProfile();
   }
 
@@ -119,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                     height: 10,
                   ),
                   Text(
-                    username!,
+                    username,
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

@@ -15,11 +15,14 @@ class MainProfile extends StatefulWidget {
 class _MainProfileState extends State<MainProfile> {
   bool circular = true;
   NetworkHandler networkHandler = NetworkHandler();
+  String dp = "";
 
   late Map<String, dynamic> responseData;
   @override
   void initState() {
     super.initState();
+    dp = getDp();
+
     fetchData();
   }
 
@@ -102,7 +105,7 @@ class _MainProfileState extends State<MainProfile> {
           Center(
             child: CircleAvatar(
               radius: 50,
-              backgroundImage: NetworkHandler().getImage('sayan'),
+              backgroundImage: AssetImage("assets/${dp}"),
             ),
           ),
           Text(
