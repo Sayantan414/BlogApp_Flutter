@@ -97,6 +97,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       drawer: Drawer(
         child: ListView(
@@ -157,7 +158,7 @@ class _HomePageState extends State<HomePage> {
         title: Text(titleString[currentState]),
         centerTitle: true,
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.search), onPressed: () {}),
+          // IconButton(icon: Icon(Icons.search), onPressed: () {}),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

@@ -236,7 +236,7 @@ class _CreatProfileState extends State<CreatProfile> {
         children: <Widget>[
           CircleAvatar(
             radius: 80.0,
-            backgroundImage: AssetImage("assets/profile.jpeg"),
+            backgroundImage: AssetImage("assets/angry.webp"),
           ),
           Positioned(
             bottom: 20.0,
