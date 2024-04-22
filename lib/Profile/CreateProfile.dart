@@ -18,6 +18,7 @@ class CreatProfile extends StatefulWidget {
 class _CreatProfileState extends State<CreatProfile> {
   final networkHandler = NetworkHandler();
   bool circular = false;
+  bool updateDp = false;
   XFile? _imageFile;
 
   final _globalkey = GlobalKey<FormState>();
@@ -176,19 +177,6 @@ class _CreatProfileState extends State<CreatProfile> {
                         print(data);
                         if (response.statusCode == 200 ||
                             response.statusCode == 201) {
-                          // if (_imageFile?.path != null) {
-                          //   var imageResponse = await networkHandler.patchImage(
-                          //       "/profile/update/image", _imageFile!.path);
-                          //   if (imageResponse.statusCode == 200) {
-                          //     setState(() {
-                          //       circular = false;
-                          //     });
-                          //     Navigator.of(context).pushAndRemoveUntil(
-                          //         MaterialPageRoute(
-                          //             builder: (context) => HomePage()),
-                          //         (route) => false);
-                          //   }
-                          // } else {
                           setState(() {
                             circular = false;
                           });
@@ -238,6 +226,7 @@ class _CreatProfileState extends State<CreatProfile> {
         children: <Widget>[
           CircleAvatar(
             radius: 80.0,
+            backgroundColor: Color.fromARGB(236, 211, 238, 196),
             backgroundImage: AssetImage("assets/${dp}"),
           ),
           Positioned(
@@ -250,7 +239,7 @@ class _CreatProfileState extends State<CreatProfile> {
                   builder: ((builder) => bottomSheet1()),
                 );
               },
-              child: Icon(
+              child: const Icon(
                 Icons.camera_alt,
                 color: Colors.teal,
                 size: 28.0,
@@ -304,96 +293,156 @@ class _CreatProfileState extends State<CreatProfile> {
 
   Widget bottomSheet1() {
     return Container(
-        height: 400,
-        color: Color.fromARGB(98, 197, 222, 184),
-        width: MediaQuery.of(context).size.width,
-        child: Card(
-            color: Color.fromARGB(255, 222, 241, 222),
-            margin: const EdgeInsets.all(18),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-              child: Column(
+      height: 420,
+      color: Color.fromARGB(98, 197, 222, 184),
+      width: MediaQuery.of(context).size.width,
+      child: Card(
+        color: Color.fromARGB(255, 222, 241, 222),
+        margin: const EdgeInsets.all(18),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      iconCreation(AssetImage("assets/lion.webp"), "lion.webp"),
-                      const SizedBox(
-                        width: 40,
-                      ),
-                      iconCreation(AssetImage("assets/nkn.webp"), "nkn.webp"),
-                      const SizedBox(
-                        width: 40,
-                      ),
-                      iconCreation(
-                          AssetImage("assets/angry.webp"), "angry.webp")
-                    ],
-                  ),
+                  iconCreation(AssetImage("assets/lion.webp"), "lion.webp"),
                   const SizedBox(
-                    height: 30,
+                    width: 40,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      iconCreation(AssetImage("assets/cat.webp"), "cat.webp"),
-                      const SizedBox(
-                        width: 40,
-                      ),
-                      iconCreation(AssetImage("assets/crocodile.webp"),
-                          "crocodile.webp"),
-                      const SizedBox(
-                        width: 40,
-                      ),
-                      iconCreation(
-                          AssetImage("assets/tiger.webp"), "tiger.webp")
-                    ],
-                  ),
+                  iconCreation(AssetImage("assets/nkn.webp"), "nkn.webp"),
                   const SizedBox(
-                    height: 30,
+                    width: 40,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      iconCreation(
-                          AssetImage("assets/panda.webp"), "panda.webp"),
-                      const SizedBox(
-                        width: 40,
-                      ),
-                      iconCreation(AssetImage("assets/owl.webp"), "owl.webp"),
-                      const SizedBox(
-                        width: 40,
-                      ),
-                      iconCreation(AssetImage("assets/dog.png"), "dog.png")
-                    ],
-                  ),
+                  iconCreation(AssetImage("assets/angry.webp"), "angry.webp")
                 ],
               ),
-            )));
+              const SizedBox(
+                height: 30,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  iconCreation(AssetImage("assets/cat.webp"), "cat.webp"),
+                  const SizedBox(
+                    width: 40,
+                  ),
+                  iconCreation(
+                      AssetImage("assets/crocodile.webp"), "crocodile.webp"),
+                  const SizedBox(
+                    width: 40,
+                  ),
+                  iconCreation(AssetImage("assets/tiger.webp"), "tiger.webp")
+                ],
+              ),
+              const SizedBox(
+                height: 30,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    iconCreation(AssetImage("assets/panda.webp"), "panda.webp"),
+                    const SizedBox(
+                      width: 40,
+                    ),
+                    iconCreation(AssetImage("assets/owl.webp"), "owl.webp"),
+                    const SizedBox(
+                      width: 40,
+                    ),
+                    iconCreation(AssetImage("assets/dog.png"), "dog.png")
+                  ],
+                ),
+              ),
+              InkWell(
+                onTap: () async {
+                  Map<String, String> data = {
+                    "name": _name.text,
+                  };
+                  var response = await networkHandler.put(
+                      "/profile/update/${widget.data["_id"]}", data);
+                  print(data);
+                  if (response.statusCode == 200 ||
+                      response.statusCode == 201) {
+                    setState(() {
+                      circular = false;
+                    });
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                        (route) => false);
+                    // }
+                  }
+                },
+                child: Center(
+                  child: Container(
+                    width: 500,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        "OK",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget iconCreation(AssetImage image, String text) {
     return InkWell(
       onTap: () {
-        print(text);
+        setState(() {
+          updateDp = true;
+          dp = text;
+          print(dp);
+          // print(text);
+        });
       },
-      child: Column(
+      child: Stack(
         children: [
-          CircleAvatar(
-            radius: 40,
-            // backgroundColor: color,
-            child: ClipOval(
-              child: Image(
-                image: image,
-                fit: BoxFit.cover,
+          Column(
+            children: [
+              CircleAvatar(
+                radius: 40,
+                backgroundColor: Color.fromARGB(255, 222, 241, 222),
+                child: ClipOval(
+                  child: Image(
+                    image: image,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
-          // const SizedBox(
-          //   height: 5,
-          // ),
-          // Text(
-          //   text,
-          //   style: const TextStyle(fontSize: 12),
+          // Positioned(
+          //   bottom: 0,
+          //   right: 0,
+          //   child: Container(
+          //     decoration: BoxDecoration(
+          //       shape: BoxShape.circle,
+          //       color: Colors.teal,
+          //     ),
+          //     padding: EdgeInsets.all(2),
+          //     child: Icon(
+          //       Icons.check,
+          //       color: Colors.white,
+          //       size: 18.0,
+          //     ),
+          //   ),
           // ),
         ],
       ),

@@ -113,6 +113,7 @@ class _HomePageState extends State<HomePage> {
                 children: <Widget>[
                   profilePhoto = CircleAvatar(
                     radius: 50,
+                    backgroundColor: Color.fromARGB(255, 147, 222, 151),
                     backgroundImage: AssetImage("assets/${dp}"),
                   ),
                   const SizedBox(

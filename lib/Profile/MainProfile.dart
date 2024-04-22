@@ -105,6 +105,7 @@ class _MainProfileState extends State<MainProfile> {
           Center(
             child: CircleAvatar(
               radius: 50,
+              backgroundColor: Color.fromARGB(255, 225, 235, 225),
               backgroundImage: AssetImage("assets/${dp}"),
             ),
           ),
