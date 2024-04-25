@@ -1,9 +1,9 @@
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:blogapp/Pages/HomePage.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker/image_picker.dart';
 
 class CreatProfile extends StatefulWidget {
   const CreatProfile({super.key, required this.type, required this.data});
@@ -19,7 +19,7 @@ class _CreatProfileState extends State<CreatProfile> {
   final networkHandler = NetworkHandler();
   bool circular = false;
   bool updateDp = false;
-  XFile? _imageFile;
+  // XFile? _imageFile;
 
   final _globalkey = GlobalKey<FormState>();
   TextEditingController _name = TextEditingController();
@@ -27,7 +27,7 @@ class _CreatProfileState extends State<CreatProfile> {
   TextEditingController _dob = TextEditingController();
   TextEditingController _titleline = TextEditingController();
   TextEditingController _about = TextEditingController();
-  final ImagePicker _picker = ImagePicker();
+  // final ImagePicker _picker = ImagePicker();
   String dp = "";
 
   @override
@@ -251,45 +251,45 @@ class _CreatProfileState extends State<CreatProfile> {
     );
   }
 
-  Widget bottomSheet() {
-    return Container(
-      height: 100.0,
-      width: MediaQuery.of(context).size.width,
-      margin: EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 20,
-      ),
-      child: Column(
-        children: <Widget>[
-          Text(
-            "Choose Profile photo",
-            style: TextStyle(
-              fontSize: 20.0,
-            ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-            ElevatedButton.icon(
-              onPressed: () {
-                takePhoto(ImageSource.camera);
-              },
-              icon: Icon(Icons.camera),
-              label: Text("Camera"),
-            ),
-            ElevatedButton.icon(
-              onPressed: () {
-                takePhoto(ImageSource.gallery);
-              },
-              icon: Icon(Icons.image),
-              label: Text("Gallery"),
-            ),
-          ])
-        ],
-      ),
-    );
-  }
+  // Widget bottomSheet() {
+  //   return Container(
+  //     height: 100.0,
+  //     width: MediaQuery.of(context).size.width,
+  //     margin: EdgeInsets.symmetric(
+  //       horizontal: 20,
+  //       vertical: 20,
+  //     ),
+  //     child: Column(
+  //       children: <Widget>[
+  //         Text(
+  //           "Choose Profile photo",
+  //           style: TextStyle(
+  //             fontSize: 20.0,
+  //           ),
+  //         ),
+  //         SizedBox(
+  //           height: 20,
+  //         ),
+  //         Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+  //           ElevatedButton.icon(
+  //             onPressed: () {
+  //               takePhoto(ImageSource.camera);
+  //             },
+  //             icon: Icon(Icons.camera),
+  //             label: Text("Camera"),
+  //           ),
+  //           ElevatedButton.icon(
+  //             onPressed: () {
+  //               takePhoto(ImageSource.gallery);
+  //             },
+  //             icon: Icon(Icons.image),
+  //             label: Text("Gallery"),
+  //           ),
+  //         ])
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget bottomSheet1() {
     return Container(
@@ -449,15 +449,15 @@ class _CreatProfileState extends State<CreatProfile> {
     );
   }
 
-  void takePhoto(ImageSource source) async {
-    final pickedFile = await _picker.pickImage(
-      source: source,
-    );
-    setState(() {
-      _imageFile =
-          (pickedFile != null ? File(pickedFile.path) : null) as XFile?;
-    });
-  }
+  // void takePhoto(ImageSource source) async {
+  //   final pickedFile = await _picker.pickImage(
+  //     source: source,
+  //   );
+  //   setState(() {
+  //     _imageFile =
+  //         (pickedFile != null ? File(pickedFile.path) : null) as XFile?;
+  //   });
+  // }
 
   Widget nameTextField() {
     return TextFormField(
