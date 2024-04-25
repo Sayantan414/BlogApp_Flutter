@@ -23,10 +23,7 @@ class _BlogsState extends State<Blogs> {
   bool isLoading = true;
   String trimmedText = '';
   String text = '';
-  // Define a TextEditingController for the search query
   final TextEditingController _searchController = TextEditingController();
-
-// Define a filteredData list to store the filtered blog posts
   List<dynamic> filteredData = [];
 
   @override
