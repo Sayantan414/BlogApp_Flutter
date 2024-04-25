@@ -24,7 +24,7 @@ class _BlogState extends State<Blog> {
       backgroundColor: const Color.fromARGB(255, 216, 234, 206),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 147, 222, 151),
-        title: Text(
+        title: const Text(
           'View',
           textAlign: TextAlign.center, // Align text at the center
         ),
@@ -32,7 +32,7 @@ class _BlogState extends State<Blog> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -40,7 +40,7 @@ class _BlogState extends State<Blog> {
               Text(
                 widget.title,
                 style: GoogleFonts.specialElite(
-                    textStyle: TextStyle(
+                    textStyle: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
                   color: Color.fromARGB(255, 4, 88, 36),
@@ -52,7 +52,7 @@ class _BlogState extends State<Blog> {
                   Text(
                     '• By ' + widget.username,
                     style: GoogleFonts.coveredByYourGrace(
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                       // fontWeight: FontWeight.bold,
                       fontSize: 20,
                       color: Colors.black,
@@ -61,11 +61,11 @@ class _BlogState extends State<Blog> {
                   const SizedBox(width: 8),
                   CircleAvatar(
                     radius: 15,
-                    backgroundColor: Color.fromARGB(255, 128, 38, 206),
+                    backgroundColor: const Color.fromARGB(255, 128, 38, 206),
                     child: Text(
                       widget.username[0].toUpperCase(),
                       style: GoogleFonts.roboto(
-                        textStyle: TextStyle(
+                        textStyle: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                           color: Colors.white,
@@ -83,7 +83,7 @@ class _BlogState extends State<Blog> {
               Text(
                 widget.body,
                 style: GoogleFonts.specialElite(
-                    textStyle: TextStyle(
+                    textStyle: const TextStyle(
                   // fontWeight: FontWeight.bold,
                   fontSize: 16,
                   color: Color.fromARGB(221, 75, 75, 75),

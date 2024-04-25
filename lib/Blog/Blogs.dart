@@ -76,13 +76,14 @@ class _BlogsState extends State<Blogs> {
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top: 8.0, left: 5.0, right: 5.0),
+                    padding:
+                        const EdgeInsets.only(top: 8.0, left: 5.0, right: 5.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 249, 249, 249),
+                        color: const Color.fromARGB(255, 249, 249, 249),
                         borderRadius: BorderRadius.circular(20.0),
                       ),
-                      padding: EdgeInsets.symmetric(horizontal: 15.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
                       child: Row(
                         children: [
                           Expanded(
@@ -98,7 +99,7 @@ class _BlogsState extends State<Blogs> {
                           SizedBox(
                             width: 35,
                             child: IconButton(
-                              icon: Icon(Icons.cancel),
+                              icon: const Icon(Icons.cancel),
                               onPressed: () {
                                 _searchController.clear();
                                 filterBlogPosts('');
@@ -113,11 +114,11 @@ class _BlogsState extends State<Blogs> {
                   ...filteredData
                       .map((item) => Card(
                             elevation: 3,
-                            margin: EdgeInsets.all(8),
+                            margin: const EdgeInsets.all(8),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            color: Color.fromARGB(255, 206, 240, 206),
+                            color: const Color.fromARGB(255, 206, 240, 206),
                             child: Row(
                               children: [
                                 Expanded(
@@ -126,12 +127,12 @@ class _BlogsState extends State<Blogs> {
                                       children: [
                                         CircleAvatar(
                                           radius: 17,
-                                          backgroundColor:
-                                              Color.fromARGB(255, 128, 38, 206),
+                                          backgroundColor: const Color.fromARGB(
+                                              255, 128, 38, 206),
                                           child: Text(
                                             item["username"][0].toUpperCase(),
                                             style: GoogleFonts.roboto(
-                                              textStyle: TextStyle(
+                                              textStyle: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 16,
                                                 color: Colors.white,
@@ -156,12 +157,12 @@ class _BlogsState extends State<Blogs> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Padding(
-                                          padding:
-                                              EdgeInsets.symmetric(vertical: 8),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8),
                                           child: Text(
                                             item["title"],
                                             style: GoogleFonts.specialElite(
-                                              textStyle: TextStyle(
+                                              textStyle: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 20,
                                                 color: Color.fromARGB(
@@ -200,8 +201,8 @@ class _BlogsState extends State<Blogs> {
                                             <PopupMenuEntry>[
                                           PopupMenuItem(
                                             child: ListTile(
-                                              leading: Icon(Icons.edit),
-                                              title: Text('Edit'),
+                                              leading: const Icon(Icons.edit),
+                                              title: const Text('Edit'),
                                               onTap: () {
                                                 Navigator.of(context).push(
                                                   MaterialPageRoute(
@@ -217,8 +218,8 @@ class _BlogsState extends State<Blogs> {
                                           ),
                                           PopupMenuItem(
                                             child: ListTile(
-                                              leading: Icon(Icons.delete),
-                                              title: Text('Delete'),
+                                              leading: const Icon(Icons.delete),
+                                              title: const Text('Delete'),
                                               onTap: () async {
                                                 var response =
                                                     await networkHandler.delete(
