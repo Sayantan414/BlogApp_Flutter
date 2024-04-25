@@ -124,18 +124,10 @@ class _BlogsState extends State<Blogs> {
                                       children: [
                                         CircleAvatar(
                                           radius: 17,
-                                          backgroundColor: const Color.fromARGB(
-                                              255, 128, 38, 206),
-                                          child: Text(
-                                            item["username"][0].toUpperCase(),
-                                            style: GoogleFonts.roboto(
-                                              textStyle: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
+                                          backgroundColor: Color.fromARGB(
+                                              255, 206, 240, 206),
+                                          backgroundImage: AssetImage(
+                                              "assets/${item["dp"]}"),
                                         ),
                                         const SizedBox(width: 8),
                                         Text(
@@ -183,10 +175,10 @@ class _BlogsState extends State<Blogs> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => Blog(
-                                            title: item["title"],
-                                            body: item["body"],
-                                            username: item["username"],
-                                          ),
+                                              title: item["title"],
+                                              body: item["body"],
+                                              username: item["username"],
+                                              dp: item["dp"]),
                                         ),
                                       );
                                     },
@@ -257,7 +249,7 @@ class _BlogsState extends State<Blogs> {
       child: isLoading
           ? LoadingAnimationWidget.fourRotatingDots(
               // LoadingAnimationwidget that call the
-              color: Color.fromARGB(
+              color: const Color.fromARGB(
                   230, 80, 208, 142), // staggereddotwave animation
               size: 50,
             )

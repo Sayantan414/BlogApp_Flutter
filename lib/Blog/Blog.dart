@@ -7,11 +7,13 @@ class Blog extends StatefulWidget {
       {super.key,
       required this.title,
       required this.body,
-      required this.username});
+      required this.username,
+      required this.dp});
 
   final String title;
   final String body;
   final String username;
+  final String dp;
 
   @override
   State<Blog> createState() => _BlogState();
@@ -61,17 +63,8 @@ class _BlogState extends State<Blog> {
                   const SizedBox(width: 8),
                   CircleAvatar(
                     radius: 15,
-                    backgroundColor: const Color.fromARGB(255, 128, 38, 206),
-                    child: Text(
-                      widget.username[0].toUpperCase(),
-                      style: GoogleFonts.roboto(
-                        textStyle: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
+                    backgroundColor: const Color.fromARGB(255, 206, 240, 206),
+                    backgroundImage: AssetImage("assets/${widget.dp}"),
                   ),
                 ],
               ),
