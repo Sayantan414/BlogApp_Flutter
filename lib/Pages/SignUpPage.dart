@@ -113,8 +113,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             json.decode(response.body);
                         print(output);
 
-                        saveCurruser(
-                            output["token"], output["username"], output["dp"]);
+                        savetoken(output["token"]);
+                        saveDp(output["dp"]);
+                        saveUsername(output["username"]);
 
                         setState(() {
                           validate = true;

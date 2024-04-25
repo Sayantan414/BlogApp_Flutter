@@ -37,6 +37,7 @@ class _HomePageState extends State<HomePage> {
     // TODO: implement initState
     super.initState();
     dp = getDp();
+    print(dp);
     username = getUsername();
     print("Data: " + username);
     // checkProfile();

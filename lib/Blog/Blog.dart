@@ -47,14 +47,33 @@ class _BlogState extends State<Blog> {
                 )),
               ),
               const SizedBox(height: 12), // Add some vertical space
-              Text(
-                '• By ' + widget.username,
-                style: GoogleFonts.coveredByYourGrace(
-                    textStyle: TextStyle(
-                  // fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Colors.black,
-                )),
+              Row(
+                children: [
+                  Text(
+                    '• By ' + widget.username,
+                    style: GoogleFonts.coveredByYourGrace(
+                        textStyle: TextStyle(
+                      // fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.black,
+                    )),
+                  ),
+                  const SizedBox(width: 8),
+                  CircleAvatar(
+                    radius: 15,
+                    backgroundColor: Color.fromARGB(255, 128, 38, 206),
+                    child: Text(
+                      widget.username[0].toUpperCase(),
+                      style: GoogleFonts.roboto(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const Divider(
                 thickness: 0.8,

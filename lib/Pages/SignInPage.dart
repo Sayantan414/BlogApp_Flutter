@@ -120,12 +120,10 @@ class _SignInPageState extends State<SignInPage> {
                         Map<String, dynamic> output =
                             json.decode(response.body);
                         print(output);
-                        // if (output["dp"]) {
-                        //   pic = output["dp"];
-                        // }
-                        saveCurruser(
-                            output["token"], output["username"], output["dp"]);
-                        // saveUsername(_usernameController.text);
+
+                        savetoken(output["token"]);
+                        saveDp(output["dp"]);
+                        saveUsername(output["username"]);
                         // await storage.write(key: "token", value: output["token"]);
                         setState(() {
                           validate = true;

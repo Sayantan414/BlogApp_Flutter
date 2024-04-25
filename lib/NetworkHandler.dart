@@ -9,10 +9,16 @@ var token = "";
 var username = "";
 var pic = "";
 
-saveCurruser(t, username, dp) {
+savetoken(t) {
   token = t;
-  username = username;
+}
+
+saveDp(dp) {
   pic = dp;
+}
+
+saveUsername(name) {
+  username = name;
 }
 
 getToken() {

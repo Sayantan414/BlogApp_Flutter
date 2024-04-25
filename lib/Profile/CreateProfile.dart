@@ -29,15 +29,17 @@ class _CreatProfileState extends State<CreatProfile> {
   TextEditingController _about = TextEditingController();
   // final ImagePicker _picker = ImagePicker();
   String dp = "";
+  String username = "";
+  bool picFlag = false;
 
   @override
   void initState() {
     super.initState();
-    // print(widget.data);
     dp = getDp();
 
     if (widget.data.isNotEmpty) {
       print(widget.data);
+      username = widget.data["username"] ?? "";
       _name.text = widget.data["name"] ?? "";
       _profession.text = widget.data["profession"] ?? "";
       _dob.text = widget.data["DOB"] ?? "";
@@ -68,23 +70,23 @@ class _CreatProfileState extends State<CreatProfile> {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
           children: <Widget>[
             imageProfile(),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             nameTextField(),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             professionTextField(),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             dobField(),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             titleTextField(),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             aboutTextField(),
@@ -227,7 +229,8 @@ class _CreatProfileState extends State<CreatProfile> {
           CircleAvatar(
             radius: 80.0,
             backgroundColor: Color.fromARGB(236, 211, 238, 196),
-            backgroundImage: AssetImage("assets/${dp}"),
+            backgroundImage: !picFlag ? AssetImage("assets/${dp}") : null,
+            child: picFlag ? CircularProgressIndicator() : null,
           ),
           Positioned(
             bottom: 20.0,
@@ -293,7 +296,7 @@ class _CreatProfileState extends State<CreatProfile> {
 
   Widget bottomSheet1() {
     return Container(
-      height: 420,
+      height: 370,
       color: Color.fromARGB(98, 197, 222, 184),
       width: MediaQuery.of(context).size.width,
       child: Card(
@@ -355,46 +358,6 @@ class _CreatProfileState extends State<CreatProfile> {
                   ],
                 ),
               ),
-              InkWell(
-                onTap: () async {
-                  Map<String, String> data = {
-                    "name": _name.text,
-                  };
-                  var response = await networkHandler.put(
-                      "/profile/update/${widget.data["_id"]}", data);
-                  print(data);
-                  if (response.statusCode == 200 ||
-                      response.statusCode == 201) {
-                    setState(() {
-                      circular = false;
-                    });
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => HomePage()),
-                        (route) => false);
-                    // }
-                  }
-                },
-                child: Center(
-                  child: Container(
-                    width: 500,
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        "OK",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),
@@ -404,13 +367,26 @@ class _CreatProfileState extends State<CreatProfile> {
 
   Widget iconCreation(AssetImage image, String text) {
     return InkWell(
-      onTap: () {
+      onTap: () async {
+        Navigator.pop(context);
         setState(() {
-          updateDp = true;
-          dp = text;
-          print(dp);
-          // print(text);
+          picFlag = true;
         });
+        dp = text;
+        print(dp);
+        Map<String, String> data = {
+          "dp": dp,
+        };
+        var response =
+            await networkHandler.patch("/user/update/${username}", data);
+        print(data);
+        if (response.statusCode == 200 || response.statusCode == 201) {
+          saveDp(dp);
+          setState(() {
+            picFlag = false;
+          });
+          dp = getDp();
+        }
       },
       child: Stack(
         children: [
@@ -472,19 +448,19 @@ class _CreatProfileState extends State<CreatProfile> {
         fillColor: Colors.grey[200],
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: Color.fromARGB(255, 232, 250, 222), // Custom border color
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: Colors
                 .orange, // Change this to your desired color for focused state
             width: 2,
           ),
         ),
-        prefixIcon: Icon(
+        prefixIcon: const Icon(
           Icons.person,
           color: Colors.green,
         ),
