@@ -1,4 +1,5 @@
 // import 'package:blogapp/NetworkHandler.dart';
+import 'package:blogapp/Profile/otherUserProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -51,23 +52,47 @@ class _BlogState extends State<Blog> {
               const SizedBox(height: 12), // Add some vertical space
               Row(
                 children: [
-                  Text(
-                    '• By ' + widget.username,
-                    style: GoogleFonts.coveredByYourGrace(
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OtherUserProfile(
+                              username: widget.username, dp: widget.dp),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      '• By ' + widget.username,
+                      style: GoogleFonts.coveredByYourGrace(
                         textStyle: const TextStyle(
-                      // fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                      color: Colors.black,
-                    )),
+                          // fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 8),
-                  CircleAvatar(
-                    radius: 15,
-                    backgroundColor: const Color.fromARGB(255, 206, 240, 206),
-                    backgroundImage: AssetImage("assets/${widget.dp}"),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OtherUserProfile(
+                              username: widget.username, dp: widget.dp),
+                        ),
+                      );
+                    },
+                    child: CircleAvatar(
+                      radius: 15,
+                      backgroundColor: const Color.fromARGB(255, 206, 240, 206),
+                      backgroundImage: AssetImage("assets/${widget.dp}"),
+                    ),
                   ),
                 ],
               ),
+
               const Divider(
                 thickness: 0.8,
               ),

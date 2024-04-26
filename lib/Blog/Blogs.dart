@@ -39,20 +39,27 @@ class _BlogsState extends State<Blogs> {
       var response = await networkHandler.get(widget.url);
       var responseData = json.decode(response);
       print(responseData.runtimeType);
-      for (var element in responseData) {
-        var res = await networkHandler.get("/user/${element['username']}");
-        var resData = json.decode(res);
-        var dp = resData['data']['dp'];
-        print(dp);
-        element['dp'] = dp;
-      }
+
       setState(() {
         data = responseData;
         filteredData = data;
         isLoading = false;
       });
+      fetchDp();
     } catch (e) {
       print('Error fetching data: $e');
+    }
+  }
+
+  Future<void> fetchDp() async {
+    for (var element in data) {
+      var res = await networkHandler.get("/user/${element['username']}");
+      var resData = json.decode(res);
+      var dp = resData['data']['dp'];
+      print(dp);
+      setState(() {
+        element['dp'] = dp;
+      });
     }
   }
 
@@ -133,8 +140,11 @@ class _BlogsState extends State<Blogs> {
                                           radius: 17,
                                           backgroundColor: Color.fromARGB(
                                               255, 206, 240, 206),
-                                          backgroundImage: AssetImage(
-                                              "assets/${item["dp"]}"),
+                                          backgroundImage: item
+                                                  .containsKey("dp")
+                                              ? AssetImage(
+                                                  "assets/${item["dp"]}")
+                                              : AssetImage("assets/nouser.png"),
                                         ),
                                         const SizedBox(width: 8),
                                         Text(
@@ -178,16 +188,18 @@ class _BlogsState extends State<Blogs> {
                                       ],
                                     ),
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => Blog(
-                                              title: item["title"],
-                                              body: item["body"],
-                                              username: item["username"],
-                                              dp: item["dp"]),
-                                        ),
-                                      );
+                                      if (item["dp"] != null) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => Blog(
+                                                title: item["title"],
+                                                body: item["body"],
+                                                username: item["username"],
+                                                dp: item["dp"]),
+                                          ),
+                                        );
+                                      }
                                     },
                                   ),
                                 ),
