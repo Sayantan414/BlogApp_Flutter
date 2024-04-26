@@ -39,6 +39,13 @@ class _BlogsState extends State<Blogs> {
       var response = await networkHandler.get(widget.url);
       var responseData = json.decode(response);
       print(responseData.runtimeType);
+      for (var element in responseData) {
+        var res = await networkHandler.get("/user/${element['username']}");
+        var resData = json.decode(res);
+        var dp = resData['data']['dp'];
+        print(dp);
+        element['dp'] = dp;
+      }
       setState(() {
         data = responseData;
         filteredData = data;
