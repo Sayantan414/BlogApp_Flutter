@@ -38,7 +38,7 @@ class _BlogsState extends State<Blogs> {
       isLoading = true;
       var response = await networkHandler.get(widget.url);
       var responseData = json.decode(response);
-      print(responseData.runtimeType);
+      print(responseData);
 
       setState(() {
         data = responseData;
@@ -179,12 +179,32 @@ class _BlogsState extends State<Blogs> {
                                         ),
                                         Text(
                                           _truncateText(item["body"], 100),
-                                          style: const TextStyle(
-                                            fontSize: 14,
+                                          style: GoogleFonts.specialElite(
+                                              textStyle: const TextStyle(
+                                            // fontWeight: FontWeight.bold,
+                                            fontSize: 16,
                                             color:
                                                 Color.fromARGB(221, 75, 75, 75),
-                                          ),
+                                          )),
                                         ),
+                                        const SizedBox(
+                                          height: 3,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              '◉ ${item["like"].length} likes',
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                // fontWeight: FontWeight.bold,
+                                                color: Color.fromARGB(
+                                                    215, 23, 23, 23),
+                                              ),
+                                            ),
+                                          ],
+                                        )
                                       ],
                                     ),
                                     onTap: () {
@@ -196,7 +216,9 @@ class _BlogsState extends State<Blogs> {
                                                 title: item["title"],
                                                 body: item["body"],
                                                 username: item["username"],
-                                                dp: item["dp"]),
+                                                dp: item["dp"],
+                                                id: item["_id"],
+                                                likes: item['like']),
                                           ),
                                         );
                                       }

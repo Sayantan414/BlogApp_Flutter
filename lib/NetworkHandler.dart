@@ -106,6 +106,21 @@ class NetworkHandler {
     return response;
   }
 
+  Future<dynamic> putl(String url) async {
+    url = formater(url);
+    var response = await http.put(
+      Uri.parse(url),
+      headers: {
+        "Content-type": "application/json",
+        "Authorization": "Bearer $token"
+      },
+    );
+    // log.i(response.body);
+    var responseBody = json.decode(response.body);
+
+    return response.body;
+  }
+
   Future<http.Response> delete(String url) async {
     url = formater(url);
     var response = await http.delete(
