@@ -33,14 +33,18 @@ class _BlogState extends State<Blog> {
   bool circular = false;
   String user = '';
   List<dynamic> likings = [];
+  int noslikes = 0;
+  List<dynamic> pictures = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     likings = widget.likes;
+    noslikes = likings.length;
     user = getUsername();
     likeFlag = likings.contains(user);
+    fetchDp();
   }
 
   @override
@@ -48,6 +52,12 @@ class _BlogState extends State<Blog> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 216, 234, 206),
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop(likings);
+          },
+        ),
         backgroundColor: const Color.fromARGB(255, 147, 222, 151),
         title: const Text(
           'View',
@@ -123,7 +133,7 @@ class _BlogState extends State<Blog> {
                               onTap: () async {
                                 try {
                                   setState(() {
-                                    circular = true;
+                                    likeFlag = true;
                                   });
                                   var response = await networkHandler
                                       .putl("/blogpost/like/${widget.id}");
@@ -135,8 +145,10 @@ class _BlogState extends State<Blog> {
                                   print(data);
                                   setState(() {
                                     likings = data['like'];
+                                    noslikes = likings.length;
                                     circular = false;
                                     likeFlag = likings.contains(user);
+                                    fetchDp();
                                   });
                                 } catch (e) {
                                   print(e);
@@ -145,7 +157,9 @@ class _BlogState extends State<Blog> {
                               child: const Text(
                                 "♡",
                                 style: TextStyle(
-                                    fontSize: 25, color: Colors.blueGrey),
+                                  fontSize: 25,
+                                  color: Colors.blueGrey,
+                                ),
                               ),
                             ),
                           if (likeFlag && !circular)
@@ -153,20 +167,20 @@ class _BlogState extends State<Blog> {
                               onTap: () async {
                                 try {
                                   setState(() {
-                                    circular = true;
+                                    likeFlag = false;
                                   });
                                   var response = await networkHandler
                                       .putl("/blogpost/like/${widget.id}");
                                   print(response);
                                   var resData = json.decode(response);
                                   var data = resData['data'];
-                                  // print(response);
-                                  // print(resData);
-                                  // print(data);
+
                                   setState(() {
                                     likings = data['like'];
+                                    noslikes = likings.length;
                                     circular = false;
                                     likeFlag = likings.contains(user);
+                                    fetchDp();
                                   });
                                 } catch (e) {
                                   print(e);
@@ -187,7 +201,7 @@ class _BlogState extends State<Blog> {
                                 );
                               },
                               child: Text(
-                                '◉ ${likings.length} likes',
+                                '◉ ${noslikes} likes',
                                 style: const TextStyle(
                                   fontSize: 15,
                                   color: Colors.blueGrey,
@@ -236,7 +250,7 @@ class _BlogState extends State<Blog> {
 
   Widget bottomSheet() {
     return Container(
-      height: 400.0,
+      height: 300.0,
       width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.symmetric(
         horizontal: 10,
@@ -245,16 +259,28 @@ class _BlogState extends State<Blog> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            for (var liking in likings)
+            for (int i = 0; i < likings.length; i++)
               ListTile(
                 leading: CircleAvatar(
-                  child: Text(liking.substring(0, 1)),
-                ),
-                title: Text(liking),
+                    backgroundImage: AssetImage("assets/${pictures[i]}")),
+                title: Text(likings[i]),
               ),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> fetchDp() async {
+    pictures = [];
+    for (var element in likings) {
+      var res = await networkHandler.get("/user/${element}");
+      var resData = json.decode(res);
+      var dp = resData['data']['dp'];
+      setState(() {
+        pictures.add(dp);
+      });
+    }
+    print(pictures);
   }
 }

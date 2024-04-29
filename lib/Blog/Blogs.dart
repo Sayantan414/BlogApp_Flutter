@@ -25,11 +25,13 @@ class _BlogsState extends State<Blogs> {
   String text = '';
   final TextEditingController _searchController = TextEditingController();
   List<dynamic> filteredData = [];
+  String username = '';
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    username = getUsername();
     fetchData();
   }
 
@@ -138,7 +140,7 @@ class _BlogsState extends State<Blogs> {
                                       children: [
                                         CircleAvatar(
                                           radius: 17,
-                                          backgroundColor: Color.fromARGB(
+                                          backgroundColor: const Color.fromARGB(
                                               255, 206, 240, 206),
                                           backgroundImage: item
                                                   .containsKey("dp")
@@ -156,6 +158,58 @@ class _BlogsState extends State<Blogs> {
                                                 Color.fromARGB(255, 85, 85, 85),
                                           ),
                                         ),
+                                        item["like"].contains(username)
+                                            ? Expanded(
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Text(
+                                                    '❤️ ${item["like"].length}',
+                                                    style: const TextStyle(
+                                                      fontSize: 16,
+                                                      // fontWeight: FontWeight.bold,
+                                                      color: Color.fromARGB(
+                                                          215, 23, 23, 23),
+                                                    ),
+                                                  ),
+                                                ),
+                                              )
+                                            : Expanded(
+                                                child: Align(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      Transform.scale(
+                                                        scale: 1.5,
+                                                        child: const Text(
+                                                          '♡',
+                                                          style: TextStyle(
+                                                            fontSize: 16,
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    215,
+                                                                    23,
+                                                                    23,
+                                                                    23),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(width: 8),
+                                                      Text(
+                                                        '${item["like"].length}',
+                                                        style: const TextStyle(
+                                                          fontSize: 16,
+                                                          color: Color.fromARGB(
+                                                              215, 23, 23, 23),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
                                       ],
                                     ),
                                     subtitle: Column(
@@ -190,21 +244,6 @@ class _BlogsState extends State<Blogs> {
                                         const SizedBox(
                                           height: 3,
                                         ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                              '◉ ${item["like"].length} likes',
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                // fontWeight: FontWeight.bold,
-                                                color: Color.fromARGB(
-                                                    215, 23, 23, 23),
-                                              ),
-                                            ),
-                                          ],
-                                        )
                                       ],
                                     ),
                                     onTap: () {
@@ -220,7 +259,9 @@ class _BlogsState extends State<Blogs> {
                                                 id: item["_id"],
                                                 likes: item['like']),
                                           ),
-                                        );
+                                        ).then((value) => setState(() {
+                                              item['like'] = value;
+                                            }));
                                       }
                                     },
                                   ),

@@ -115,9 +115,6 @@ class NetworkHandler {
         "Authorization": "Bearer $token"
       },
     );
-    // log.i(response.body);
-    var responseBody = json.decode(response.body);
-
     return response.body;
   }
 
