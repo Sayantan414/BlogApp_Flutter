@@ -158,35 +158,67 @@ class _BlogsState extends State<Blogs> {
                                                 Color.fromARGB(255, 85, 85, 85),
                                           ),
                                         ),
-                                        item["like"].contains(username)
-                                            ? Expanded(
-                                                child: Align(
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  child: Text(
-                                                    '❤️ ${item["like"].length}',
-                                                    style: const TextStyle(
-                                                      fontSize: 16,
-                                                      // fontWeight: FontWeight.bold,
-                                                      color: Color.fromARGB(
-                                                          215, 23, 23, 23),
+                                        if (widget.type != "Own")
+                                          item["like"].contains(username)
+                                              ? Expanded(
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Row(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      children: [
+                                                        const Icon(
+                                                          Icons.favorite,
+                                                          color: Color.fromARGB(
+                                                              212, 245, 31, 31),
+                                                        ),
+                                                        Text(
+                                                          ' ${item["like"].length}',
+                                                          style:
+                                                              const TextStyle(
+                                                            fontSize: 16,
+                                                            // fontWeight: FontWeight.bold,
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    215,
+                                                                    23,
+                                                                    23,
+                                                                    23),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
-                                                ),
-                                              )
-                                            : Expanded(
-                                                child: Align(
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.end,
-                                                    children: [
-                                                      Transform.scale(
-                                                        scale: 1.5,
-                                                        child: const Text(
-                                                          '♡',
-                                                          style: TextStyle(
+                                                )
+                                              : Expanded(
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        Transform.scale(
+                                                          scale: 1.5,
+                                                          child: const Icon(
+                                                            Icons
+                                                                .favorite_outline,
+                                                            size: 16,
+                                                            color:
+                                                                Color.fromARGB(
+                                                                    214,
+                                                                    92,
+                                                                    92,
+                                                                    92),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                            width: 8),
+                                                        Text(
+                                                          '${item["like"].length}',
+                                                          style:
+                                                              const TextStyle(
                                                             fontSize: 16,
                                                             color:
                                                                 Color.fromARGB(
@@ -196,20 +228,10 @@ class _BlogsState extends State<Blogs> {
                                                                     23),
                                                           ),
                                                         ),
-                                                      ),
-                                                      const SizedBox(width: 8),
-                                                      Text(
-                                                        '${item["like"].length}',
-                                                        style: const TextStyle(
-                                                          fontSize: 16,
-                                                          color: Color.fromARGB(
-                                                              215, 23, 23, 23),
-                                                        ),
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
                                       ],
                                     ),
                                     subtitle: Column(

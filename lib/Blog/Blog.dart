@@ -155,12 +155,10 @@ class _BlogState extends State<Blog> {
                                   print(e);
                                 }
                               },
-                              child: const Text(
-                                "♡",
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  color: Colors.blueGrey,
-                                ),
+                              child: const Icon(
+                                Icons.favorite_outline,
+                                size: 25,
+                                color: Color.fromARGB(214, 92, 92, 92),
                               ),
                             ),
                           if (likeFlag)
@@ -186,9 +184,10 @@ class _BlogState extends State<Blog> {
                                   print(e);
                                 }
                               },
-                              child: const Text(
-                                "❤️",
-                                style: TextStyle(fontSize: 20),
+                              child: const Icon(
+                                Icons.favorite,
+                                size: 25,
+                                color: Color.fromARGB(212, 245, 31, 31),
                               ),
                             ),
                           const SizedBox(width: 4),
