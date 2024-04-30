@@ -1,21 +1,22 @@
 // import 'dart:io';
 
+import 'dart:convert';
+
 import 'package:blogapp/NetworkHandler.dart';
-import 'package:blogapp/Pages/HomePage.dart';
 import 'package:flutter/material.dart';
 // import 'package:image_picker/image_picker.dart';
 
-class CreatProfile extends StatefulWidget {
-  const CreatProfile({super.key, required this.type, required this.data});
+class CreateProfile extends StatefulWidget {
+  const CreateProfile({super.key, required this.type, required this.data});
 
   final String type;
   final Map<String, dynamic> data;
 
   @override
-  _CreatProfileState createState() => _CreatProfileState();
+  _CreateProfileState createState() => _CreateProfileState();
 }
 
-class _CreatProfileState extends State<CreatProfile> {
+class _CreateProfileState extends State<CreateProfile> {
   final networkHandler = NetworkHandler();
   bool circular = false;
   bool updateDp = false;
@@ -60,7 +61,7 @@ class _CreatProfileState extends State<CreatProfile> {
               color: Colors.black,
             ),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.of(context).pop("pic");
             }),
       ),
       backgroundColor: Color.fromARGB(236, 211, 238, 196),
@@ -111,6 +112,8 @@ class _CreatProfileState extends State<CreatProfile> {
                             await networkHandler.post("/profile/add", data);
                         if (response.statusCode == 200 ||
                             response.statusCode == 201) {
+                          var responseData = json.decode(response.body);
+                          print(responseData['data']);
                           // if (_imageFile?.path != null) {
                           //   var imageResponse = await networkHandler.patchImage(
                           //       "/profile/add/image", _imageFile!.path);
@@ -127,10 +130,7 @@ class _CreatProfileState extends State<CreatProfile> {
                           setState(() {
                             circular = false;
                           });
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage()),
-                              (route) => false);
+                          Navigator.of(context).pop(responseData['data']);
                           // }
                         }
                       }
@@ -176,16 +176,15 @@ class _CreatProfileState extends State<CreatProfile> {
                         };
                         var response = await networkHandler.put(
                             "/profile/update/${widget.data["_id"]}", data);
-                        print(data);
+
                         if (response.statusCode == 200 ||
                             response.statusCode == 201) {
+                          var responseData = json.decode(response.body);
+                          print(responseData['data']);
                           setState(() {
                             circular = false;
                           });
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage()),
-                              (route) => false);
+                          Navigator.of(context).pop(responseData['data']);
                           // }
                         }
                       }

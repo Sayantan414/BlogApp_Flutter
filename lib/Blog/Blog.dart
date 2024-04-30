@@ -30,11 +30,11 @@ class Blog extends StatefulWidget {
 class _BlogState extends State<Blog> {
   NetworkHandler networkHandler = NetworkHandler();
   bool likeFlag = false;
-  bool circular = false;
   String user = '';
   List<dynamic> likings = [];
   int noslikes = 0;
   List<dynamic> pictures = [];
+  bool seeLikeDps = false;
 
   @override
   void initState() {
@@ -44,6 +44,8 @@ class _BlogState extends State<Blog> {
     noslikes = likings.length;
     user = getUsername();
     likeFlag = likings.contains(user);
+    pictures = [];
+    seeLikeDps = false;
     fetchDp();
   }
 
@@ -128,7 +130,7 @@ class _BlogState extends State<Blog> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          if (!likeFlag && !circular)
+                          if (!likeFlag)
                             GestureDetector(
                               onTap: () async {
                                 try {
@@ -146,7 +148,6 @@ class _BlogState extends State<Blog> {
                                   setState(() {
                                     likings = data['like'];
                                     noslikes = likings.length;
-                                    circular = false;
                                     likeFlag = likings.contains(user);
                                     fetchDp();
                                   });
@@ -162,7 +163,7 @@ class _BlogState extends State<Blog> {
                                 ),
                               ),
                             ),
-                          if (likeFlag && !circular)
+                          if (likeFlag)
                             GestureDetector(
                               onTap: () async {
                                 try {
@@ -178,7 +179,6 @@ class _BlogState extends State<Blog> {
                                   setState(() {
                                     likings = data['like'];
                                     noslikes = likings.length;
-                                    circular = false;
                                     likeFlag = likings.contains(user);
                                     fetchDp();
                                   });
@@ -192,8 +192,9 @@ class _BlogState extends State<Blog> {
                               ),
                             ),
                           const SizedBox(width: 4),
-                          if (!circular)
-                            InkWell(
+                          IgnorePointer(
+                            ignoring: !seeLikeDps,
+                            child: InkWell(
                               onTap: () {
                                 showModalBottomSheet(
                                   context: context,
@@ -201,25 +202,14 @@ class _BlogState extends State<Blog> {
                                 );
                               },
                               child: Text(
-                                '◉ ${noslikes} likes',
+                                '◉ $noslikes likes',
                                 style: const TextStyle(
                                   fontSize: 15,
                                   color: Colors.blueGrey,
                                 ),
                               ),
                             ),
-                          if (circular)
-                            const SizedBox(
-                              width: 20, // Adjust the width as needed
-                              height: 20, // Adjust the height as needed
-                              child: CircularProgressIndicator(
-                                value: null,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.green),
-                                strokeWidth:
-                                    2, // Adjust the thickness of the circle outline
-                              ),
-                            )
+                          ),
                         ],
                       ),
                     ),
@@ -281,6 +271,7 @@ class _BlogState extends State<Blog> {
         pictures.add(dp);
       });
     }
+    seeLikeDps = true;
     print(pictures);
   }
 }

@@ -86,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          CreatProfile(type: "Add", data: const {})))
+                          CreateProfile(type: "Add", data: const {})))
             },
             child: Container(
               height: 60,

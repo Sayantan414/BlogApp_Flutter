@@ -48,17 +48,24 @@ class _MainProfileState extends State<MainProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 225, 235, 225),
+      backgroundColor: const Color.fromARGB(255, 225, 235, 225),
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 225, 235, 225),
+        backgroundColor: const Color.fromARGB(255, 225, 235, 225),
         elevation: 0,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.edit),
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) =>
-                      CreatProfile(type: "Edit", data: responseData)));
+              Navigator.of(context)
+                  .push(MaterialPageRoute(
+                      builder: (context) =>
+                          CreateProfile(type: "Edit", data: responseData)))
+                  .then((value) => setState(() {
+                        if (value.runtimeType == String)
+                          dp = getDp();
+                        else
+                          responseData = value;
+                      }));
             },
             color: Colors.black,
           ),
