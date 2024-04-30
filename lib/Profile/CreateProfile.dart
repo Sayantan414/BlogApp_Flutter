@@ -146,8 +146,8 @@ class _CreateProfileState extends State<CreateProfile> {
                         child: Center(
                           child: circular
                               ? const CircularProgressIndicator(
-                                  backgroundColor: Colors
-                                      .green, // Background color of the progress indicator
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
                                 )
                               : const Text(
                                   "Submit",
@@ -200,8 +200,8 @@ class _CreateProfileState extends State<CreateProfile> {
                         child: Center(
                           child: circular
                               ? const CircularProgressIndicator(
-                                  backgroundColor: Colors
-                                      .green, // Background color of the progress indicator
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
                                 )
                               : const Text(
                                   "Update",
@@ -229,7 +229,11 @@ class _CreateProfileState extends State<CreateProfile> {
             radius: 80.0,
             backgroundColor: Color.fromARGB(236, 211, 238, 196),
             backgroundImage: !picFlag ? AssetImage("assets/${dp}") : null,
-            child: picFlag ? CircularProgressIndicator() : null,
+            child: picFlag
+                ? const CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                  )
+                : null,
           ),
           Positioned(
             bottom: 20.0,

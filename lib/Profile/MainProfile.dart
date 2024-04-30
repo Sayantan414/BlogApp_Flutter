@@ -65,6 +65,7 @@ class _MainProfileState extends State<MainProfile> {
                           dp = getDp();
                         else
                           responseData = value;
+                        dp = getDp();
                       }));
             },
             color: Colors.black,
