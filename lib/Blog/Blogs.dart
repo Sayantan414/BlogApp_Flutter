@@ -314,15 +314,90 @@ class _BlogsState extends State<Blogs> {
                                               leading: const Icon(Icons.delete),
                                               title: const Text('Delete'),
                                               onTap: () async {
-                                                var response =
-                                                    await networkHandler.delete(
-                                                        "/blogpost/delete/${item["_id"]}");
-                                                if (response.statusCode ==
-                                                        200 ||
-                                                    response.statusCode ==
-                                                        201) {
-                                                  fetchData();
-                                                }
+                                                showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title:
+                                                          const Text("Delete"),
+                                                      content: const Text(
+                                                          "Are you sure you want to delete this?"),
+                                                      actions: [
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.pop(
+                                                                context);
+                                                          },
+                                                          child: const Text(
+                                                            "No",
+                                                            style: TextStyle(
+                                                              color: Color
+                                                                  .fromARGB(
+                                                                      255,
+                                                                      4,
+                                                                      88,
+                                                                      36),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        TextButton(
+                                                          onPressed: () async {
+                                                            var response =
+                                                                await networkHandler
+                                                                    .delete(
+                                                                        "/blogpost/delete/${item["_id"]}");
+                                                            if (response.statusCode ==
+                                                                    200 ||
+                                                                response.statusCode ==
+                                                                    201) {
+                                                              fetchData();
+                                                              ScaffoldMessenger
+                                                                      .of(context)
+                                                                  .clearSnackBars();
+                                                              ScaffoldMessenger
+                                                                      .of(context)
+                                                                  .showSnackBar(
+                                                                SnackBar(
+                                                                  duration:
+                                                                      const Duration(
+                                                                          seconds:
+                                                                              3),
+                                                                  content:
+                                                                      const Center(
+                                                                    child: Text(
+                                                                        'Item Deleted Successfully'),
+                                                                  ),
+                                                                  action:
+                                                                      SnackBarAction(
+                                                                    label: '',
+                                                                    onPressed:
+                                                                        () {},
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            }
+                                                            Navigator.pop(
+                                                                context); // Close the dialog
+                                                            Navigator.pop(
+                                                                context); // Close the menu after tapping "Delete"
+                                                          },
+                                                          child: const Text(
+                                                            "Yes",
+                                                            style: TextStyle(
+                                                              color: Color
+                                                                  .fromARGB(
+                                                                      255,
+                                                                      4,
+                                                                      88,
+                                                                      36),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  },
+                                                );
                                               },
                                             ),
                                           ),
