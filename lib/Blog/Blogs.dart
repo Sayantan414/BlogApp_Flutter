@@ -39,11 +39,12 @@ class _BlogsState extends State<Blogs> {
     try {
       isLoading = true;
       var responseData = await await fetchAllPost();
-      print(responseData);
+      // print(responseData);
 
       setState(() {
-        data = responseData as List;
+        data = responseData;
         filteredData = data;
+        print(filteredData[0]['title']);
         isLoading = false;
       });
     } catch (e) {
@@ -110,291 +111,68 @@ class _BlogsState extends State<Blogs> {
                       ),
                     ),
                   ),
-                  ...filteredData
-                      .map((item) => Card(
-                            elevation: 3,
-                            margin: const EdgeInsets.all(8),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            color: const Color.fromARGB(255, 206, 240, 206),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: ListTile(
-                                    title: Row(
-                                      children: [
-                                        CircleAvatar(
-                                          radius: 17,
-                                          backgroundColor: const Color.fromARGB(
-                                              255, 206, 240, 206),
-                                          backgroundImage: item
-                                                  .containsKey("dp")
-                                              ? AssetImage(
-                                                  "assets/${item["dp"]}")
-                                              : AssetImage("assets/nouser.png"),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        Text(
-                                          item["fullname"],
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                            color:
-                                                Color.fromARGB(255, 85, 85, 85),
-                                          ),
-                                        ),
-                                        if (widget.type != "Own")
-                                          item["like"].contains(username)
-                                              ? Expanded(
-                                                  child: Align(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: Row(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      children: [
-                                                        const Icon(
-                                                          Icons.favorite,
-                                                          color: Color.fromARGB(
-                                                              212, 245, 31, 31),
-                                                        ),
-                                                        Text(
-                                                          ' ${item["like"].length}',
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 16,
-                                                            // fontWeight: FontWeight.bold,
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    215,
-                                                                    23,
-                                                                    23,
-                                                                    23),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                )
-                                              : Expanded(
-                                                  child: Align(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment.end,
-                                                      children: [
-                                                        Transform.scale(
-                                                          scale: 1.5,
-                                                          child: const Icon(
-                                                            Icons
-                                                                .favorite_outline,
-                                                            size: 16,
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    214,
-                                                                    92,
-                                                                    92,
-                                                                    92),
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                            width: 8),
-                                                        Text(
-                                                          '${item["like"].length}',
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 16,
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    215,
-                                                                    23,
-                                                                    23,
-                                                                    23),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                      ],
+                  ...filteredData.map((item) => Card(
+                        elevation: 3,
+                        margin: const EdgeInsets.only(top: 5),
+                        color: const Color.fromARGB(255, 206, 240, 206),
+                        child: Stack(
+                          children: <Widget>[
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Image.network(
+                                  item['photo'],
+                                  fit: BoxFit.cover,
+                                  height: 200,
+                                  width: double.infinity,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    item['title'],
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 8),
-                                          child: Text(
-                                            item["title"],
-                                            style: GoogleFonts.specialElite(
-                                              textStyle: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 20,
-                                                color: Color.fromARGB(
-                                                    255, 4, 88, 36),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Text(
-                                          _truncateText(
-                                              item["description"], 100),
-                                          style: GoogleFonts.specialElite(
-                                              textStyle: const TextStyle(
-                                            // fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                            color:
-                                                Color.fromARGB(221, 75, 75, 75),
-                                          )),
-                                        ),
-                                        const SizedBox(
-                                          height: 3,
-                                        ),
-                                      ],
-                                    ),
-                                    onTap: () {
-                                      if (item["dp"] != null) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => Blog(
-                                                title: item["title"],
-                                                body: item["description"],
-                                                username: item["fullname"],
-                                                dp: item["dp"],
-                                                id: item["_id"],
-                                                likes: item['like']),
-                                          ),
-                                        ).then((value) => setState(() {
-                                              item['like'] = value;
-                                            }));
-                                      }
-                                    },
                                   ),
                                 ),
-                                widget.type == "Own"
-                                    ? PopupMenuButton(
-                                        itemBuilder: (BuildContext context) =>
-                                            <PopupMenuEntry>[
-                                          PopupMenuItem(
-                                            child: ListTile(
-                                              leading: const Icon(Icons.edit),
-                                              title: const Text('Edit'),
-                                              onTap: () {
-                                                Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        AddBlog(
-                                                      type: "Edit",
-                                                      data: item,
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                          PopupMenuItem(
-                                            child: ListTile(
-                                              leading: const Icon(Icons.delete),
-                                              title: const Text('Delete'),
-                                              onTap: () async {
-                                                showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return AlertDialog(
-                                                      title:
-                                                          const Text("Delete"),
-                                                      content: const Text(
-                                                          "Are you sure you want to delete this?"),
-                                                      actions: [
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            Navigator.pop(
-                                                                context);
-                                                          },
-                                                          child: const Text(
-                                                            "No",
-                                                            style: TextStyle(
-                                                              color: Color
-                                                                  .fromARGB(
-                                                                      255,
-                                                                      4,
-                                                                      88,
-                                                                      36),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        TextButton(
-                                                          onPressed: () async {
-                                                            var response =
-                                                                await networkHandler
-                                                                    .delete(
-                                                                        "/blogpost/delete/${item["_id"]}");
-                                                            if (response.statusCode ==
-                                                                    200 ||
-                                                                response.statusCode ==
-                                                                    201) {
-                                                              fetchData();
-                                                              ScaffoldMessenger
-                                                                      .of(context)
-                                                                  .clearSnackBars();
-                                                              ScaffoldMessenger
-                                                                      .of(context)
-                                                                  .showSnackBar(
-                                                                SnackBar(
-                                                                  duration:
-                                                                      const Duration(
-                                                                          seconds:
-                                                                              3),
-                                                                  content:
-                                                                      const Center(
-                                                                    child: Text(
-                                                                        'Item Deleted Successfully'),
-                                                                  ),
-                                                                  action:
-                                                                      SnackBarAction(
-                                                                    label: '',
-                                                                    onPressed:
-                                                                        () {},
-                                                                  ),
-                                                                ),
-                                                              );
-                                                            }
-                                                            Navigator.pop(
-                                                                context); // Close the dialog
-                                                            Navigator.pop(
-                                                                context); // Close the menu after tapping "Delete"
-                                                          },
-                                                          child: const Text(
-                                                            "Yes",
-                                                            style: TextStyle(
-                                                              color: Color
-                                                                  .fromARGB(
-                                                                      255,
-                                                                      4,
-                                                                      88,
-                                                                      36),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    : Container(),
                               ],
                             ),
-                          ))
-                      .toList(),
+                            Positioned(
+                              top: 8,
+                              left: 8,
+                              child: Text(
+                                "vjyhvjhyhj", // Replace with item['username']
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  backgroundColor: Colors.white,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: 8,
+                              right: 8,
+                              child: PopupMenuButton<String>(
+                                onSelected: (String value) {
+                                  // Handle the selected value
+                                },
+                                itemBuilder: (BuildContext context) {
+                                  return <String>['Option 1', 'Option 2']
+                                      .map((String choice) {
+                                    return PopupMenuItem<String>(
+                                      value: choice,
+                                      child: Text(choice),
+                                    );
+                                  }).toList();
+                                },
+                                icon: Icon(Icons.more_vert),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ))
                 ],
               ),
             )

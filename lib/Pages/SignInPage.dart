@@ -117,7 +117,7 @@ class _SignInPageState extends State<SignInPage> {
                     try {
                       var loginresponse = await login(payLoadLogin);
 
-                      print(loginresponse);
+                      // print(loginresponse);
                       saveValidtoken(loginresponse["data"]["token"]);
 
                       Navigator.pushAndRemoveUntil(
