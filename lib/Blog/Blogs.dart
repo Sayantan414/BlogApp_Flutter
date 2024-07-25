@@ -44,7 +44,7 @@ class _BlogsState extends State<Blogs> {
       setState(() {
         data = responseData;
         filteredData = data;
-        print(filteredData[0]['title']);
+        print(filteredData[0]['user'][0]['profilePhoto']);
         isLoading = false;
       });
     } catch (e) {
@@ -57,7 +57,7 @@ class _BlogsState extends State<Blogs> {
       filteredData = data.where((item) {
         String title = item["title"].toLowerCase();
         String body = item["description"].toLowerCase();
-        String username = item["fullname"].toLowerCase();
+        String username = item['user'][0]["fullname"].toLowerCase();
         return title.contains(query.toLowerCase()) ||
             body.contains(query.toLowerCase()) ||
             username.contains(query.toLowerCase());
@@ -112,62 +112,74 @@ class _BlogsState extends State<Blogs> {
                     ),
                   ),
                   ...filteredData.map((item) => Card(
-                        elevation: 3,
-                        margin: const EdgeInsets.only(top: 5),
-                        color: const Color.fromARGB(255, 206, 240, 206),
-                        child: Stack(
-                          children: <Widget>[
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Image.network(
-                                  item['photo'],
-                                  fit: BoxFit.cover,
-                                  height: 200,
-                                  width: double.infinity,
-                                ),
+                        elevation: 2,
+                        color: Color.fromARGB(255, 220, 250, 228),
+                        margin: EdgeInsets.only(top: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // First Row: CircleAvatar, Fullname, and PopupMenuButton
+                            Row(
+                              children: [
+                                // CircleAvatar with profile photo
                                 Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    item['title'],
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        "https://res.cloudinary.com/djs5memx8/image/upload/v1721902294/blog-api/nrap6pousx3h8hn8d2sc.webp"),
+                                    radius: 20, // Adjust the radius as needed
+                                    backgroundColor: Colors
+                                        .transparent, // Transparent background
+                                  ),
+                                ),
+                                SizedBox(
+                                    width: 8), // Space between avatar and text
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        bottom: 2.0, left: 3.0),
+                                    child: Text(
+                                      item['user'][0]['fullname'],
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16),
                                     ),
                                   ),
                                 ),
+                                PopupMenuButton<String>(
+                                  onSelected: (String value) {
+                                    // Handle menu item selection
+                                  },
+                                  itemBuilder: (BuildContext context) {
+                                    return {'Option 1', 'Option 2', 'Option 3'}
+                                        .map((String choice) {
+                                      return PopupMenuItem<String>(
+                                        value: choice,
+                                        child: Text(choice),
+                                      );
+                                    }).toList();
+                                  },
+                                  icon: Icon(Icons.more_vert),
+                                ),
                               ],
                             ),
-                            Positioned(
-                              top: 8,
-                              left: 8,
-                              child: Text(
-                                "vjyhvjhyhj", // Replace with item['username']
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                  backgroundColor: Colors.white,
-                                ),
+                            // Second Row: Image.network
+                            Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Image.network(
+                                item['photo'],
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: 200,
                               ),
                             ),
-                            Positioned(
-                              top: 8,
-                              right: 8,
-                              child: PopupMenuButton<String>(
-                                onSelected: (String value) {
-                                  // Handle the selected value
-                                },
-                                itemBuilder: (BuildContext context) {
-                                  return <String>['Option 1', 'Option 2']
-                                      .map((String choice) {
-                                    return PopupMenuItem<String>(
-                                      value: choice,
-                                      child: Text(choice),
-                                    );
-                                  }).toList();
-                                },
-                                icon: Icon(Icons.more_vert),
+                            // Third Row: Title
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                item['title'],
+                                style: TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
                               ),
                             ),
                           ],
