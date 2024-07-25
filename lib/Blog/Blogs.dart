@@ -4,6 +4,7 @@ import 'package:blogapp/Blog/Blog.dart';
 import 'package:blogapp/Blog/addBlog.dart';
 
 import 'package:blogapp/NetworkHandler.dart';
+import 'package:blogapp/Services/postService.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -31,37 +32,22 @@ class _BlogsState extends State<Blogs> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    username = getUsername();
     fetchData();
   }
 
   void fetchData() async {
     try {
       isLoading = true;
-      var response = await networkHandler.get(widget.url);
-      var responseData = json.decode(response);
+      var responseData = await await fetchAllPost();
       print(responseData);
 
       setState(() {
-        data = responseData;
+        data = responseData as List;
         filteredData = data;
         isLoading = false;
       });
-      fetchDp();
     } catch (e) {
       print('Error fetching data: $e');
-    }
-  }
-
-  Future<void> fetchDp() async {
-    for (var element in data) {
-      var res = await networkHandler.get("/user/${element['username']}");
-      var resData = json.decode(res);
-      var dp = resData['data']['dp'];
-      print(dp);
-      setState(() {
-        element['dp'] = dp;
-      });
     }
   }
 
@@ -69,8 +55,8 @@ class _BlogsState extends State<Blogs> {
     setState(() {
       filteredData = data.where((item) {
         String title = item["title"].toLowerCase();
-        String body = item["body"].toLowerCase();
-        String username = item["username"].toLowerCase();
+        String body = item["description"].toLowerCase();
+        String username = item["fullname"].toLowerCase();
         return title.contains(query.toLowerCase()) ||
             body.contains(query.toLowerCase()) ||
             username.contains(query.toLowerCase());
@@ -150,7 +136,7 @@ class _BlogsState extends State<Blogs> {
                                         ),
                                         const SizedBox(width: 8),
                                         Text(
-                                          item["username"],
+                                          item["fullname"],
                                           style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 14,
@@ -254,7 +240,8 @@ class _BlogsState extends State<Blogs> {
                                           ),
                                         ),
                                         Text(
-                                          _truncateText(item["body"], 100),
+                                          _truncateText(
+                                              item["description"], 100),
                                           style: GoogleFonts.specialElite(
                                               textStyle: const TextStyle(
                                             // fontWeight: FontWeight.bold,
@@ -275,8 +262,8 @@ class _BlogsState extends State<Blogs> {
                                           MaterialPageRoute(
                                             builder: (context) => Blog(
                                                 title: item["title"],
-                                                body: item["body"],
-                                                username: item["username"],
+                                                body: item["description"],
+                                                username: item["fullname"],
                                                 dp: item["dp"],
                                                 id: item["_id"],
                                                 likes: item['like']),

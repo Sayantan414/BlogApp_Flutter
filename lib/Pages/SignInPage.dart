@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:blogapp/Pages/HomePage.dart';
 import 'package:blogapp/Pages/SignUpPage.dart';
+import 'package:blogapp/Services/userService.dart';
+import 'package:blogapp/Utils/functions.dart';
 import "package:flutter/material.dart";
 
 class SignInPage extends StatefulWidget {
@@ -16,7 +18,7 @@ class _SignInPageState extends State<SignInPage> {
   bool vis = true;
   final _globalkey = GlobalKey<FormState>();
   NetworkHandler networkHandler = NetworkHandler();
-  TextEditingController _usernameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   String? errorText = null;
   bool validate = false;
@@ -56,7 +58,7 @@ class _SignInPageState extends State<SignInPage> {
                 const SizedBox(
                   height: 20,
                 ),
-                usernameTextField(),
+                emailTextField(),
                 SizedBox(
                   height: 15,
                 ),
@@ -106,42 +108,25 @@ class _SignInPageState extends State<SignInPage> {
                       circular = true;
                     });
 
-                    //Login Logic start here
-                    Map<String, String> data = {
-                      "username": _usernameController.text,
-                      "password": _passwordController.text,
+                    var payLoadLogin = {
+                      // "email": _emailController.text,
+                      // "password": _passwordController.text,
+                      "email": "admin@gmail.com",
+                      "password": "12345"
                     };
                     try {
-                      var response =
-                          await networkHandler.post("/user/login", data);
+                      var loginresponse = await login(payLoadLogin);
 
-                      if (response.statusCode == 200 ||
-                          response.statusCode == 201) {
-                        Map<String, dynamic> output =
-                            json.decode(response.body);
-                        print(output);
+                      print(loginresponse);
+                      saveValidtoken(loginresponse["data"]["token"]);
 
-                        savetoken(output["token"]);
-                        saveDp(output["dp"]);
-                        saveUsername(output["username"]);
-                        // await storage.write(key: "token", value: output["token"]);
-                        setState(() {
-                          validate = true;
-                          circular = false;
-                        });
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(builder: (context) => HomePage()),
-                            ((route) => false));
-                      } else {
-                        String output = json.decode(response.body);
-                        setState(() {
-                          validate = false;
-                          errorText = output;
-                          circular = false;
-                        });
-                      }
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                          ((route) => false));
                     } catch (e) {
+                      validate = false;
+                      circular = false;
                       print(e);
                     }
 
@@ -179,12 +164,12 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  Widget usernameTextField() {
+  Widget emailTextField() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          "Username",
+          "Email",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -193,10 +178,10 @@ class _SignInPageState extends State<SignInPage> {
         ),
         const SizedBox(height: 8), // Add spacing between Text and TextFormField
         TextFormField(
-          controller: _usernameController,
+          controller: _emailController,
           style: TextStyle(color: Colors.black), // Set text color to black
           decoration: InputDecoration(
-            hintText: "Enter your username",
+            hintText: "Enter your email",
             hintStyle: TextStyle(color: Colors.grey), // Set hint text color
             errorText: validate ? null : errorText,
             filled: true, // Set to true to fill the box with color

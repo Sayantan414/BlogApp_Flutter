@@ -3,6 +3,8 @@ import 'dart:math';
 
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:blogapp/Pages/HomePage.dart';
+import 'package:blogapp/Services/userService.dart';
+import 'package:blogapp/Utils/functions.dart';
 import "package:flutter/material.dart";
 
 class SignUpPage extends StatefulWidget {
@@ -16,7 +18,10 @@ class _SignUpPageState extends State<SignUpPage> {
   bool vis = true;
   final _globalkey = GlobalKey<FormState>();
   NetworkHandler networkHandler = NetworkHandler();
+  TextEditingController _firstnameController = TextEditingController();
+  TextEditingController _lastnameController = TextEditingController();
   TextEditingController _usernameController = TextEditingController();
+
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   // ignore: avoid_init_to_null
@@ -40,9 +45,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    int randomIndex = random.nextInt(strings.length);
-    String randomString = strings[randomIndex];
-
     return Scaffold(
       body: Container(
         // height: MediaQuery.of(context).size.height,
@@ -60,7 +62,7 @@ class _SignUpPageState extends State<SignUpPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "Sign up with email",
+                "Register",
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -71,77 +73,108 @@ class _SignUpPageState extends State<SignUpPage> {
               const SizedBox(
                 height: 20,
               ),
-              usernameTextField(),
+              firstnameTextField(),
+              lastnameTextField(),
               emailTextField(),
               passwordTextField(),
               const SizedBox(
                 height: 20,
               ),
               InkWell(
+                // onTap: () async {
+                //   setState(() {
+                //     circular = true;
+                //   });
+                //   await checkUser();
+                //   if (_globalkey.currentState!.validate() && validate) {
+                //     Map<String, String> data = {
+                //       "firstname": _firstnameController.text,
+                //       "lastname": _lastnameController.text,
+                //       "email": _emailController.text,
+                //       "password": _passwordController.text,
+                //     };
+                //     print(data);
+                //     var responseRegister =
+                //         await networkHandler.post("/user/register", data);
+
+                //     if (responseRegister.statusCode == 200 ||
+                //         responseRegister.statusCode == 201) {
+                //       // print(responseRegister.body);
+
+                //       Map<String, String> data = {
+                //         "email": _emailController.text,
+                //         "password": _passwordController.text,
+                //       };
+                //       var response =
+                //           await networkHandler.post("/login", data);
+
+                //       // print(response.body);
+
+                //       if (response.statusCode == 200 ||
+                //           response.statusCode == 201) {
+                //         Map<String, dynamic> output =
+                //             json.decode(response.body);
+                //         print(output);
+
+                //         savetoken(output["token"]);
+                //         saveDp(output["dp"]);
+                //         saveUsername(output["username"]);
+
+                //         setState(() {
+                //           validate = true;
+                //           circular = false;
+                //         });
+                //         Navigator.pushAndRemoveUntil(
+                //             context,
+                //             MaterialPageRoute(
+                //               builder: (context) => HomePage(),
+                //             ),
+                //             (route) => false);
+                //       } else {
+                //         ScaffoldMessenger.of(context).showSnackBar(
+                //           const SnackBar(
+                //             content: Text('Network error!'),
+                //           ),
+                //         );
+                //       }
+                //       setState(() {
+                //         circular = false;
+                //       });
+                //     } else {
+                //       setState(() {
+                //         circular = false;
+                //       });
+                //     }
+                //   }
+                // },
                 onTap: () async {
-                  setState(() {
-                    circular = true;
-                  });
-                  await checkUser();
-                  if (_globalkey.currentState!.validate() && validate) {
-                    Map<String, String> data = {
-                      "username": _usernameController.text,
+                  var payLoad = {
+                    "firstname": _firstnameController.text,
+                    "lastname": _lastnameController.text,
+                    "email": _emailController.text,
+                    "password": _passwordController.text,
+                  };
+
+                  try {
+                    var r = await register(payLoad);
+
+                    print(r);
+
+                    var payLoadLogin = {
                       "email": _emailController.text,
                       "password": _passwordController.text,
-                      "dp": randomString
                     };
-                    print(data);
-                    var responseRegister =
-                        await networkHandler.post("/user/register", data);
 
-                    if (responseRegister.statusCode == 200 ||
-                        responseRegister.statusCode == 201) {
-                      // print(responseRegister.body);
+                    try {
+                      var loginresponse = await login(payLoadLogin);
 
-                      Map<String, String> data = {
-                        "username": _usernameController.text,
-                        "password": _passwordController.text,
-                      };
-                      var response =
-                          await networkHandler.post("/user/login", data);
-
-                      // print(response.body);
-
-                      if (response.statusCode == 200 ||
-                          response.statusCode == 201) {
-                        Map<String, dynamic> output =
-                            json.decode(response.body);
-                        print(output);
-
-                        savetoken(output["token"]);
-                        saveDp(output["dp"]);
-                        saveUsername(output["username"]);
-
-                        setState(() {
-                          validate = true;
-                          circular = false;
-                        });
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => HomePage(),
-                            ),
-                            (route) => false);
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Network error!'),
-                          ),
-                        );
-                      }
-                      setState(() {
-                        circular = false;
-                      });
-                    } else {
-                      setState(() {
-                        circular = false;
-                      });
+                      print(loginresponse);
+                      saveValidtoken(loginresponse["data"]["token"]);
+                    } catch (e) {
+                      print(e);
                     }
+                  } catch (e) {
+                    print(e);
                   }
                 },
                 child: circular
@@ -197,14 +230,14 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
-  Widget usernameTextField() {
+  Widget firstnameTextField() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            "Username",
+            "Firstname",
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -213,7 +246,53 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
           SizedBox(height: 8), // Add spacing between Text and TextFormField
           TextFormField(
-            controller: _usernameController,
+            controller: _firstnameController,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Color.fromARGB(255, 226, 241, 221),
+              errorText: validate ? null : errorText,
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black, width: 2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey[400]!, width: 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red, width: 2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.red, width: 2),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              contentPadding:
+                  EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget lastnameTextField() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "Lastname",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+            ),
+          ),
+          SizedBox(height: 8), // Add spacing between Text and TextFormField
+          TextFormField(
+            controller: _lastnameController,
             decoration: InputDecoration(
               filled: true,
               fillColor: Color.fromARGB(255, 226, 241, 221),

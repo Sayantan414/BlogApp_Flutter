@@ -17,11 +17,7 @@ class _HomePageState extends State<HomePage> {
   int currentState = 0;
   List<Widget> widgets = [HomeScreen(), ProfileScreen()];
   List<String> titleString = ["Home Page", "Profile Page"];
-  // final storage = FlutterSecureStorage();
-  NetworkHandler networkHandler = NetworkHandler();
-  String username = "";
-  String dp = "";
-  late Map<String, dynamic> responseData;
+  // late Map<String, dynamic> responseData;
 
   Widget profilePhoto = Container(
     height: 100,
@@ -36,66 +32,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    dp = getDp();
-    print(dp);
-    username = getUsername();
-    print("Data: " + username);
-    // checkProfile();
-  }
-
-  void checkProfile() async {
-    try {
-      var response = await networkHandler.get("/profile/checkProfile");
-      print(response);
-      bool status = response["status"];
-      print(status);
-      if (status == true) {
-        setState(() {
-          fetchData();
-        });
-      } else {
-        setState(() {
-          profilePhoto = Container(
-            height: 100,
-            width: 100,
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(50),
-            ),
-          );
-        });
-      }
-    } catch (e) {
-      profilePhoto = Container(
-        height: 100,
-        width: 100,
-        decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(50),
-        ),
-      );
-    }
-  }
-
-  void fetchData() async {
-    try {
-      var response = await networkHandler.get("/profile/getData");
-      if (response != null && response["data"] != null) {
-        responseData = response["data"];
-        print(responseData);
-        setState(() {
-          profilePhoto = CircleAvatar(
-            radius: 50,
-            backgroundImage:
-                NetworkHandler().getImage(responseData['username']),
-          );
-        });
-      } else {
-        print("Response is null or doesn't contain data");
-      }
-    } catch (e) {
-      print("Error fetching data: $e");
-    }
   }
 
   @override
@@ -112,10 +48,11 @@ class _HomePageState extends State<HomePage> {
               ),
               child: Column(
                 children: <Widget>[
-                  profilePhoto = CircleAvatar(
+                  profilePhoto = const CircleAvatar(
                     radius: 50,
                     backgroundColor: Color.fromARGB(255, 147, 222, 151),
-                    backgroundImage: AssetImage("assets/${dp}"),
+                    backgroundImage: AssetImage(
+                        "https://res.cloudinary.com/djs5memx8/image/upload/v1721902294/blog-api/nrap6pousx3h8hn8d2sc.webp"),
                   ),
                   const SizedBox(
                     height: 10,
