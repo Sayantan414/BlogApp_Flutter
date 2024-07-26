@@ -49,11 +49,18 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: <Widget>[
                   profilePhoto = const CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Color.fromARGB(255, 147, 222, 151),
-                    backgroundImage: AssetImage(
+                    backgroundImage: NetworkImage(
                         "https://res.cloudinary.com/djs5memx8/image/upload/v1721902294/blog-api/nrap6pousx3h8hn8d2sc.webp"),
+                    radius: 50, // Adjust the radius as needed
+                    backgroundColor: Color.fromARGB(255, 147, 222, 151),
                   ),
+
+                  // const CircleAvatar(
+                  //   radius: 50,
+                  //   backgroundColor: Color.fromARGB(255, 147, 222, 151),
+                  //   backgroundImage: AssetImage(
+                  //       "https://res.cloudinary.com/djs5memx8/image/upload/v1721902294/blog-api/nrap6pousx3h8hn8d2sc.webp"),
+                  // ),
                   const SizedBox(
                     height: 10,
                   ),

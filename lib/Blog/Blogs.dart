@@ -44,7 +44,7 @@ class _BlogsState extends State<Blogs> {
       setState(() {
         data = responseData;
         filteredData = data;
-        print(filteredData[0]['user'][0]['profilePhoto']);
+        print(filteredData[0]['viewsCount']);
         isLoading = false;
       });
     } catch (e) {
@@ -57,10 +57,10 @@ class _BlogsState extends State<Blogs> {
       filteredData = data.where((item) {
         String title = item["title"].toLowerCase();
         String body = item["description"].toLowerCase();
-        String username = item['user'][0]["fullname"].toLowerCase();
+        String fullname = item['user'][0]["fullname"].toLowerCase();
         return title.contains(query.toLowerCase()) ||
             body.contains(query.toLowerCase()) ||
-            username.contains(query.toLowerCase());
+            fullname.contains(query.toLowerCase());
       }).toList();
     });
   }
@@ -111,78 +111,168 @@ class _BlogsState extends State<Blogs> {
                       ),
                     ),
                   ),
-                  ...filteredData.map((item) => Card(
-                        elevation: 2,
-                        color: Color.fromARGB(255, 220, 250, 228),
-                        margin: EdgeInsets.only(top: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // First Row: CircleAvatar, Fullname, and PopupMenuButton
-                            Row(
-                              children: [
-                                // CircleAvatar with profile photo
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        "https://res.cloudinary.com/djs5memx8/image/upload/v1721902294/blog-api/nrap6pousx3h8hn8d2sc.webp"),
-                                    radius: 20, // Adjust the radius as needed
-                                    backgroundColor: Colors
-                                        .transparent, // Transparent background
+                  ...filteredData.map((item) => InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Blog(post: item),
+                            ),
+                          );
+                        },
+                        child: Card(
+                          elevation: 2,
+                          color: Color.fromARGB(255, 205, 241, 205),
+                          margin: EdgeInsets.only(top: 10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // First Row: CircleAvatar, Fullname, and PopupMenuButton
+                              Row(
+                                children: [
+                                  // CircleAvatar with profile photo
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(left: 8.0, bottom: 2.0),
+                                    child: item['user'][0]['profilePhoto'] !=
+                                            null
+                                        ? CircleAvatar(
+                                            backgroundImage: NetworkImage(
+                                                item['user'][0]
+                                                    ['profilePhoto']),
+                                            radius:
+                                                17, // Adjust the radius as needed
+                                            backgroundColor: Colors
+                                                .transparent, // Transparent background
+                                          )
+                                        : const CircleAvatar(
+                                            backgroundImage:
+                                                AssetImage('assets/nouser.png'),
+                                            radius:
+                                                17, // Adjust the radius as needed
+                                            backgroundColor: Colors
+                                                .transparent, // Transparent background
+                                          ),
                                   ),
+                                  const SizedBox(
+                                      width:
+                                          8), // Space between avatar and text
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          bottom: 2.0, left: 1.0),
+                                      child: Text(
+                                        item['user'][0]['fullname'],
+                                        style: GoogleFonts.specialElite(
+                                          textStyle: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                            color:
+                                                Color.fromARGB(255, 51, 51, 51),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  PopupMenuButton<String>(
+                                    onSelected: (String value) {
+                                      // Handle menu item selection
+                                    },
+                                    itemBuilder: (BuildContext context) {
+                                      return {
+                                        'Option 1',
+                                        'Option 2',
+                                        'Option 3'
+                                      }.map((String choice) {
+                                        return PopupMenuItem<String>(
+                                          value: choice,
+                                          child: Text(choice),
+                                        );
+                                      }).toList();
+                                    },
+                                    icon: Icon(Icons.more_vert),
+                                  ),
+                                ],
+                              ),
+                              // Second Row: Image.network
+                              Padding(
+                                padding: const EdgeInsets.all(2.0),
+                                child: Image.network(
+                                  item['photo'],
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: 200,
                                 ),
-                                SizedBox(
-                                    width: 8), // Space between avatar and text
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        bottom: 2.0, left: 3.0),
-                                    child: Text(
-                                      item['user'][0]['fullname'],
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
+                              ),
+                              // Third Row: Title
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 8.0, left: 8.0),
+                                child: Text(
+                                  item['title'],
+                                  // "bcfjke jfkrenif jfioerjiof jferido nvcjrkdnivonrio vnijevinreio jionion",
+                                  style: GoogleFonts.specialElite(
+                                    textStyle: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Color.fromARGB(255, 0, 128, 0),
                                     ),
                                   ),
                                 ),
-                                PopupMenuButton<String>(
-                                  onSelected: (String value) {
-                                    // Handle menu item selection
-                                  },
-                                  itemBuilder: (BuildContext context) {
-                                    return {'Option 1', 'Option 2', 'Option 3'}
-                                        .map((String choice) {
-                                      return PopupMenuItem<String>(
-                                        value: choice,
-                                        child: Text(choice),
-                                      );
-                                    }).toList();
-                                  },
-                                  icon: Icon(Icons.more_vert),
+                              ),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0,
                                 ),
-                              ],
-                            ),
-                            // Second Row: Image.network
-                            Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Image.network(
-                                item['photo'],
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                height: 200,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                          icon:
+                                              Icon(Icons.thumb_up_alt_outlined),
+                                          color: Color.fromARGB(255, 1, 42, 19),
+                                          onPressed: () {
+                                            // Handle like action
+                                          },
+                                        ),
+                                        Text(item['likesCount'].toString()),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                          icon: Icon(Icons.comment),
+                                          color: Color.fromARGB(255, 1, 42, 19),
+                                          onPressed: () {
+                                            // Handle comment action
+                                          },
+                                        ),
+                                        Text(item['commentsCount'] != null
+                                            ? item['commentsCount'].toString()
+                                            : "0"),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        IconButton(
+                                          icon: Icon(Icons.visibility),
+                                          color: Color.fromARGB(255, 1, 42, 19),
+                                          onPressed: () {
+                                            // Handle view action
+                                          },
+                                        ),
+                                        Text(item['viewsCount'].toString()),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            // Third Row: Title
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                item['title'],
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ))
                 ],
