@@ -53,7 +53,7 @@ class _BlogState extends State<Blog> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(1.0),
+          padding: const EdgeInsets.all(0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -70,8 +70,8 @@ class _BlogState extends State<Blog> {
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, top: 8.0),
                 child: Text(
-                  // widget.post['title'],
-                  "grvbre jgvbuerihngivu hvureuiv hnvuire hiuovreuoih",
+                  widget.post['title'],
+                  // "grvbre jgvbuerihngivu hvureuiv hnvuire hiuovreuoih",
                   style: GoogleFonts.specialElite(
                       textStyle: const TextStyle(
                     fontWeight: FontWeight.bold,
@@ -97,10 +97,10 @@ class _BlogState extends State<Blog> {
                       padding: const EdgeInsets.only(left: 8.0),
                       child: Text(
                         '• By ' + widget.post['user'][0]['fullname'],
-                        style: GoogleFonts.coveredByYourGrace(
+                        style: GoogleFonts.lato(
                           textStyle: const TextStyle(
                             // fontWeight: FontWeight.bold,
-                            fontSize: 20,
+                            fontSize: 16,
                             color: Colors.black,
                           ),
                         ),
@@ -133,6 +133,14 @@ class _BlogState extends State<Blog> {
                                 Colors.transparent, // Transparent background
                           ),
                   ),
+                  Expanded(
+                      child: Padding(
+                    padding: const EdgeInsets.only(right: 20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [Text("• " + widget.post['daysAgo'])],
+                    ),
+                  ))
                   //   Expanded(
                   //     child: Padding(
                   //       padding: const EdgeInsets.only(right: 15.0),
@@ -226,63 +234,107 @@ class _BlogState extends State<Blog> {
               ),
 
               Padding(
-                padding: const EdgeInsets.only(left: 5.0, right: 5.0, top: 4.0),
+                padding:
+                    const EdgeInsets.only(left: 5.0, right: 5.0, top: 12.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     // Like button
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.thumb_up_alt_outlined),
-                          onPressed: () {
-                            // Handle like action
-                            print('Liked');
-                          },
+                    SizedBox(
+                      width: 95.0, // Set the width as needed
+                      height: 30.0, // Set desired height
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          // Handle like action
+                          print('Liked');
+                        },
+                        icon: Icon(Icons.thumb_up_alt_outlined,
+                            size: 22, color: Colors.green),
+                        label: Expanded(
+                          child: Text(
+                            widget.post['likesCount'].toString(),
+                            // "20M",
+                            style: TextStyle(color: Colors.black, fontSize: 12),
+                            overflow:
+                                TextOverflow.ellipsis, // Handles text overflow
+                          ),
                         ),
-                        Text(widget.post['likesCount'].toString()),
-                      ],
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: Colors.green),
+                        ),
+                      ),
                     ),
                     // Dislike button
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.thumb_down_alt_outlined),
-                          onPressed: () {
-                            // Handle dislike action
-                            print('Disliked');
-                          },
+                    SizedBox(
+                      width: 95.0, // Set the width as needed
+                      height: 30.0, // Set desired height
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          // Handle dislike action
+                          print('Disliked');
+                        },
+                        icon: Icon(Icons.thumb_down_alt_outlined,
+                            size: 22, color: Colors.red),
+                        label: Expanded(
+                          child: Text(
+                            widget.post['disLikesCount'] != null
+                                ? widget.post['disLikesCount'].toString()
+                                : "0",
+                            style: TextStyle(color: Colors.black, fontSize: 12),
+                            overflow:
+                                TextOverflow.ellipsis, // Handles text overflow
+                          ),
                         ),
-                        Text('Dislikes'),
-                      ],
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: Colors.red),
+                        ),
+                      ),
                     ),
                     // View button
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.visibility),
-                          onPressed: () {
-                            // Handle view action
-                            print('Viewed');
-                          },
+                    SizedBox(
+                      width: 95.0, // Set the width as needed
+                      height: 30.0, // Set desired height
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          // Handle view action
+                          print('Viewed');
+                        },
+                        icon: Icon(Icons.visibility,
+                            size: 22, color: Colors.blue),
+                        label: Expanded(
+                          child: Text(
+                            widget.post['viewsCount'].toString(),
+                            style: TextStyle(color: Colors.black, fontSize: 12),
+                            overflow:
+                                TextOverflow.ellipsis, // Handles text overflow
+                          ),
                         ),
-                        Text(widget.post['viewsCount'].toString()),
-                      ],
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: Colors.blue),
+                        ),
+                      ),
                     ),
                     // Active button
-                    OutlinedButton(
-                      onPressed: () {
-                        // Handle active action
-                        print('Active');
-                      },
-                      style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: Colors.green),
-                        // primary: Colors.green,
-                      ),
-                      child: const Text(
-                        'Active',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 4, 88, 36),
+                    SizedBox(
+                      width: 100.0, // Set the width as needed
+                      height: 30.0, // Set the height as needed
+                      child: OutlinedButton(
+                        onPressed: () {
+                          // Handle active action
+                          print('Active');
+                        },
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: Colors.green),
+                        ),
+                        child: const Expanded(
+                          child: Text(
+                            'Unfollow',
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 4, 88, 36),
+                                fontSize: 12),
+                            overflow:
+                                TextOverflow.ellipsis, // Handles text overflow
+                          ),
                         ),
                       ),
                     ),

@@ -120,152 +120,183 @@ class _BlogsState extends State<Blogs> {
                             ),
                           );
                         },
-                        child: Card(
-                          elevation: 2,
-                          color: Color.fromARGB(255, 205, 241, 205),
-                          margin: EdgeInsets.only(top: 10),
+                        child: Container(
+                          margin:
+                              EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            gradient: const LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Color.fromARGB(255, 220, 244, 209),
+                                Color.fromARGB(255, 235, 250, 220),
+                                Color.fromARGB(255, 200, 230, 190),
+                              ],
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 5,
+                                blurRadius: 7,
+                                offset:
+                                    Offset(0, 3), // changes position of shadow
+                              ),
+                            ],
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               // First Row: CircleAvatar, Fullname, and PopupMenuButton
-                              Row(
-                                children: [
-                                  // CircleAvatar with profile photo
-                                  Padding(
-                                    padding:
-                                        EdgeInsets.only(left: 8.0, bottom: 2.0),
-                                    child: item['user'][0]['profilePhoto'] !=
-                                            null
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    // CircleAvatar with profile photo
+                                    item['user'][0]['profilePhoto'] != null
                                         ? CircleAvatar(
                                             backgroundImage: NetworkImage(
                                                 item['user'][0]
                                                     ['profilePhoto']),
-                                            radius:
-                                                17, // Adjust the radius as needed
-                                            backgroundColor: Colors
-                                                .transparent, // Transparent background
+                                            radius: 20,
+                                            backgroundColor: Colors.transparent,
                                           )
                                         : const CircleAvatar(
                                             backgroundImage:
                                                 AssetImage('assets/nouser.png'),
-                                            radius:
-                                                17, // Adjust the radius as needed
-                                            backgroundColor: Colors
-                                                .transparent, // Transparent background
+                                            radius: 20,
+                                            backgroundColor: Colors.transparent,
                                           ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            item['user'][0]['fullname'],
+                                            style: GoogleFonts.roboto(
+                                              textStyle: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                                color: Color.fromARGB(
+                                                    255, 51, 51, 51),
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            item[
+                                                'daysAgo'], // Replace with actual timestamp
+                                            style: GoogleFonts.roboto(
+                                              textStyle: const TextStyle(
+                                                fontSize: 12,
+                                                color: Color.fromARGB(
+                                                    255, 96, 95, 95),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    PopupMenuButton<String>(
+                                      onSelected: (String value) {
+                                        // Handle menu item selection
+                                      },
+                                      itemBuilder: (BuildContext context) {
+                                        return {
+                                          'Option 1',
+                                          'Option 2',
+                                          'Option 3'
+                                        }.map((String choice) {
+                                          return PopupMenuItem<String>(
+                                            value: choice,
+                                            child: Text(choice),
+                                          );
+                                        }).toList();
+                                      },
+                                      icon: Icon(Icons.more_vert),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              // Post Image
+                              if (item['photo'] != null)
+                                ClipRRect(
+                                  borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(12)),
+                                  child: Image.network(
+                                    item['photo'],
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    height: 200,
                                   ),
-                                  const SizedBox(
-                                      width:
-                                          8), // Space between avatar and text
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          bottom: 2.0, left: 1.0),
-                                      child: Text(
-                                        item['user'][0]['fullname'],
-                                        style: GoogleFonts.specialElite(
-                                          textStyle: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                            color:
-                                                Color.fromARGB(255, 51, 51, 51),
-                                          ),
-                                        ),
+                                ),
+                              // Post Description or Title
+                              if (item['title'] != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 12.0, left: 12.0),
+                                  child: Text(
+                                    item['title'],
+                                    // "vyhfytfyt ftyfytfdytf fyfytytfy ftys4aarest tguyviugi",
+                                    style: GoogleFonts.roboto(
+                                      textStyle: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: Color.fromARGB(255, 87, 86, 86),
                                       ),
                                     ),
                                   ),
-                                  PopupMenuButton<String>(
-                                    onSelected: (String value) {
-                                      // Handle menu item selection
-                                    },
-                                    itemBuilder: (BuildContext context) {
-                                      return {
-                                        'Option 1',
-                                        'Option 2',
-                                        'Option 3'
-                                      }.map((String choice) {
-                                        return PopupMenuItem<String>(
-                                          value: choice,
-                                          child: Text(choice),
-                                        );
-                                      }).toList();
-                                    },
-                                    icon: Icon(Icons.more_vert),
-                                  ),
-                                ],
-                              ),
-                              // Second Row: Image.network
-                              Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: Image.network(
-                                  item['photo'],
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  height: 200,
                                 ),
-                              ),
-                              // Third Row: Title
-                              Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 8.0, left: 8.0),
-                                child: Text(
-                                  item['title'],
-                                  // "bcfjke jfkrenif jfioerjiof jferido nvcjrkdnivonrio vnijevinreio jionion",
-                                  style: GoogleFonts.specialElite(
-                                    textStyle: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-                                      color: Color.fromARGB(255, 0, 128, 0),
-                                    ),
-                                  ),
-                                ),
-                              ),
-
+                              // Post Interaction
                               Padding(
                                 padding: const EdgeInsets.symmetric(
-                                  horizontal: 8.0,
-                                ),
+                                    horizontal: 12.0, vertical: 4.0),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
+                                    // Views text on the left
                                     Row(
                                       children: [
-                                        IconButton(
-                                          icon:
-                                              Icon(Icons.thumb_up_alt_outlined),
-                                          color: Color.fromARGB(255, 1, 42, 19),
-                                          onPressed: () {
-                                            // Handle like action
-                                          },
+                                        const Icon(
+                                          Icons.visibility,
+                                          size: 22,
+                                          color: Colors.blue,
                                         ),
-                                        Text(item['likesCount'].toString()),
+                                        const SizedBox(
+                                            width:
+                                                8), // Space between icon and text
+                                        Text(
+                                          item['viewsCount'].toString(),
+                                          style: const TextStyle(
+                                            color:
+                                                Color.fromARGB(255, 1, 42, 19),
+                                            fontSize: 14,
+                                          ),
+                                        ),
                                       ],
                                     ),
+                                    // Likes text on the right
                                     Row(
                                       children: [
-                                        IconButton(
-                                          icon: Icon(Icons.comment),
-                                          color: Color.fromARGB(255, 1, 42, 19),
-                                          onPressed: () {
-                                            // Handle comment action
-                                          },
+                                        const Icon(
+                                          Icons.thumb_up,
+                                          size: 22,
+                                          color:
+                                              Color.fromARGB(255, 39, 174, 96),
                                         ),
-                                        Text(item['commentsCount'] != null
-                                            ? item['commentsCount'].toString()
-                                            : "0"),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        IconButton(
-                                          icon: Icon(Icons.visibility),
-                                          color: Color.fromARGB(255, 1, 42, 19),
-                                          onPressed: () {
-                                            // Handle view action
-                                          },
+                                        const SizedBox(
+                                            width:
+                                                8), // Space between icon and text
+                                        Text(
+                                          item['likesCount'].toString(),
+                                          style: const TextStyle(
+                                            color:
+                                                Color.fromARGB(255, 1, 42, 19),
+                                            fontSize: 14,
+                                          ),
                                         ),
-                                        Text(item['viewsCount'].toString()),
                                       ],
                                     ),
                                   ],
