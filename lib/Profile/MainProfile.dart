@@ -13,7 +13,7 @@ class MainProfile extends StatefulWidget {
 }
 
 class _MainProfileState extends State<MainProfile> {
-  bool circular = true;
+  bool circular = false;
   NetworkHandler networkHandler = NetworkHandler();
   String dp = "";
 
@@ -21,9 +21,9 @@ class _MainProfileState extends State<MainProfile> {
   @override
   void initState() {
     super.initState();
-    dp = getDp();
+    // dp = getDp();
 
-    fetchData();
+    // fetchData();
   }
 
   void fetchData() async {
@@ -85,20 +85,20 @@ class _MainProfileState extends State<MainProfile> {
                 Divider(
                   thickness: 0.8,
                 ),
-                otherDetails("About", responseData['about'] ?? ""),
-                otherDetails("Name", responseData['name'] ?? ""),
-                otherDetails("Profession", responseData['profession'] ?? ""),
-                otherDetails("DOB", responseData['DOB'] ?? ""),
+                otherDetails("About", "test"),
+                otherDetails("Name", "test"),
+                otherDetails("Profession", "test"),
+                otherDetails("DOB", "test"),
                 const Divider(
                   thickness: 0.8,
                 ),
                 const SizedBox(
                   height: 20,
                 ),
-                const Blogs(
-                  url: "/blogpost/getOwnBlog",
-                  type: "Own",
-                ),
+                // const Blogs(
+                //   url: "/blogpost/getOwnBlog",
+                //   type: "Own",
+                // ),
               ],
             ),
     );
@@ -114,17 +114,17 @@ class _MainProfileState extends State<MainProfile> {
             child: CircleAvatar(
               radius: 50,
               backgroundColor: Color.fromARGB(255, 225, 235, 225),
-              backgroundImage: AssetImage("assets/${dp}"),
+              backgroundImage: AssetImage("assets/nouser.png"),
             ),
           ),
           Text(
-            responseData['username'] ?? "",
+            "Username",
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(
             height: 10,
           ),
-          Text(responseData['titleline'] ?? "")
+          Text("titleLine")
         ],
       ),
     );

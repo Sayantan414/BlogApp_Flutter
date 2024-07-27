@@ -14,98 +14,143 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  bool circular = false;
   NetworkHandler networkHandler = NetworkHandler();
-  Widget page = const CircularProgressIndicator(
-      value: null, valueColor: AlwaysStoppedAnimation<Color>(Colors.green));
+  String dp = "";
+
+  late Map<String, dynamic> responseData;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    checkProfile();
+    // dp = getDp();
+
+    // fetchData();
   }
 
-  void checkProfile() async {
+  void fetchData() async {
     try {
-      var response = await networkHandler.get("/profile/checkProfile");
-      print("data" + response);
-      var responseData = json.decode(response);
-      bool status = responseData["status"];
-      print(status);
-      if (status == true) {
+      var response = await networkHandler.get("/profile/getData");
+      var data = json.decode(response);
+      print(data);
+      if (data != null && data["data"] != null) {
+        responseData = data["data"];
+
         setState(() {
-          page = MainProfile();
+          circular = false;
         });
       } else {
-        setState(() {
-          page = button();
-        });
+        print("Response is null or doesn't contain data");
       }
     } catch (e) {
-      setState(() {
-        page = button();
-      });
+      print("Error fetching data: $e");
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(98, 197, 222, 184),
-      body: Padding(
-        padding: const EdgeInsets.all(2),
-        child: page,
+      backgroundColor: const Color.fromARGB(255, 225, 235, 225),
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 225, 235, 225),
+        elevation: 0,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(
+                      builder: (context) =>
+                          CreateProfile(type: "Edit", data: responseData)))
+                  .then((value) => setState(() {
+                        if (value.runtimeType == String)
+                          dp = getDp();
+                        else
+                          responseData = value;
+                        dp = getDp();
+                      }));
+            },
+            color: Colors.black,
+          ),
+        ],
+      ),
+      body: circular
+          ? const Center(
+              child: CircularProgressIndicator(
+              value: null,
+              valueColor: AlwaysStoppedAnimation<Color>(
+                  Colors.green), // Color of the progress indicator
+            ))
+          : ListView(
+              children: <Widget>[
+                head(),
+                Divider(
+                  thickness: 0.8,
+                ),
+                otherDetails("About", "test"),
+                otherDetails("Name", "test"),
+                otherDetails("Profession", "test"),
+                otherDetails("DOB", "test"),
+                const Divider(
+                  thickness: 0.8,
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                // const Blogs(
+                //   url: "/blogpost/getOwnBlog",
+                //   type: "Own",
+                // ),
+              ],
+            ),
+    );
+  }
+
+  Widget head() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Center(
+            child: CircleAvatar(
+              radius: 50,
+              backgroundColor: Color.fromARGB(255, 225, 235, 225),
+              backgroundImage: AssetImage("assets/nouser.png"),
+            ),
+          ),
+          Text(
+            "Username",
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Text("titleLine")
+        ],
       ),
     );
   }
 
-  Widget showProfile() {
-    return const Center(child: Text("Profile Data is Avalable"));
-  }
-
-  Widget button() {
+  Widget otherDetails(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 70),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          const Text(
-            "Tap the button to add profile data",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Color.fromARGB(255, 13, 149, 61),
-              fontSize: 18,
+          Text(
+            "$label :",
+            style: const TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(
-            height: 30,
+            height: 5,
           ),
-          InkWell(
-            onTap: () => {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          CreateProfile(type: "Add", data: const {})))
-            },
-            child: Container(
-              height: 60,
-              width: 150,
-              decoration: BoxDecoration(
-                color: Colors.blueGrey,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Center(
-                child: Text(
-                  "Add Profile",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                  ),
-                ),
-              ),
-            ),
-          ),
+          Text(
+            value,
+            style: const TextStyle(fontSize: 15),
+          )
         ],
       ),
     );

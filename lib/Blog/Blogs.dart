@@ -80,7 +80,7 @@ class _BlogsState extends State<Blogs> {
                         const EdgeInsets.only(top: 8.0, left: 5.0, right: 5.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 249, 249, 249),
+                        color: Color.fromARGB(255, 235, 244, 235),
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -129,9 +129,9 @@ class _BlogsState extends State<Blogs> {
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: [
+                                Color.fromARGB(255, 200, 230, 190),
                                 Color.fromARGB(255, 220, 244, 209),
                                 Color.fromARGB(255, 235, 250, 220),
-                                Color.fromARGB(255, 200, 230, 190),
                               ],
                             ),
                             boxShadow: [
@@ -198,23 +198,21 @@ class _BlogsState extends State<Blogs> {
                                         ],
                                       ),
                                     ),
-                                    PopupMenuButton<String>(
-                                      onSelected: (String value) {
-                                        // Handle menu item selection
-                                      },
-                                      itemBuilder: (BuildContext context) {
-                                        return {
-                                          'Option 1',
-                                          'Option 2',
-                                          'Option 3'
-                                        }.map((String choice) {
-                                          return PopupMenuItem<String>(
-                                            value: choice,
-                                            child: Text(choice),
+                                    Padding(
+                                      padding: const EdgeInsets.all(6.0),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          showModalBottomSheet(
+                                            context: context,
+                                            builder: ((builder) =>
+                                                bottomSheet()),
                                           );
-                                        }).toList();
-                                      },
-                                      icon: Icon(Icons.more_vert),
+                                        },
+                                        child: Text(
+                                          "•••",
+                                          style: TextStyle(fontSize: 18.0),
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -310,6 +308,166 @@ class _BlogsState extends State<Blogs> {
               ),
             )
           : _noData(),
+    );
+  }
+
+  Widget bottomSheet() {
+    return Container(
+      height: 320.0,
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 20,
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Card(
+              color: Color.fromARGB(255, 230, 251, 223),
+              margin: const EdgeInsets.symmetric(vertical: 1.0),
+              elevation: 4.0,
+              child: Container(
+                width: double.infinity, // Make the card full width
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Text and Arrow Pair 1
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'View Post',
+                            style: GoogleFonts.roboto(
+                              textStyle: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: Color.fromARGB(255, 4, 88, 36),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: Colors.grey,
+                        ),
+                      ],
+                    ),
+                    Text(
+                      'Subtext 1',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    Divider(height: 20, color: Colors.grey[300]),
+                    SizedBox(height: 16), // Space between pairs
+
+                    // Text and Arrow Pair 2
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Edit Post',
+                            style: GoogleFonts.roboto(
+                              textStyle: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: Color.fromARGB(255, 4, 88, 36),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: Colors.grey,
+                        ),
+                      ],
+                    ),
+                    Text(
+                      'Subtext 2',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    Divider(height: 20, color: Colors.grey[300]),
+                    SizedBox(height: 16), // Space between pairs
+
+                    // Text and Arrow Pair 3
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Delete Post',
+                            style: GoogleFonts.roboto(
+                              textStyle: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: Color.fromARGB(255, 4, 88, 36),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: Colors.grey,
+                        ),
+                      ],
+                    ),
+                    Text(
+                      'Subtext 3',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    Divider(height: 20, color: Colors.grey[300]),
+                    SizedBox(height: 16), // Space between pairs
+
+                    // Text and Arrow Pair 4
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Block User',
+                            style: GoogleFonts.roboto(
+                              textStyle: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: Color.fromARGB(255, 4, 88, 36),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: Colors.grey,
+                        ),
+                      ],
+                    ),
+                    Text(
+                      'Subtext 4',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
