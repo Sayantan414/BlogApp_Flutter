@@ -4,7 +4,8 @@ getBaseUrl() {
 
 var token = '';
 saveValidtoken(t) {
-  token = t;
+  token = "Bearer " + t;
+  print(token);
 }
 
 getValidToken() {

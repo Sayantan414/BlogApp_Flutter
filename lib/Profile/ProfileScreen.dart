@@ -1,10 +1,9 @@
-import 'dart:convert';
-
+import 'package:blogapp/Blog/Blogs.dart';
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:blogapp/Profile/CreateProfile.dart';
+import 'package:blogapp/Services/userService.dart';
 import 'package:flutter/material.dart';
-
-import 'MainProfile.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -16,33 +15,32 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   bool circular = false;
   NetworkHandler networkHandler = NetworkHandler();
-  String dp = "";
+  List<dynamic> data = [];
+  bool isLoading = true;
+  String dp = '';
+  Map<String, dynamic> profileDetails = {};
 
   late Map<String, dynamic> responseData;
+
   @override
   void initState() {
     super.initState();
-    // dp = getDp();
-
-    // fetchData();
+    fetchData();
   }
 
   void fetchData() async {
     try {
-      var response = await networkHandler.get("/profile/getData");
-      var data = json.decode(response);
-      print(data);
-      if (data != null && data["data"] != null) {
-        responseData = data["data"];
+      circular = true;
+      var responseData = await profile();
+      profileDetails = responseData;
+      print(profileDetails);
 
-        setState(() {
-          circular = false;
-        });
-      } else {
-        print("Response is null or doesn't contain data");
-      }
+      setState(() {
+        data = profileDetails['posts'];
+        circular = false;
+      });
     } catch (e) {
-      print("Error fetching data: $e");
+      print('Error fetching data: $e');
     }
   }
 
@@ -82,24 +80,92 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ))
           : ListView(
               children: <Widget>[
-                head(),
-                Divider(
-                  thickness: 0.8,
+                Center(child: head()),
+                SizedBox(
+                  height: 8,
+                ), // Center the head widget
+                // Divider(
+                //   thickness: 0.8,
+                // ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 4.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _buildCard(
+                          "Followers",
+                          profileDetails['followersCount'].toString(),
+                          Color.fromARGB(255, 34, 139, 34),
+                          Color.fromARGB(255, 50, 205, 50),
+                        ),
+                      ),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: _buildCard(
+                          "Following",
+                          profileDetails['followingCount'].toString(),
+                          Color.fromARGB(255, 0, 0, 205),
+                          Color.fromARGB(255, 30, 144, 255),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                otherDetails("About", "test"),
-                otherDetails("Name", "test"),
-                otherDetails("Profession", "test"),
-                otherDetails("DOB", "test"),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 8.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _buildCard(
+                          "Viewers",
+                          profileDetails['viewersCount'].toString(),
+                          Color.fromARGB(255, 255, 165, 0),
+                          Color.fromARGB(255, 255, 200, 0),
+                        ),
+                      ),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: _buildCard(
+                          "No. of Posts",
+                          profileDetails['postCounts'].toString(),
+                          Color.fromARGB(255, 128, 0, 128),
+                          Color.fromARGB(255, 148, 0, 211),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 const Divider(
                   thickness: 0.8,
                 ),
                 const SizedBox(
                   height: 20,
                 ),
-                // const Blogs(
-                //   url: "/blogpost/getOwnBlog",
-                //   type: "Own",
-                // ),
+                data.isNotEmpty ? Blogs(type: "Own", posts: data) : _noData(),
+              ],
+            ),
+    );
+  }
+
+  Widget _noData() {
+    return Center(
+      child: isLoading
+          ? LoadingAnimationWidget.fourRotatingDots(
+              color: const Color.fromARGB(230, 80, 208, 142),
+              size: 50,
+            )
+          : const Column(
+              mainAxisAlignment: MainAxisAlignment.center, // Center vertically
+              children: [
+                SizedBox(height: 20),
+                Text(
+                  "We don't have any Blog Yet",
+                  style: TextStyle(
+                      // color: myColors["desabled"],
+                      ),
+                ),
               ],
             ),
     );
@@ -107,25 +173,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget head() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment:
+            CrossAxisAlignment.center, // Center content within the column
         children: <Widget>[
-          Center(
-            child: CircleAvatar(
-              radius: 50,
-              backgroundColor: Color.fromARGB(255, 225, 235, 225),
-              backgroundImage: AssetImage("assets/nouser.png"),
-            ),
+          CircleAvatar(
+            radius: 50,
+            backgroundColor: Color.fromARGB(255, 225, 235, 225),
+            backgroundImage: profileDetails['profilePhoto'] != null
+                ? NetworkImage(profileDetails['profilePhoto'])
+                : AssetImage('assets/nouser.png') as ImageProvider,
           ),
+
+          const SizedBox(height: 10), // Add space between avatar and text
           Text(
-            "Username",
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            profileDetails['fullname'],
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text("titleLine")
+          const SizedBox(height: 10), // Add space between texts
+          Text("titleLine"),
         ],
       ),
     );
@@ -152,6 +219,61 @@ class _ProfileScreenState extends State<ProfileScreen> {
             style: const TextStyle(fontSize: 15),
           )
         ],
+      ),
+    );
+  }
+
+  Widget _buildCard(String title, String count, Color dark, Color light) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            dark,
+            light,
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 5.0,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              title,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(height: 10),
+            Text(
+              count,
+              style: TextStyle(
+                fontSize: 24,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                shadows: [
+                  Shadow(
+                    blurRadius: 3.0,
+                    color: Color.fromARGB(116, 255, 255, 255),
+                    offset: Offset(2.0, 2.0),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

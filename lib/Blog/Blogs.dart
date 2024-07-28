@@ -10,9 +10,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class Blogs extends StatefulWidget {
-  const Blogs({super.key, required this.url, required this.type});
-  final String url;
+  const Blogs({super.key, required this.type, required this.posts});
   final String type;
+  final List posts;
 
   @override
   _BlogsState createState() => _BlogsState();
@@ -30,26 +30,18 @@ class _BlogsState extends State<Blogs> {
 
   @override
   void initState() {
+    // print(widget.posts);
     // TODO: implement initState
-    super.initState();
-    fetchData();
-  }
-
-  void fetchData() async {
-    try {
-      isLoading = true;
-      var responseData = await await fetchAllPost();
-      // print(responseData);
-
+    data = widget.posts;
+    filteredData = data;
+    // print(filteredData);
+    print("object");
+    if (filteredData.isNotEmpty) {
       setState(() {
-        data = responseData;
-        filteredData = data;
-        print(filteredData[0]['viewsCount']);
         isLoading = false;
       });
-    } catch (e) {
-      print('Error fetching data: $e');
     }
+    super.initState();
   }
 
   void filterBlogPosts(String query) {
@@ -65,250 +57,250 @@ class _BlogsState extends State<Blogs> {
     });
   }
 
+  void filterOwnBlogPosts(String query) {
+    setState(() {
+      filteredData = data.where((item) {
+        String title = item["title"].toLowerCase();
+        String body = item["description"].toLowerCase();
+        return title.contains(query.toLowerCase()) ||
+            body.contains(query.toLowerCase());
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () async {
-        fetchData();
-      }, // Callback function to fetch data
-      child: data.isNotEmpty
-          ? SingleChildScrollView(
-              child: Column(
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(top: 8.0, left: 5.0, right: 5.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 235, 244, 235),
-                        borderRadius: BorderRadius.circular(20.0),
+        onRefresh: () async {}, // Callback function to fetch data
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0, left: 5.0, right: 5.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(255, 235, 244, 235),
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: _searchController,
+                          onChanged: widget.type == "Public"
+                              ? filterBlogPosts
+                              : filterOwnBlogPosts,
+                          decoration: const InputDecoration(
+                            hintText: 'Search...',
+                            border: InputBorder.none,
+                          ),
+                        ),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                      child: Row(
+                      SizedBox(
+                        width: 35,
+                        child: IconButton(
+                          icon: const Icon(Icons.cancel),
+                          onPressed: () {
+                            _searchController.clear();
+                            widget.type == "Public"
+                                ? filterBlogPosts('')
+                                : filterOwnBlogPosts('');
+                            FocusScope.of(context).unfocus();
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              ...filteredData.map((item) => InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Blog(post: item),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        gradient: const LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Color.fromARGB(255, 200, 230, 190),
+                            Color.fromARGB(255, 220, 244, 209),
+                            Color.fromARGB(255, 235, 250, 220),
+                          ],
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(0, 3), // changes position of shadow
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: TextField(
-                              controller: _searchController,
-                              onChanged: filterBlogPosts,
-                              decoration: const InputDecoration(
-                                hintText: 'Search...',
-                                border: InputBorder.none,
-                              ),
+                          // First Row: CircleAvatar, Fullname, and PopupMenuButton
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                // CircleAvatar with profile photo
+                                item['user'][0]['profilePhoto'] != null
+                                    ? CircleAvatar(
+                                        backgroundImage: NetworkImage(
+                                            item['user'][0]['profilePhoto']),
+                                        radius: 20,
+                                        backgroundColor: Colors.transparent,
+                                      )
+                                    : const CircleAvatar(
+                                        backgroundImage:
+                                            AssetImage('assets/nouser.png'),
+                                        radius: 20,
+                                        backgroundColor: Colors.transparent,
+                                      ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        item['user'][0]['fullname'],
+                                        style: GoogleFonts.roboto(
+                                          textStyle: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                            color:
+                                                Color.fromARGB(255, 51, 51, 51),
+                                          ),
+                                        ),
+                                      ),
+                                      Text(
+                                        item['daysAgo'],
+                                        style: GoogleFonts.roboto(
+                                          textStyle: const TextStyle(
+                                            fontSize: 12,
+                                            color:
+                                                Color.fromARGB(255, 96, 95, 95),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(6.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        builder: ((builder) => bottomSheet()),
+                                      );
+                                    },
+                                    child: Text(
+                                      "•••",
+                                      style: TextStyle(fontSize: 18.0),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(
-                            width: 35,
-                            child: IconButton(
-                              icon: const Icon(Icons.cancel),
-                              onPressed: () {
-                                _searchController.clear();
-                                filterBlogPosts('');
-                                FocusScope.of(context).unfocus();
-                              },
+                          // Post Image
+                          if (item['photo'] != null)
+                            ClipRRect(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(12)),
+                              child: Image.network(
+                                item['photo'],
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                height: 200,
+                              ),
+                            ),
+                          // Post Description or Title
+                          if (item['title'] != null)
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 12.0, left: 12.0),
+                              child: Text(
+                                item['title'],
+                                // "vyhfytfyt ftyfytfdytf fyfytytfy ftys4aarest tguyviugi",
+                                style: GoogleFonts.roboto(
+                                  textStyle: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                    color: Color.fromARGB(255, 87, 86, 86),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          // Post Interaction
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0, vertical: 4.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // Views text on the left
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.visibility,
+                                      size: 22,
+                                      color: Colors.blue,
+                                    ),
+                                    const SizedBox(
+                                        width:
+                                            8), // Space between icon and text
+                                    Text(
+                                      item['viewsCount'].toString(),
+                                      style: const TextStyle(
+                                        color: Color.fromARGB(255, 1, 42, 19),
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                // Likes text on the right
+                                Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.thumb_up,
+                                      size: 22,
+                                      color: Color.fromARGB(255, 39, 174, 96),
+                                    ),
+                                    const SizedBox(
+                                        width:
+                                            8), // Space between icon and text
+                                    Text(
+                                      item['likesCount'].toString(),
+                                      style: const TextStyle(
+                                        color: Color.fromARGB(255, 1, 42, 19),
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  ...filteredData.map((item) => InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Blog(post: item),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          margin:
-                              EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                            gradient: const LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Color.fromARGB(255, 200, 230, 190),
-                                Color.fromARGB(255, 220, 244, 209),
-                                Color.fromARGB(255, 235, 250, 220),
-                              ],
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.2),
-                                spreadRadius: 5,
-                                blurRadius: 7,
-                                offset:
-                                    Offset(0, 3), // changes position of shadow
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // First Row: CircleAvatar, Fullname, and PopupMenuButton
-                              Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    // CircleAvatar with profile photo
-                                    item['user'][0]['profilePhoto'] != null
-                                        ? CircleAvatar(
-                                            backgroundImage: NetworkImage(
-                                                item['user'][0]
-                                                    ['profilePhoto']),
-                                            radius: 20,
-                                            backgroundColor: Colors.transparent,
-                                          )
-                                        : const CircleAvatar(
-                                            backgroundImage:
-                                                AssetImage('assets/nouser.png'),
-                                            radius: 20,
-                                            backgroundColor: Colors.transparent,
-                                          ),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            item['user'][0]['fullname'],
-                                            style: GoogleFonts.roboto(
-                                              textStyle: const TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 16,
-                                                color: Color.fromARGB(
-                                                    255, 51, 51, 51),
-                                              ),
-                                            ),
-                                          ),
-                                          Text(
-                                            item[
-                                                'daysAgo'], // Replace with actual timestamp
-                                            style: GoogleFonts.roboto(
-                                              textStyle: const TextStyle(
-                                                fontSize: 12,
-                                                color: Color.fromARGB(
-                                                    255, 96, 95, 95),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(6.0),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          showModalBottomSheet(
-                                            context: context,
-                                            builder: ((builder) =>
-                                                bottomSheet()),
-                                          );
-                                        },
-                                        child: Text(
-                                          "•••",
-                                          style: TextStyle(fontSize: 18.0),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              // Post Image
-                              if (item['photo'] != null)
-                                ClipRRect(
-                                  borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(12)),
-                                  child: Image.network(
-                                    item['photo'],
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    height: 200,
-                                  ),
-                                ),
-                              // Post Description or Title
-                              if (item['title'] != null)
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 12.0, left: 12.0),
-                                  child: Text(
-                                    item['title'],
-                                    // "vyhfytfyt ftyfytfdytf fyfytytfy ftys4aarest tguyviugi",
-                                    style: GoogleFonts.roboto(
-                                      textStyle: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
-                                        color: Color.fromARGB(255, 87, 86, 86),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              // Post Interaction
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12.0, vertical: 4.0),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    // Views text on the left
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.visibility,
-                                          size: 22,
-                                          color: Colors.blue,
-                                        ),
-                                        const SizedBox(
-                                            width:
-                                                8), // Space between icon and text
-                                        Text(
-                                          item['viewsCount'].toString(),
-                                          style: const TextStyle(
-                                            color:
-                                                Color.fromARGB(255, 1, 42, 19),
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    // Likes text on the right
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.thumb_up,
-                                          size: 22,
-                                          color:
-                                              Color.fromARGB(255, 39, 174, 96),
-                                        ),
-                                        const SizedBox(
-                                            width:
-                                                8), // Space between icon and text
-                                        Text(
-                                          item['likesCount'].toString(),
-                                          style: const TextStyle(
-                                            color:
-                                                Color.fromARGB(255, 1, 42, 19),
-                                            fontSize: 14,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ))
-                ],
-              ),
-            )
-          : _noData(),
-    );
+                  ))
+            ],
+          ),
+        ));
   }
 
   Widget bottomSheet() {
@@ -477,31 +469,5 @@ class _BlogsState extends State<Blogs> {
     } else {
       return text.substring(0, maxLength) + ' more...';
     }
-  }
-
-  _noData() {
-    return Center(
-      child: isLoading
-          ? LoadingAnimationWidget.fourRotatingDots(
-              // LoadingAnimationwidget that call the
-              color: const Color.fromARGB(
-                  230, 80, 208, 142), // staggereddotwave animation
-              size: 50,
-            )
-          : const Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  "We don't have any Blog Yet",
-                  style: TextStyle(
-                      // color: myColors["desabled"],
-                      ),
-                )
-              ],
-            ),
-    );
   }
 }

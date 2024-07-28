@@ -33,7 +33,7 @@ class _BlogState extends State<Blog> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 225, 235, 225),
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),

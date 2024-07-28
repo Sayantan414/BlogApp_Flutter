@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:blogapp/Utils/functions.dart';
 
 var baseUrl = getBaseUrl();
+var token = getValidToken();
 
 Future<List<dynamic>> fetchAllPost() async {
   Map<String, String> headers = {
