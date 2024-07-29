@@ -30,19 +30,6 @@ class _SignUpPageState extends State<SignUpPage> {
   bool circular = false;
   String pic = "";
 
-  List<String> strings = [
-    'angry.webp',
-    'cat.webp',
-    'crocodile.webp',
-    'dog.png',
-    'lion.webp',
-    'nkn.webp',
-    'owl.webp',
-    'panda.webp',
-    'tiger.webp'
-  ];
-  Random random = Random();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,7 +145,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   try {
                     var r = await register(payLoad);
 
-                    print(r);
+                    // print(r);
 
                     var payLoadLogin = {
                       "email": _emailController.text,
@@ -168,8 +155,14 @@ class _SignUpPageState extends State<SignUpPage> {
                     try {
                       var loginresponse = await login(payLoadLogin);
 
-                      print(loginresponse);
+                      // print(loginresponse);
                       saveValidtoken(loginresponse["data"]["token"]);
+                      saveUserDetails(
+                          loginresponse["data"]['firstname'],
+                          loginresponse["data"]['lastname'],
+                          loginresponse["data"]['profilePhoto'],
+                          loginresponse["data"]['email'],
+                          loginresponse["data"]['id']);
                     } catch (e) {
                       print(e);
                     }
@@ -223,7 +216,6 @@ class _SignUpPageState extends State<SignUpPage> {
       } else {
         setState(() {
           // circular = false;
-          print("object");
           validate = true;
         });
       }

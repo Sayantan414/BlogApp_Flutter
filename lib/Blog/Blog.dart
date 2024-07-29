@@ -1,14 +1,17 @@
 import 'dart:convert';
 
 import 'package:blogapp/Profile/otherUserProfile.dart';
+import 'package:blogapp/Services/postService.dart';
+import 'package:blogapp/Utils/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:blogapp/NetworkHandler.dart';
 
 class Blog extends StatefulWidget {
-  const Blog({super.key, required this.post});
+  const Blog({super.key, required this.post, required this.type});
 
   final Map post;
+  final String type;
 
   @override
   State<Blog> createState() => _BlogState();
@@ -22,12 +25,16 @@ class _BlogState extends State<Blog> {
   int noslikes = 0;
   List<dynamic> pictures = [];
   bool seeLikeDps = false;
+  Map<String, dynamic> userDetails = {};
+  bool like = false;
 
   @override
   void initState() {
     super.initState();
-    pictures = [];
-    seeLikeDps = false;
+    userDetails = getUserDetails();
+    // print(userDetails);
+    like = widget.post["likes"].contains(userDetails["id"]);
+    // print(like);
   }
 
   @override
@@ -86,15 +93,25 @@ class _BlogState extends State<Blog> {
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: Text(
-                        '• By ${widget.post['user'][0]['fullname']}',
-                        style: GoogleFonts.lato(
-                          textStyle: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
+                      child: widget.type == "Public"
+                          ? Text(
+                              '• By ${widget.post['user'][0]['fullname']}',
+                              style: GoogleFonts.lato(
+                                textStyle: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            )
+                          : Text(
+                              '• By ${userDetails["name"]}',
+                              style: GoogleFonts.lato(
+                                textStyle: const TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -102,18 +119,33 @@ class _BlogState extends State<Blog> {
                     onTap: () {
                       // Navigate to the other user's profile
                     },
-                    child: widget.post['user'][0]['profilePhoto'] != null
-                        ? CircleAvatar(
-                            backgroundImage: NetworkImage(
-                                widget.post['user'][0]['profilePhoto']),
-                            radius: 17,
-                            backgroundColor: Colors.transparent,
-                          )
-                        : const CircleAvatar(
-                            backgroundImage: AssetImage('assets/nouser.png'),
-                            radius: 17,
-                            backgroundColor: Colors.transparent,
-                          ),
+                    child: widget.type == "Public"
+                        ? (widget.post['user'][0]['profilePhoto'] != null
+                            ? CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                    widget.post['user'][0]['profilePhoto']),
+                                radius: 20,
+                                backgroundColor: Colors.transparent,
+                              )
+                            : const CircleAvatar(
+                                backgroundImage:
+                                    AssetImage('assets/nouser.png'),
+                                radius: 20,
+                                backgroundColor: Colors.transparent,
+                              ))
+                        : (userDetails["photo"] != null
+                            ? CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage(userDetails["photo"]),
+                                radius: 20,
+                                backgroundColor: Colors.transparent,
+                              )
+                            : const CircleAvatar(
+                                backgroundImage:
+                                    AssetImage('assets/nouser.png'),
+                                radius: 20,
+                                backgroundColor: Colors.transparent,
+                              )),
                   ),
                   Expanded(
                     child: Padding(
@@ -136,11 +168,22 @@ class _BlogState extends State<Blog> {
                       width: 95.0,
                       height: 30.0,
                       child: OutlinedButton.icon(
-                        onPressed: () {
-                          print('Liked');
+                        onPressed: () async {
+                          setState(() {
+                            like = !like;
+                          });
+                          var response = await likePost(widget.post["id"]);
+                          print(response);
+                          print(widget.post['likesCount']);
+                          setState(() {
+                            widget.post['likesCount'] =
+                                response["data"]["likesCount"].toString();
+                          });
                         },
-                        icon: const Icon(Icons.thumb_up_alt_outlined,
-                            size: 22, color: Colors.green),
+                        icon: Icon(
+                            like ? Icons.thumb_up : Icons.thumb_up_alt_outlined,
+                            size: 22,
+                            color: Colors.green),
                         label: Text(
                           widget.post['likesCount'].toString(),
                           style: const TextStyle(

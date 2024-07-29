@@ -28,3 +28,20 @@ Future<List<dynamic>> fetchAllPost() async {
         jsonDecode(response.body)['message'] ?? 'An error occurred');
   }
 }
+
+Future<Map<String, dynamic>> likePost(String id) async {
+  Map<String, String> headers = {
+    'Content-Type': 'application/json',
+    'Authorization': token
+  };
+
+  final response = await http.get(Uri.parse('$baseUrl/api/v1/posts/likes/$id'),
+      headers: headers);
+
+  if (response.statusCode == 200) {
+    final String responseString = response.body;
+    return jsonDecode(responseString);
+  } else {
+    return Future.error(jsonDecode(response.body)['message']);
+  }
+}

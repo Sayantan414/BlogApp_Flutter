@@ -5,6 +5,7 @@ import 'package:blogapp/Blog/addBlog.dart';
 
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:blogapp/Services/postService.dart';
+import 'package:blogapp/Utils/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -27,15 +28,17 @@ class _BlogsState extends State<Blogs> {
   final TextEditingController _searchController = TextEditingController();
   List<dynamic> filteredData = [];
   String username = '';
+  Map<String, dynamic> userDetails = {};
 
   @override
   void initState() {
     // print(widget.posts);
     // TODO: implement initState
+    userDetails = getUserDetails();
+    // print(userDetails);
     data = widget.posts;
     filteredData = data;
     // print(filteredData);
-    print("object");
     if (filteredData.isNotEmpty) {
       setState(() {
         isLoading = false;
@@ -119,7 +122,8 @@ class _BlogsState extends State<Blogs> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Blog(post: item),
+                          builder: (context) =>
+                              Blog(post: item, type: widget.type),
                         ),
                       );
                     },
@@ -131,9 +135,9 @@ class _BlogsState extends State<Blogs> {
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
-                            Color.fromARGB(255, 200, 230, 190),
-                            Color.fromARGB(255, 220, 244, 209),
-                            Color.fromARGB(255, 235, 250, 220),
+                            Color.fromARGB(255, 147, 222, 151), // Darker green
+                            Color.fromARGB(255, 173, 236, 178), // Medium green
+                            Color.fromARGB(255, 194, 239, 194), // Lighter green
                           ],
                         ),
                         boxShadow: [
@@ -154,36 +158,63 @@ class _BlogsState extends State<Blogs> {
                             child: Row(
                               children: [
                                 // CircleAvatar with profile photo
-                                item['user'][0]['profilePhoto'] != null
-                                    ? CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                            item['user'][0]['profilePhoto']),
-                                        radius: 20,
-                                        backgroundColor: Colors.transparent,
-                                      )
-                                    : const CircleAvatar(
-                                        backgroundImage:
-                                            AssetImage('assets/nouser.png'),
-                                        radius: 20,
-                                        backgroundColor: Colors.transparent,
-                                      ),
+                                widget.type == "Public"
+                                    ? (item['user'][0]['profilePhoto'] != null
+                                        ? CircleAvatar(
+                                            backgroundImage: NetworkImage(
+                                                item['user'][0]
+                                                    ['profilePhoto']),
+                                            radius: 20,
+                                            backgroundColor: Colors.transparent,
+                                          )
+                                        : const CircleAvatar(
+                                            backgroundImage:
+                                                AssetImage('assets/nouser.png'),
+                                            radius: 20,
+                                            backgroundColor: Colors.transparent,
+                                          ))
+                                    : (userDetails["photo"] != null
+                                        ? CircleAvatar(
+                                            backgroundImage: NetworkImage(
+                                                userDetails["photo"]),
+                                            radius: 20,
+                                            backgroundColor: Colors.transparent,
+                                          )
+                                        : const CircleAvatar(
+                                            backgroundImage:
+                                                AssetImage('assets/nouser.png'),
+                                            radius: 20,
+                                            backgroundColor: Colors.transparent,
+                                          )),
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        item['user'][0]['fullname'],
-                                        style: GoogleFonts.roboto(
-                                          textStyle: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                            color:
-                                                Color.fromARGB(255, 51, 51, 51),
-                                          ),
-                                        ),
-                                      ),
+                                      widget.type == "Public"
+                                          ? Text(
+                                              item['user'][0]['fullname'],
+                                              style: GoogleFonts.roboto(
+                                                textStyle: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                  color: Color.fromARGB(
+                                                      255, 51, 51, 51),
+                                                ),
+                                              ),
+                                            )
+                                          : Text(
+                                              userDetails['name'],
+                                              style: GoogleFonts.roboto(
+                                                textStyle: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                  color: Color.fromARGB(
+                                                      255, 51, 51, 51),
+                                                ),
+                                              ),
+                                            ),
                                       Text(
                                         item['daysAgo'],
                                         style: GoogleFonts.roboto(
@@ -252,10 +283,12 @@ class _BlogsState extends State<Blogs> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 // Views text on the left
+
+                                // Likes text on the right
                                 Row(
                                   children: [
                                     const Icon(
-                                      Icons.visibility,
+                                      Icons.thumb_up,
                                       size: 22,
                                       color: Colors.blue,
                                     ),
@@ -263,7 +296,7 @@ class _BlogsState extends State<Blogs> {
                                         width:
                                             8), // Space between icon and text
                                     Text(
-                                      item['viewsCount'].toString(),
+                                      item['likesCount'].toString(),
                                       style: const TextStyle(
                                         color: Color.fromARGB(255, 1, 42, 19),
                                         fontSize: 14,
@@ -271,19 +304,18 @@ class _BlogsState extends State<Blogs> {
                                     ),
                                   ],
                                 ),
-                                // Likes text on the right
                                 Row(
                                   children: [
                                     const Icon(
-                                      Icons.thumb_up,
+                                      Icons.visibility,
                                       size: 22,
-                                      color: Color.fromARGB(255, 39, 174, 96),
+                                      color: Color.fromARGB(255, 128, 127, 127),
                                     ),
                                     const SizedBox(
                                         width:
                                             8), // Space between icon and text
                                     Text(
-                                      item['likesCount'].toString(),
+                                      item['viewsCount'].toString(),
                                       style: const TextStyle(
                                         color: Color.fromARGB(255, 1, 42, 19),
                                         fontSize: 14,
@@ -340,14 +372,14 @@ class _BlogsState extends State<Blogs> {
                             ),
                           ),
                         ),
-                        Icon(
+                        const Icon(
                           Icons.arrow_forward_ios,
                           size: 16,
                           color: Colors.grey,
                         ),
                       ],
                     ),
-                    Text(
+                    const Text(
                       'Subtext 1',
                       style: TextStyle(
                         fontSize: 14,
