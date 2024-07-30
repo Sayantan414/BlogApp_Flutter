@@ -52,7 +52,7 @@ class _BlogsState extends State<Blogs> {
       filteredData = data.where((item) {
         String title = item["title"].toLowerCase();
         String body = item["description"].toLowerCase();
-        String fullname = item['user'][0]["fullname"].toLowerCase();
+        String fullname = item['user']["fullname"].toLowerCase();
         return title.contains(query.toLowerCase()) ||
             body.contains(query.toLowerCase()) ||
             fullname.contains(query.toLowerCase());
@@ -118,14 +118,28 @@ class _BlogsState extends State<Blogs> {
                 ),
               ),
               ...filteredData.map((item) => InkWell(
-                    onTap: () {
-                      Navigator.push(
+                    onTap: () async {
+                      var result = await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
                               Blog(post: item, type: widget.type),
                         ),
                       );
+
+                      if (result != null) {
+                        setState(() {
+                          result['likesCount'] = item['likesCount'].toString();
+                          result['likes'] = item['likes'];
+                          result['dislikesCount'] =
+                              item['dislikesCount'].toString();
+                          result['dislikes'] = item['dislikes'];
+                          result['numViews'] = item['numViews'];
+                          result['viewsCount'] = item['viewsCount'];
+                          result['followers'] = item['user']['followers'];
+                        });
+                        print(result);
+                      }
                     },
                     child: Container(
                       margin: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
@@ -159,11 +173,10 @@ class _BlogsState extends State<Blogs> {
                               children: [
                                 // CircleAvatar with profile photo
                                 widget.type == "Public"
-                                    ? (item['user'][0]['profilePhoto'] != null
+                                    ? (item['user']['profilePhoto'] != null
                                         ? CircleAvatar(
                                             backgroundImage: NetworkImage(
-                                                item['user'][0]
-                                                    ['profilePhoto']),
+                                                item['user']['profilePhoto']),
                                             radius: 20,
                                             backgroundColor: Colors.transparent,
                                           )
@@ -194,7 +207,7 @@ class _BlogsState extends State<Blogs> {
                                     children: [
                                       widget.type == "Public"
                                           ? Text(
-                                              item['user'][0]['fullname'],
+                                              item['user']['fullname'],
                                               style: GoogleFonts.roboto(
                                                 textStyle: const TextStyle(
                                                   fontWeight: FontWeight.bold,
@@ -309,7 +322,7 @@ class _BlogsState extends State<Blogs> {
                                     const Icon(
                                       Icons.visibility,
                                       size: 22,
-                                      color: Color.fromARGB(255, 128, 127, 127),
+                                      color: Color.fromARGB(255, 255, 255, 255),
                                     ),
                                     const SizedBox(
                                         width:
@@ -317,7 +330,7 @@ class _BlogsState extends State<Blogs> {
                                     Text(
                                       item['viewsCount'].toString(),
                                       style: const TextStyle(
-                                        color: Color.fromARGB(255, 1, 42, 19),
+                                        color: Color.fromARGB(255, 13, 13, 13),
                                         fontSize: 14,
                                       ),
                                     ),

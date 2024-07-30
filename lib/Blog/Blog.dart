@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:blogapp/Profile/otherUserProfile.dart';
 import 'package:blogapp/Services/postService.dart';
+import 'package:blogapp/Services/userService.dart';
 import 'package:blogapp/Utils/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -27,14 +28,35 @@ class _BlogState extends State<Blog> {
   bool seeLikeDps = false;
   Map<String, dynamic> userDetails = {};
   bool like = false;
+  bool dislike = false;
+  bool followingButton = true;
+  bool follow = false;
 
   @override
   void initState() {
     super.initState();
     userDetails = getUserDetails();
+    if (userDetails["id"] == widget.post['user']['id']) {
+      setState(() {
+        followingButton = false;
+      });
+    }
     // print(userDetails);
+    viewDetailPost();
     like = widget.post["likes"].contains(userDetails["id"]);
+    dislike = widget.post["dislikes"].contains(userDetails["id"]);
     // print(like);
+  }
+
+  viewDetailPost() async {
+    var response = await viewPost(widget.post["id"]);
+    // print(response);
+    if (response['status'] == "success") {
+      setState(() {
+        widget.post['viewsCount'] = response["data"]["viewsCount"];
+        widget.post['numViews'] = response["data"]["numViews"];
+      });
+    }
   }
 
   @override
@@ -45,7 +67,15 @@ class _BlogState extends State<Blog> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).pop(likings);
+            Navigator.of(context).pop({
+              'likesCount': widget.post['likesCount'].toString(),
+              'likes': widget.post['likes'],
+              'dislikesCount': widget.post['dislikesCount'].toString(),
+              'dislikes': widget.post['dislikes'],
+              'viewsCount': widget.post['viewsCount'],
+              'numViews': widget.post['numViews'],
+              'followers': widget.post['user']['followers']
+            });
           },
         ),
         backgroundColor: const Color.fromARGB(255, 147, 222, 151),
@@ -95,7 +125,7 @@ class _BlogState extends State<Blog> {
                       padding: const EdgeInsets.only(left: 8.0),
                       child: widget.type == "Public"
                           ? Text(
-                              '• By ${widget.post['user'][0]['fullname']}',
+                              '• By ${widget.post['user']['fullname']}',
                               style: GoogleFonts.lato(
                                 textStyle: const TextStyle(
                                   fontSize: 16,
@@ -120,10 +150,10 @@ class _BlogState extends State<Blog> {
                       // Navigate to the other user's profile
                     },
                     child: widget.type == "Public"
-                        ? (widget.post['user'][0]['profilePhoto'] != null
+                        ? (widget.post['user']['profilePhoto'] != null
                             ? CircleAvatar(
                                 backgroundImage: NetworkImage(
-                                    widget.post['user'][0]['profilePhoto']),
+                                    widget.post['user']['profilePhoto']),
                                 radius: 20,
                                 backgroundColor: Colors.transparent,
                               )
@@ -174,10 +204,18 @@ class _BlogState extends State<Blog> {
                           });
                           var response = await likePost(widget.post["id"]);
                           print(response);
-                          print(widget.post['likesCount']);
+                          // print(widget.post['likesCount']);
                           setState(() {
                             widget.post['likesCount'] =
                                 response["data"]["likesCount"].toString();
+                            widget.post['likes'] = response["data"]["likes"];
+                            widget.post['dislikesCount'] =
+                                response["data"]["dislikesCount"].toString();
+                            widget.post['dislikes'] =
+                                response["data"]["dislikes"];
+                            if (dislike) {
+                              dislike = false;
+                            }
                           });
                         },
                         icon: Icon(
@@ -199,13 +237,34 @@ class _BlogState extends State<Blog> {
                       width: 95.0,
                       height: 30.0,
                       child: OutlinedButton.icon(
-                        onPressed: () {
-                          print('Disliked');
+                        onPressed: () async {
+                          setState(() {
+                            dislike = !dislike;
+                          });
+                          var response = await dislikePost(widget.post["id"]);
+                          print(response);
+                          // print(widget.post['likesCount']);
+                          setState(() {
+                            widget.post['dislikesCount'] =
+                                response["data"]["dislikesCount"].toString();
+                            widget.post['dislikes'] =
+                                response["data"]["dislikes"];
+                            widget.post['likesCount'] =
+                                response["data"]["likesCount"].toString();
+                            widget.post['likes'] = response["data"]["likes"];
+                            if (like) {
+                              like = false;
+                            }
+                          });
                         },
-                        icon: const Icon(Icons.thumb_down_alt_outlined,
-                            size: 22, color: Colors.red),
+                        icon: Icon(
+                            dislike
+                                ? Icons.thumb_down
+                                : Icons.thumb_down_alt_outlined,
+                            size: 22,
+                            color: Colors.red),
                         label: Text(
-                          widget.post['disLikesCount']?.toString() ?? "0",
+                          widget.post['dislikesCount']?.toString() ?? "0",
                           style: const TextStyle(
                               color: Colors.black, fontSize: 12),
                           overflow: TextOverflow.ellipsis,
@@ -235,25 +294,53 @@ class _BlogState extends State<Blog> {
                         ),
                       ),
                     ),
-                    SizedBox(
-                      width: 100.0,
-                      height: 30.0,
-                      child: OutlinedButton(
-                        onPressed: () {
-                          print('Active');
-                        },
-                        style: OutlinedButton.styleFrom(
-                          side: const BorderSide(color: Colors.green),
-                        ),
-                        child: const Text(
-                          'Unfollow',
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 4, 88, 36),
-                              fontSize: 12),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ),
+                    followingButton
+                        ? SizedBox(
+                            // width: 100.0,
+                            height: 30.0,
+                            child: follow
+                                ? OutlinedButton(
+                                    onPressed: () async {},
+                                    style: OutlinedButton.styleFrom(
+                                      side:
+                                          const BorderSide(color: Colors.green),
+                                    ),
+                                    child: const Text(
+                                      'Unfollow',
+                                      style: TextStyle(
+                                          color: Color.fromARGB(255, 4, 88, 36),
+                                          fontSize: 12),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  )
+                                : OutlinedButton(
+                                    onPressed: () async {
+                                      var response = await following(
+                                          widget.post['user']['id']);
+                                      if (response['status'] == 'success') {
+                                        setState(() {
+                                          widget.post['user']['followers'] =
+                                              response['data']['followers'];
+                                          follow = true;
+                                        });
+                                      }
+                                    },
+                                    style: OutlinedButton.styleFrom(
+                                      side:
+                                          const BorderSide(color: Colors.green),
+                                    ),
+                                    child: const Text(
+                                      'follow',
+                                      style: TextStyle(
+                                          color: Color.fromARGB(255, 4, 88, 36),
+                                          fontSize: 12),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                          )
+                        : SizedBox(
+                            width: 0,
+                          ),
                   ],
                 ),
               ),

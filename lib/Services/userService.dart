@@ -65,3 +65,20 @@ Future<Map<String, dynamic>> profile() async {
         jsonDecode(response.body)['message'] ?? 'An error occurred');
   }
 }
+
+Future<Map<String, dynamic>> following(String id) async {
+  Map<String, String> headers = {
+    'Content-Type': 'application/json',
+    'Authorization': token
+  };
+
+  final response = await http
+      .get(Uri.parse('$baseUrl/api/v1/users/following/$id'), headers: headers);
+
+  if (response.statusCode == 200) {
+    final String responseString = response.body;
+    return jsonDecode(responseString);
+  } else {
+    return Future.error(jsonDecode(response.body)['message']);
+  }
+}

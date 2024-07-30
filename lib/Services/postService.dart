@@ -45,3 +45,37 @@ Future<Map<String, dynamic>> likePost(String id) async {
     return Future.error(jsonDecode(response.body)['message']);
   }
 }
+
+Future<Map<String, dynamic>> dislikePost(String id) async {
+  Map<String, String> headers = {
+    'Content-Type': 'application/json',
+    'Authorization': token
+  };
+
+  final response = await http
+      .get(Uri.parse('$baseUrl/api/v1/posts/dislikes/$id'), headers: headers);
+
+  if (response.statusCode == 200) {
+    final String responseString = response.body;
+    return jsonDecode(responseString);
+  } else {
+    return Future.error(jsonDecode(response.body)['message']);
+  }
+}
+
+Future<Map<String, dynamic>> viewPost(String id) async {
+  Map<String, String> headers = {
+    'Content-Type': 'application/json',
+    'Authorization': token
+  };
+
+  final response = await http
+      .get(Uri.parse('$baseUrl/api/v1/posts/numViews/$id'), headers: headers);
+
+  if (response.statusCode == 200) {
+    final String responseString = response.body;
+    return jsonDecode(responseString);
+  } else {
+    return Future.error(jsonDecode(response.body)['message']);
+  }
+}
