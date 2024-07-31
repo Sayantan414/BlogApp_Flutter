@@ -36,7 +36,7 @@ class _BlogState extends State<Blog> {
   void initState() {
     super.initState();
     userDetails = getUserDetails();
-    if (userDetails["id"] == widget.post['user']['id']) {
+    if (userDetails["id"] == widget.post["user"]["id"]) {
       setState(() {
         followingButton = false;
       });
@@ -45,7 +45,9 @@ class _BlogState extends State<Blog> {
     viewDetailPost();
     like = widget.post["likes"].contains(userDetails["id"]);
     dislike = widget.post["dislikes"].contains(userDetails["id"]);
-    // print(like);
+    // print(widget.post);
+    follow = widget.post["user"]["followers"].contains(userDetails["id"]);
+    // print(follow);
   }
 
   viewDetailPost() async {
@@ -56,6 +58,14 @@ class _BlogState extends State<Blog> {
         widget.post['viewsCount'] = response["data"]["viewsCount"];
         widget.post['numViews'] = response["data"]["numViews"];
       });
+    }
+  }
+
+  String _truncateText(String text, int maxLength) {
+    if (text.length <= maxLength) {
+      return text;
+    } else {
+      return text.substring(0, maxLength) + '...';
     }
   }
 
@@ -74,7 +84,8 @@ class _BlogState extends State<Blog> {
               'dislikes': widget.post['dislikes'],
               'viewsCount': widget.post['viewsCount'],
               'numViews': widget.post['numViews'],
-              'followers': widget.post['user']['followers']
+              'followers': widget.post['user']['followers'],
+              'following': widget.post['user']['following'],
             });
           },
         ),
@@ -125,7 +136,9 @@ class _BlogState extends State<Blog> {
                       padding: const EdgeInsets.only(left: 8.0),
                       child: widget.type == "Public"
                           ? Text(
-                              '• By ${widget.post['user']['fullname']}',
+                              _truncateText(
+                                  '• By ${widget.post['user']['fullname']}',
+                                  16),
                               style: GoogleFonts.lato(
                                 textStyle: const TextStyle(
                                   fontSize: 16,
@@ -134,7 +147,7 @@ class _BlogState extends State<Blog> {
                               ),
                             )
                           : Text(
-                              '• By ${userDetails["name"]}',
+                              _truncateText('• By ${userDetails["name"]}', 16),
                               style: GoogleFonts.lato(
                                 textStyle: const TextStyle(
                                   fontSize: 16,
@@ -300,7 +313,19 @@ class _BlogState extends State<Blog> {
                             height: 30.0,
                             child: follow
                                 ? OutlinedButton(
-                                    onPressed: () async {},
+                                    onPressed: () async {
+                                      var response = await unfollow(
+                                          widget.post['user']['id']);
+                                      // print(response);
+                                      if (response['status'] == 'success') {
+                                        setState(() {
+                                          widget.post['user']['followers'] =
+                                              response['data']['followers'];
+                                          follow = false;
+                                        });
+                                        print(widget.post['user']['followers']);
+                                      }
+                                    },
                                     style: OutlinedButton.styleFrom(
                                       side:
                                           const BorderSide(color: Colors.green),
@@ -317,12 +342,14 @@ class _BlogState extends State<Blog> {
                                     onPressed: () async {
                                       var response = await following(
                                           widget.post['user']['id']);
+                                      // print(response);
                                       if (response['status'] == 'success') {
                                         setState(() {
                                           widget.post['user']['followers'] =
                                               response['data']['followers'];
                                           follow = true;
                                         });
+                                        print(widget.post['user']['followers']);
                                       }
                                     },
                                     style: OutlinedButton.styleFrom(
@@ -339,7 +366,27 @@ class _BlogState extends State<Blog> {
                                   ),
                           )
                         : SizedBox(
-                            width: 0,
+                            width: 95.0,
+                            height: 30.0,
+                            child: OutlinedButton.icon(
+                              onPressed: () {
+                                print('edit');
+                              },
+                              icon: const Icon(Icons.edit,
+                                  size: 22,
+                                  color: Color.fromARGB(255, 111, 112, 113)),
+                              label: const Text(
+                                "Edit",
+                                style: TextStyle(
+                                    color: Color.fromARGB(255, 111, 112, 113),
+                                    fontSize: 11),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(
+                                    color: Color.fromARGB(255, 111, 112, 113)),
+                              ),
+                            ),
                           ),
                   ],
                 ),

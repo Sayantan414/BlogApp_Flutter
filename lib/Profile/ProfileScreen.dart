@@ -47,9 +47,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 225, 235, 225),
+      backgroundColor: const Color.fromARGB(255, 241, 246, 241),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 225, 235, 225),
+        backgroundColor: const Color.fromARGB(255, 241, 246, 241),
         elevation: 0,
         actions: <Widget>[
           IconButton(
@@ -96,8 +96,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: _buildCard(
                           "Followers",
                           profileDetails['followersCount'].toString(),
-                          Color.fromARGB(255, 34, 139, 34),
-                          Color.fromARGB(255, 50, 205, 50),
+                          Color.fromARGB(255, 34, 139, 34), // Forest Green
+                          Color.fromARGB(255, 60, 179,
+                              113), // Slightly lighter shade of green
                         ),
                       ),
                       SizedBox(width: 12),
@@ -105,8 +106,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: _buildCard(
                           "Following",
                           profileDetails['followingCount'].toString(),
-                          Color.fromARGB(255, 0, 0, 205),
-                          Color.fromARGB(255, 30, 144, 255),
+                          Color.fromARGB(255, 0, 0, 205), // Medium Blue
+                          Color.fromARGB(255, 70, 130,
+                              180), // Slightly lighter shade of blue
                         ),
                       ),
                     ],
@@ -121,8 +123,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: _buildCard(
                           "Viewers",
                           profileDetails['viewersCount'].toString(),
-                          Color.fromARGB(255, 255, 165, 0),
-                          Color.fromARGB(255, 255, 200, 0),
+                          Color.fromARGB(255, 255, 140, 0), // Dark Orange
+                          Color.fromARGB(255, 255, 165,
+                              0), // Slightly lighter shade of orange
                         ),
                       ),
                       SizedBox(width: 12),
@@ -130,13 +133,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: _buildCard(
                           "No. of Posts",
                           profileDetails['postCounts'].toString(),
-                          Color.fromARGB(255, 128, 0, 128),
-                          Color.fromARGB(255, 148, 0, 211),
+                          Color.fromARGB(255, 128, 0, 128), // Purple
+                          Color.fromARGB(255, 147, 112,
+                              219), // Slightly lighter shade of purple
                         ),
                       ),
                     ],
                   ),
                 ),
+
                 const Divider(
                   thickness: 0.8,
                 ),

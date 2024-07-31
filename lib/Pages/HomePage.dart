@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 241, 246, 241),
       drawer: Drawer(
         child: ListView(
           children: <Widget>[

@@ -126,6 +126,7 @@ class _BlogsState extends State<Blogs> {
                               Blog(post: item, type: widget.type),
                         ),
                       );
+                      print(result);
 
                       if (result != null) {
                         setState(() {
@@ -137,8 +138,9 @@ class _BlogsState extends State<Blogs> {
                           result['numViews'] = item['numViews'];
                           result['viewsCount'] = item['viewsCount'];
                           result['followers'] = item['user']['followers'];
+                          result['following'] = item['user']['following'];
                         });
-                        print(result);
+                        // print(item);
                       }
                     },
                     child: Container(
