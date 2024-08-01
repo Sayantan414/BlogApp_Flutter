@@ -112,19 +112,20 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color.fromARGB(255, 147, 222, 151),
+        backgroundColor: Color.fromARGB(255, 244, 245, 244),
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => AddBlog(type: "Add", data: const {})));
         },
         child: const Text(
           "+",
-          style: TextStyle(fontSize: 40, color: Colors.white),
+          style:
+              TextStyle(fontSize: 40, color: Color.fromARGB(255, 4, 148, 54)),
         ),
       ),
       bottomNavigationBar: BottomAppBar(
         color: Color.fromARGB(255, 147, 222, 151),
-        shape: CircularNotchedRectangle(),
+        // shape: CircularNotchedRectangle(),
         notchMargin: 12,
         child: Container(
           height: 60,
