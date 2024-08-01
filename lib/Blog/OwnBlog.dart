@@ -1,30 +1,22 @@
 import 'dart:convert';
 
-import 'package:blogapp/Profile/otherUserProfile.dart';
 import 'package:blogapp/Services/postService.dart';
 import 'package:blogapp/Services/userService.dart';
 import 'package:blogapp/Utils/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:blogapp/NetworkHandler.dart';
 
-class Blog extends StatefulWidget {
-  const Blog({super.key, required this.post});
+class OwnBlog extends StatefulWidget {
+  const OwnBlog({super.key, required this.post});
 
   final Map post;
 
   @override
-  State<Blog> createState() => _BlogState();
+  State<OwnBlog> createState() => _OwnBlogState();
 }
 
-class _BlogState extends State<Blog> {
-  NetworkHandler networkHandler = NetworkHandler();
+class _OwnBlogState extends State<OwnBlog> {
   bool likeFlag = false;
-  String user = '';
-  List<dynamic> likings = [];
-  int noslikes = 0;
-  List<dynamic> pictures = [];
-  bool seeLikeDps = false;
   Map<String, dynamic> userDetails = {};
   bool like = false;
   bool dislike = false;
@@ -35,17 +27,13 @@ class _BlogState extends State<Blog> {
   void initState() {
     super.initState();
     userDetails = getUserDetails();
-    if (userDetails["id"] == widget.post["user"]["id"]) {
-      setState(() {
-        followingButton = false;
-      });
-    }
+    print(widget.post);
+
     // print(userDetails);
     viewDetailPost();
     like = widget.post["likes"].contains(userDetails["id"]);
     dislike = widget.post["dislikes"].contains(userDetails["id"]);
     // print(widget.post);
-    follow = widget.post["user"]["followers"].contains(userDetails["id"]);
     // print(follow);
   }
 
@@ -76,16 +64,7 @@ class _BlogState extends State<Blog> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.of(context).pop({
-              'likesCount': widget.post['likesCount'].toString(),
-              'likes': widget.post['likes'],
-              'dislikesCount': widget.post['dislikesCount'].toString(),
-              'dislikes': widget.post['dislikes'],
-              'viewsCount': widget.post['viewsCount'],
-              'numViews': widget.post['numViews'],
-              'followers': widget.post['user']['followers'],
-              'following': widget.post['user']['following'],
-            });
+            Navigator.of(context).pop({});
           },
         ),
         backgroundColor: const Color.fromARGB(255, 147, 222, 151),
@@ -132,35 +111,35 @@ class _BlogState extends State<Blog> {
                       // Navigate to the other user's profile
                     },
                     child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          _truncateText(
-                              '• By ${widget.post['user']['fullname']}', 16),
-                          style: GoogleFonts.lato(
-                            textStyle: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                            ),
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        _truncateText('• By ${userDetails["name"]}', 16),
+                        style: GoogleFonts.lato(
+                          textStyle: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
                           ),
-                        )),
+                        ),
+                      ),
+                    ),
                   ),
                   const SizedBox(width: 8),
                   GestureDetector(
-                      onTap: () {
-                        // Navigate to the other user's profile
-                      },
-                      child: (widget.post['user']['profilePhoto'] != null
-                          ? CircleAvatar(
-                              backgroundImage: NetworkImage(
-                                  widget.post['user']['profilePhoto']),
-                              radius: 20,
-                              backgroundColor: Colors.transparent,
-                            )
-                          : const CircleAvatar(
-                              backgroundImage: AssetImage('assets/nouser.png'),
-                              radius: 20,
-                              backgroundColor: Colors.transparent,
-                            ))),
+                    onTap: () {
+                      // Navigate to the other user's profile
+                    },
+                    child: (userDetails["photo"] != null
+                        ? CircleAvatar(
+                            backgroundImage: NetworkImage(userDetails["photo"]),
+                            radius: 20,
+                            backgroundColor: Colors.transparent,
+                          )
+                        : const CircleAvatar(
+                            backgroundImage: AssetImage('assets/nouser.png'),
+                            radius: 20,
+                            backgroundColor: Colors.transparent,
+                          )),
+                  ),
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(right: 20.0),
@@ -279,83 +258,28 @@ class _BlogState extends State<Blog> {
                       ),
                     ),
                     SizedBox(
-                      // width: 100.0,
+                      width: 95.0,
                       height: 30.0,
-                      child: follow
-                          ? OutlinedButton(
-                              onPressed: () async {
-                                var response =
-                                    await unfollow(widget.post['user']['id']);
-                                // print(response);
-                                if (response['status'] == 'success') {
-                                  setState(() {
-                                    widget.post['user']['followers'] =
-                                        response['data']['followers'];
-                                    follow = false;
-                                  });
-                                  print(widget.post['user']['followers']);
-                                }
-                              },
-                              style: OutlinedButton.styleFrom(
-                                side: const BorderSide(color: Colors.green),
-                              ),
-                              child: const Text(
-                                'Unfollow',
-                                style: TextStyle(
-                                    color: Color.fromARGB(255, 4, 88, 36),
-                                    fontSize: 12),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            )
-                          : OutlinedButton(
-                              onPressed: () async {
-                                var response =
-                                    await following(widget.post['user']['id']);
-                                // print(response);
-                                if (response['status'] == 'success') {
-                                  setState(() {
-                                    widget.post['user']['followers'] =
-                                        response['data']['followers'];
-                                    follow = true;
-                                  });
-                                  print(widget.post['user']['followers']);
-                                }
-                              },
-                              style: OutlinedButton.styleFrom(
-                                side: const BorderSide(color: Colors.green),
-                              ),
-                              child: const Text(
-                                'follow',
-                                style: TextStyle(
-                                    color: Color.fromARGB(255, 4, 88, 36),
-                                    fontSize: 12),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                    )
-                    //  SizedBox(
-                    //     width: 95.0,
-                    //     height: 30.0,
-                    //     child: OutlinedButton.icon(
-                    //       onPressed: () {
-                    //         print('edit');
-                    //       },
-                    //       icon: const Icon(Icons.edit,
-                    //           size: 22,
-                    //           color: Color.fromARGB(255, 111, 112, 113)),
-                    //       label: const Text(
-                    //         "Edit",
-                    //         style: TextStyle(
-                    //             color: Color.fromARGB(255, 111, 112, 113),
-                    //             fontSize: 11),
-                    //         overflow: TextOverflow.ellipsis,
-                    //       ),
-                    //       style: OutlinedButton.styleFrom(
-                    //         side: const BorderSide(
-                    //             color: Color.fromARGB(255, 111, 112, 113)),
-                    //       ),
-                    //     ),
-                    //   ),
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          print('edit');
+                        },
+                        icon: const Icon(Icons.edit,
+                            size: 22,
+                            color: Color.fromARGB(255, 111, 112, 113)),
+                        label: const Text(
+                          "Edit",
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 111, 112, 113),
+                              fontSize: 11),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          side: const BorderSide(
+                              color: Color.fromARGB(255, 111, 112, 113)),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

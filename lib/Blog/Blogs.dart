@@ -1,14 +1,10 @@
-import 'dart:convert';
-
 import 'package:blogapp/Blog/Blog.dart';
-import 'package:blogapp/Blog/addBlog.dart';
+import 'package:blogapp/Blog/OwnBlog.dart';
 
 import 'package:blogapp/NetworkHandler.dart';
-import 'package:blogapp/Services/postService.dart';
 import 'package:blogapp/Utils/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class Blogs extends StatefulWidget {
   const Blogs({super.key, required this.type, required this.posts});
@@ -118,31 +114,53 @@ class _BlogsState extends State<Blogs> {
                 ),
               ),
               ...filteredData.map((item) => InkWell(
-                    onTap: () async {
-                      var result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              Blog(post: item, type: widget.type),
-                        ),
-                      );
-                      print(result);
+                    onTap: widget.type == "Public"
+                        ? () async {
+                            var result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Blog(post: item),
+                              ),
+                            );
+                            print(result);
 
-                      if (result != null) {
-                        setState(() {
-                          result['likesCount'] = item['likesCount'].toString();
-                          result['likes'] = item['likes'];
-                          result['dislikesCount'] =
-                              item['dislikesCount'].toString();
-                          result['dislikes'] = item['dislikes'];
-                          result['numViews'] = item['numViews'];
-                          result['viewsCount'] = item['viewsCount'];
-                          result['followers'] = item['user']['followers'];
-                          result['following'] = item['user']['following'];
-                        });
-                        // print(item);
-                      }
-                    },
+                            if (result != null) {
+                              setState(() {
+                                result['likesCount'] =
+                                    item['likesCount'].toString();
+                                result['likes'] = item['likes'];
+                                result['dislikesCount'] =
+                                    item['dislikesCount'].toString();
+                                result['dislikes'] = item['dislikes'];
+                                result['numViews'] = item['numViews'];
+                                result['viewsCount'] = item['viewsCount'];
+                                result['followers'] = item['user']['followers'];
+                                result['following'] = item['user']['following'];
+                              });
+                              // print(item);
+                            }
+                          }
+                        : () async {
+                            var result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => OwnBlog(post: item),
+                              ),
+                            );
+                            if (result != null) {
+                              setState(() {
+                                result['likesCount'] =
+                                    item['likesCount'].toString();
+                                result['likes'] = item['likes'];
+                                result['dislikesCount'] =
+                                    item['dislikesCount'].toString();
+                                result['dislikes'] = item['dislikes'];
+                                // result['numViews'] = item['numViews'];
+                                // result['viewsCount'] = item['viewsCount'];
+                              });
+                              // print(item);
+                            }
+                          },
                     child: Container(
                       margin: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
                       decoration: BoxDecoration(
