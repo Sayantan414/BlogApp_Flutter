@@ -1,6 +1,11 @@
+import 'dart:io';
+
+import 'package:blogapp/CustumWidget/OverlayCard.dart';
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:blogapp/Pages/HomePage.dart';
+import 'package:blogapp/Services/postService.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddBlog extends StatefulWidget {
   const AddBlog({super.key, required this.type, required this.data});
@@ -16,20 +21,21 @@ class _AddBlogState extends State<AddBlog> {
   final _globalkey = GlobalKey<FormState>();
   TextEditingController _title = TextEditingController();
   TextEditingController _body = TextEditingController();
-  // late XFile _imageFile;
   IconData iconphoto = Icons.image;
-  NetworkHandler networkHandler = NetworkHandler();
 
-  @override
-  void initState() {
-    super.initState();
-    print(widget.data);
+  File? _imageFile;
 
-    if (widget.data.isNotEmpty) {
-      print(widget.data);
-      _title.text = widget.data["title"] ?? "";
-      _body.text = widget.data["body"] ?? "";
-    }
+  Future<void> _pickImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _imageFile = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
   }
 
   @override
@@ -37,48 +43,62 @@ class _AddBlogState extends State<AddBlog> {
     return Scaffold(
       backgroundColor: Color.fromARGB(236, 211, 238, 196),
       appBar: AppBar(
-        backgroundColor: Colors.white54,
+        backgroundColor: Color.fromARGB(236, 211, 238, 196),
         elevation: 0,
         leading: IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.clear,
               color: Colors.black,
             ),
             onPressed: () {
               Navigator.pop(context);
             }),
-        // actions: <Widget>[
-        //   ElevatedButton(
-        //     onPressed: () {
-        //       if (_globalkey.currentState!.validate()) {
-        //         showModalBottomSheet(
-        //           context: context,
-        //           builder: ((builder) => OverlayCard(
-        //                 body: _body.text,
-        //                 title: _title.text,
-        //               )),
-        //         );
-        //       }
-        //     },
-        //     child: Text(
-        //       "Preview",
-        //       style: TextStyle(fontSize: 18),
-        //     ),
-        //   ),
-        // ],
       ),
       body: Form(
         key: _globalkey,
         child: ListView(
           children: <Widget>[
+            _uploadBannerField(),
             titleTextField(),
             bodyTextField(),
             SizedBox(
               height: 20,
             ),
-            widget.type == "Add" ? addButton() : updateButton(),
+            addButton(),
+            SizedBox(
+              height: 20,
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _uploadBannerField() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 10),
+          if (_imageFile == null)
+            Center(
+              child: const Icon(Icons.image, size: 100, color: Colors.white),
+            )
+          else
+            Image.file(_imageFile!,
+                height: 200, width: double.infinity, fit: BoxFit.cover),
+          SizedBox(height: 10),
+          Center(
+            child: ElevatedButton(
+              onPressed: _pickImage,
+              child: Text(
+                'Select Image',
+                style: TextStyle(color: Colors.teal),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -117,13 +137,6 @@ class _AddBlogState extends State<AddBlog> {
           ),
           labelText: "Add Blog Title",
           labelStyle: const TextStyle(color: Colors.black),
-          // prefixIcon: IconButton(
-          //   icon: Icon(
-          //     iconphoto,
-          //     color: Color.fromARGB(255, 147, 222, 151),
-          //   ),
-          //   onPressed: takeCoverPhoto,
-          // ),
         ),
         maxLength: 100,
         maxLines: null,
@@ -173,20 +186,12 @@ class _AddBlogState extends State<AddBlog> {
     return InkWell(
       onTap: () async {
         if (_globalkey.currentState!.validate()) {
-          Map<String, String> data = {
-            "title": _title.text,
-            "body": _body.text,
-          };
-
-          var response = await networkHandler.post1("/blogpost/Add", data);
-          print("Data : " + response.body);
-
-          if (response.statusCode == 200 || response.statusCode == 201) {
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage()),
-                (route) => false);
-          }
+          // createPost(
+          //         _title.text,
+          //         _body.text,
+          //         _categoryController.text,
+          //         _imageFile,
+          //       );
         }
       },
       child: Center(
@@ -212,21 +217,21 @@ class _AddBlogState extends State<AddBlog> {
     return InkWell(
       onTap: () async {
         if (_globalkey.currentState!.validate()) {
-          Map<String, String> data = {
-            "title": _title.text,
-            "body": _body.text,
-          };
+          // Map<String, String> data = {
+          //   "title": _title.text,
+          //   "body": _body.text,
+          // };
 
-          var response = await networkHandler.put(
-              "/blogpost/update/${widget.data["_id"]}", data);
-          print("Data : " + response.body);
+          // var response = await networkHandler.put(
+          //     "/blogpost/update/${widget.data["_id"]}", data);
+          // print("Data : " + response.body);
 
-          if (response.statusCode == 200 || response.statusCode == 201) {
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage()),
-                (route) => false);
-          }
+          // if (response.statusCode == 200 || response.statusCode == 201) {
+          //   Navigator.pushAndRemoveUntil(
+          //       context,
+          //       MaterialPageRoute(builder: (context) => HomePage()),
+          //       (route) => false);
+          // }
         }
       },
       child: Center(
@@ -247,14 +252,4 @@ class _AddBlogState extends State<AddBlog> {
       ),
     );
   }
-
-  // void takeCoverPhoto() async {
-  //   final imagePicker = ImagePicker();
-  //   final pickedImage =
-  //       await imagePicker.pickImage(source: ImageSource.gallery);
-  //   setState(() {
-  //     _imageFile = pickedImage!;
-  //     iconphoto = Icons.check_box;
-  //   });
-  // }
 }

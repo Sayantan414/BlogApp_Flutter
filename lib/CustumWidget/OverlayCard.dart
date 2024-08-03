@@ -1,52 +1,49 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class OverlayCard extends StatelessWidget {
+  const OverlayCard({super.key, required this.imagefile, required this.title});
+  final PickedFile imagefile;
   final String title;
-  final String body;
-
-  const OverlayCard({super.key, required this.body, required this.title});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 400,
+      height: 200,
       padding: EdgeInsets.all(5),
       width: MediaQuery.of(context).size.width,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: Stack(
         children: <Widget>[
-          SizedBox(height: 10), // Add some gap at the top
-          // Expanded(
-          //   child: Container(
-          //     decoration: BoxDecoration(
-          //       image: DecorationImage(
-          //         image: FileImage(
-          //           File(imagefile.path),
-          //         ),
-          //         fit: BoxFit.cover, // Fit the image to cover the container
-          //       ),
-          //       borderRadius: BorderRadius.circular(8),
-          //     ),
-          //   ),
-          // ),
           Container(
-            padding: EdgeInsets.all(8),
-            height: 55,
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 255, 255, 255),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(8),
-                bottomRight: Radius.circular(8),
-              ),
-            ),
-            child: Text(
-              title,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-              ),
+              image: DecorationImage(
+                  image: FileImage(
+                    File(imagefile.path),
+                  ),
+                  fit: BoxFit.fitWidth),
             ),
           ),
+          Positioned(
+            bottom: 2,
+            child: Container(
+              padding: EdgeInsets.all(8),
+              height: 55,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(8)),
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+          )
         ],
       ),
     );
