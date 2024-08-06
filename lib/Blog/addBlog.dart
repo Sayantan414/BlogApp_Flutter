@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:blogapp/CustumWidget/OverlayCard.dart';
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:blogapp/Pages/HomePage.dart';
+import 'package:blogapp/Services/categoryService.dart';
 import 'package:blogapp/Services/postService.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -22,8 +23,16 @@ class _AddBlogState extends State<AddBlog> {
   TextEditingController _title = TextEditingController();
   TextEditingController _body = TextEditingController();
   IconData iconphoto = Icons.image;
+  String? _selectedCategory;
+  List<dynamic> categories = [];
 
   File? _imageFile;
+
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchCategory();
+  }
 
   Future<void> _pickImage() async {
     final pickedFile =
@@ -36,6 +45,22 @@ class _AddBlogState extends State<AddBlog> {
         print('No image selected.');
       }
     });
+  }
+
+  void fetchCategory() async {
+    try {
+      // isLoading = true;
+      var responseData = await fetchAllCategory();
+      // print(responseData);
+
+      setState(() {
+        categories = responseData;
+
+        // isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
   }
 
   @override
@@ -59,6 +84,7 @@ class _AddBlogState extends State<AddBlog> {
         child: ListView(
           children: <Widget>[
             _uploadBannerField(),
+            categoryDropdownField(),
             titleTextField(),
             bodyTextField(),
             SizedBox(
@@ -93,7 +119,7 @@ class _AddBlogState extends State<AddBlog> {
             child: ElevatedButton(
               onPressed: _pickImage,
               child: Text(
-                'Select Image',
+                'Choose a Image',
                 style: TextStyle(color: Colors.teal),
               ),
             ),
@@ -144,6 +170,54 @@ class _AddBlogState extends State<AddBlog> {
     );
   }
 
+  Widget categoryDropdownField() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 10,
+      ),
+      child: DropdownButtonFormField<String>(
+        value: _selectedCategory,
+        onChanged: (String? newValue) {
+          setState(() {
+            _selectedCategory = newValue;
+          });
+        },
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return "Please select a category";
+          }
+          return null;
+        },
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.grey[200],
+          border: OutlineInputBorder(
+            borderSide: const BorderSide(
+              color: Color.fromARGB(255, 147, 222, 151),
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(
+              color: Colors.blue,
+              width: 2,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          labelText: "Select Category",
+          labelStyle: TextStyle(color: Colors.black),
+        ),
+        items: categories.map<DropdownMenuItem<String>>((dynamic category) {
+          return DropdownMenuItem<String>(
+            value: category['_id'],
+            child: Text(category['title']),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
   Widget bodyTextField() {
     return Padding(
       padding: const EdgeInsets.symmetric(
@@ -186,12 +260,8 @@ class _AddBlogState extends State<AddBlog> {
     return InkWell(
       onTap: () async {
         if (_globalkey.currentState!.validate()) {
-          // createPost(
-          //         _title.text,
-          //         _body.text,
-          //         _categoryController.text,
-          //         _imageFile,
-          //       );
+          await createPost(
+              _title.text, _body.text, _selectedCategory!, _imageFile);
         }
       },
       child: Center(

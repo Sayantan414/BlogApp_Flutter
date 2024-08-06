@@ -279,6 +279,19 @@ class _BlogsState extends State<Blogs> {
                               ],
                             ),
                           ),
+                          // Padding(
+                          //   padding: const EdgeInsets.only(top: 2.0, left: 8.0),
+                          //   child: Text(
+                          //     "#${item['category']['title']}",
+                          //     style: GoogleFonts.poppins(
+                          //       textStyle: const TextStyle(
+                          //         // fontWeight: FontWeight.bold,
+                          //         fontSize: 14,
+                          //         color: Colors.blue,
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                           // Post Image
                           if (item['photo'] != null)
                             ClipRRect(
@@ -303,7 +316,7 @@ class _BlogsState extends State<Blogs> {
                                   textStyle: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
-                                    color: Color.fromARGB(255, 87, 86, 86),
+                                    color: Color.fromARGB(255, 56, 98, 67),
                                   ),
                                 ),
                               ),

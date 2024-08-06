@@ -28,7 +28,6 @@ class _SignUpPageState extends State<SignUpPage> {
   String? errorText = null;
   bool validate = false;
   bool circular = false;
-  String pic = "";
 
   @override
   Widget build(BuildContext context) {

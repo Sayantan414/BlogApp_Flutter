@@ -83,31 +83,44 @@ Future<Map<String, dynamic>> viewPost(String id) async {
 }
 
 Future<void> createPost(
-    String title, String description, String category, File? image) async {
-  final url = Uri.parse('$baseUrl/api/v1/posts'); // Replace with your API URL
-  final headers = {
-    'Content-Type': 'multipart/form-data',
-    'Authorization': 'Bearer YOUR_TOKEN', // Include the token if required
-  };
+    String title, String description, String category, File? imageFile) async {
+  final url = Uri.parse('$baseUrl/api/v1/posts');
+  final request = http.MultipartRequest('POST', url);
 
-  var request = http.MultipartRequest('POST', url)
-    ..fields['title'] = title
-    ..fields['description'] = description
-    ..fields['category'] = category
-    ..headers.addAll(headers);
+  // Add headers
+  request.headers.addAll({
+    'Content-Type': 'application/json',
+    'Authorization': token // replace with your actual token
+  });
 
-  if (image != null) {
-    request.files.add(await http.MultipartFile.fromPath('image', image.path));
+  // Add fields
+  request.fields['title'] = title;
+  request.fields['description'] = description;
+  request.fields['category'] = category;
+  print(request.fields);
+  // Add image file if available
+  if (imageFile != null) {
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        'image',
+        imageFile.path,
+      ),
+    );
   }
 
   try {
     final response = await request.send();
+
+    // Read the response as a string
+    final responseData = await http.Response.fromStream(response);
+    print(responseData.body);
+
     if (response.statusCode == 200) {
-      final responseData = await http.Response.fromStream(response);
-      final data = jsonDecode(responseData.body);
-      print('Post created: $data');
+      final data = json.decode(responseData.body);
+      print('Post created: ${data['data']}');
     } else {
       print('Failed to create post: ${response.statusCode}');
+      print('Response body: ${responseData.body}');
     }
   } catch (e) {
     print('Error: $e');
