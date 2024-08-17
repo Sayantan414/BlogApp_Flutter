@@ -7,6 +7,8 @@ import 'package:blogapp/Utils/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:blogapp/NetworkHandler.dart';
+import 'package:intl/intl.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class Blog extends StatefulWidget {
   const Blog({super.key, required this.post});
@@ -30,10 +32,13 @@ class _BlogState extends State<Blog> {
   bool dislike = false;
   bool followingButton = true;
   bool follow = false;
+  List<dynamic> data = [];
+  bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
+    // print(widget.post);
     userDetails = getUserDetails();
     if (userDetails["id"] == widget.post["user"]["id"]) {
       setState(() {
@@ -47,6 +52,23 @@ class _BlogState extends State<Blog> {
     // print(widget.post);
     follow = widget.post["user"]["followers"].contains(userDetails["id"]);
     // print(follow);
+    fetchAllComments();
+  }
+
+  void fetchAllComments() async {
+    try {
+      isLoading = true;
+      var responseData = await fetchComments(widget.post['_id']);
+      print(responseData);
+
+      setState(() {
+        data = responseData;
+
+        isLoading = false;
+      });
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
   }
 
   viewDetailPost() async {
@@ -70,6 +92,7 @@ class _BlogState extends State<Blog> {
 
   @override
   Widget build(BuildContext context) {
+    final DateFormat dateFormat = DateFormat('MMMM d, y h:mm a');
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 225, 235, 225),
       appBar: AppBar(
@@ -413,26 +436,177 @@ class _BlogState extends State<Blog> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: 5,
-                      itemBuilder: (context, index) {
-                        return const ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: AssetImage('assets/nouser.png'),
-                            radius: 17,
-                            backgroundColor: Colors.transparent,
+                    isLoading
+                        ? LoadingAnimationWidget.fourRotatingDots(
+                            color: const Color.fromARGB(230, 80, 208, 142),
+                            size: 50,
+                          )
+                        : ListView(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            children: data.map((comment) {
+                              return ListTile(
+                                leading: comment['user']['profilePhoto'] != null
+                                    ? CircleAvatar(
+                                        backgroundImage: NetworkImage(
+                                            comment['user']['profilePhoto']),
+                                        radius: 20,
+                                        backgroundColor: Colors.transparent,
+                                      )
+                                    : const CircleAvatar(
+                                        backgroundImage:
+                                            AssetImage('assets/nouser.png'),
+                                        radius: 17,
+                                        backgroundColor: Colors.transparent,
+                                      ),
+                                title: Text(
+                                  comment['user']['fullname'],
+                                  style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color.fromARGB(255, 4, 88, 36)),
+                                ),
+                                subtitle: Text(
+                                  // "vrevgre jviurehniue hiorhndiouhvnoi huirhndui huirndiuohno hiuohio",
+                                  comment['description'],
+                                  style: GoogleFonts.lato(
+                                    textStyle: const TextStyle(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize
+                                      .min, // Adjusts the width of the row
+                                  children: [
+                                    Text(
+                                      comment['timeAgo'],
+                                      style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Color.fromARGB(
+                                              255, 143, 142, 142)),
+                                    ),
+                                    const SizedBox(
+                                        width:
+                                            8), // Add spacing between text and icon
+                                    GestureDetector(
+                                      onTap: () {
+                                        showModalBottomSheet(
+                                          context: context,
+                                          builder: ((builder) => bottomSheet()),
+                                        );
+                                      },
+                                      child: Text(
+                                        "•••",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color:
+                                                Color.fromARGB(255, 4, 88, 36)),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }).toList(), // Convert the Iterable to a List
                           ),
-                          title: Text("comments"),
-                        );
-                      },
-                    ),
                   ],
                 ),
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget bottomSheet() {
+    return Container(
+      height: 160.0,
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 20,
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Card(
+              color: Color.fromARGB(255, 230, 251, 223),
+              margin: const EdgeInsets.symmetric(vertical: 1.0),
+              elevation: 4.0,
+              child: Container(
+                width: double.infinity, // Make the card full width
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Edit Comment',
+                            style: GoogleFonts.roboto(
+                              textStyle: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: Color.fromARGB(255, 4, 88, 36),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: Colors.grey,
+                        ),
+                      ],
+                    ),
+                    Text(
+                      'Subtext 2',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    Divider(height: 20, color: Colors.grey[300]),
+                    SizedBox(height: 16), // Space between pairs
+
+                    // Text and Arrow Pair 3
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Delete Comment',
+                            style: GoogleFonts.roboto(
+                              textStyle: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: Color.fromARGB(255, 4, 88, 36),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: 16,
+                          color: Colors.grey,
+                        ),
+                      ],
+                    ),
+                    Text(
+                      'Subtext 3',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

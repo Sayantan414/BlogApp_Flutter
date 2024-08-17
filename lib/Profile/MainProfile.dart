@@ -105,8 +105,8 @@ class _MainProfileState extends State<MainProfile> {
   }
 
   Widget head() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -119,9 +119,9 @@ class _MainProfileState extends State<MainProfile> {
           ),
           Text(
             "Username",
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(
+          SizedBox(
             height: 10,
           ),
           Text("titleLine")

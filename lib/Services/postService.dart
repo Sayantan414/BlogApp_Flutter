@@ -31,6 +31,31 @@ Future<List<dynamic>> fetchAllPost() async {
   }
 }
 
+Future<List<dynamic>> fetchComments(String id) async {
+  Map<String, String> headers = {
+    'Content-Type': 'application/json',
+    'Authorization': token
+  };
+
+  final response = await http
+      .get(Uri.parse('$baseUrl/api/v1/posts/comments/$id'), headers: headers);
+  // print(response.body);
+
+  if (response.statusCode == 200) {
+    // Decode the JSON response
+    Map<String, dynamic> decodedResponse = jsonDecode(response.body);
+    if (decodedResponse['status'] == 'success') {
+      List<dynamic> comments = decodedResponse['data'];
+      return comments;
+    } else {
+      return Future.error(decodedResponse['message'] ?? 'An error occurred');
+    }
+  } else {
+    return Future.error(
+        jsonDecode(response.body)['message'] ?? 'An error occurred');
+  }
+}
+
 Future<Map<String, dynamic>> likePost(String id) async {
   Map<String, String> headers = {
     'Content-Type': 'application/json',

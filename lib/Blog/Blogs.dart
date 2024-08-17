@@ -25,6 +25,8 @@ class _BlogsState extends State<Blogs> {
   List<dynamic> filteredData = [];
   String username = '';
   Map<String, dynamic> userDetails = {};
+  List<dynamic> uniqueCategory = ['All'];
+  String selectedCategory = 'All';
 
   @override
   void initState() {
@@ -35,6 +37,16 @@ class _BlogsState extends State<Blogs> {
     data = widget.posts;
     filteredData = data;
     // print(filteredData);
+    if (widget.type == 'Public') {
+      for (var post in data) {
+        String categoryTitle = post['category']['title'];
+
+        if (!uniqueCategory.contains(categoryTitle)) {
+          uniqueCategory.add(categoryTitle);
+        }
+      }
+    }
+
     if (filteredData.isNotEmpty) {
       setState(() {
         isLoading = false;
@@ -63,6 +75,18 @@ class _BlogsState extends State<Blogs> {
         String body = item["description"].toLowerCase();
         return title.contains(query.toLowerCase()) ||
             body.contains(query.toLowerCase());
+      }).toList();
+    });
+  }
+
+  filterPostsByCategory(String categoryName) {
+    if (categoryName == 'All') {
+      categoryName = '';
+    }
+    setState(() {
+      filteredData = data.where((item) {
+        String category = item['category']["title"].toLowerCase();
+        return category.contains(categoryName.toLowerCase());
       }).toList();
     });
   }
@@ -113,6 +137,56 @@ class _BlogsState extends State<Blogs> {
                   ),
                 ),
               ),
+              widget.type == 'Public'
+                  ? Wrap(
+                      alignment: WrapAlignment
+                          .start, // Aligns the buttons to the start (left side)
+                      spacing: 8.0, // Horizontal spacing between buttons
+                      runSpacing: 4.0, // Vertical spacing between rows
+                      children: uniqueCategory.map((category) {
+                        final isSelected = selectedCategory ==
+                            category; // Check if this category is selected
+                        return OutlinedButton(
+                          onPressed: () {
+                            setState(() {
+                              selectedCategory =
+                                  category; // Set the selected category on button click
+                            });
+                            filterPostsByCategory(category);
+                            print(category);
+                          },
+                          child: Text(
+                            category,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: isSelected
+                                  ? Colors.white
+                                  : Color.fromARGB(255, 54, 170, 85),
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 10),
+                            side: BorderSide(
+                              color: isSelected
+                                  ? Color.fromARGB(255, 148, 233,
+                                      171) // Outline color when selected
+                                  : Color.fromARGB(162, 111, 239,
+                                      145), // Outline color when not selected
+                            ),
+                            backgroundColor: isSelected
+                                ? Color.fromARGB(255, 148, 233, 171)
+                                : Colors.white,
+                            textStyle: TextStyle(fontSize: 14),
+                          ),
+                        );
+                      }).toList(),
+                    )
+                  : SizedBox(
+                      height: 0,
+                    ),
               ...filteredData.map((item) => InkWell(
                     onTap: widget.type == "Public"
                         ? () async {

@@ -33,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       circular = true;
       var responseData = await profile();
       profileDetails = responseData;
-      print(profileDetails);
+      // print(profileDetails);
 
       setState(() {
         data = profileDetails['posts'];

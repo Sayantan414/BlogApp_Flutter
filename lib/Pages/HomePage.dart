@@ -104,7 +104,10 @@ class _HomePageState extends State<HomePage> {
       ),
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 147, 222, 151),
-        title: Text(titleString[currentState]),
+        title: Text(
+          titleString[currentState],
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: true,
         actions: <Widget>[
           // IconButton(icon: Icon(Icons.search), onPressed: () {}),
