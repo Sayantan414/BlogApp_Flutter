@@ -3,19 +3,10 @@ getBaseUrl() {
 }
 
 var token = '';
-Map<String, dynamic> userDetails = {
-  'name': '',
-  'photo': '',
-  'email': '',
-  'id': ''
-};
+Map<String, dynamic> userDetails = {};
 
-void saveUserDetails(String firstname, String lastname, String profilePhoto,
-    String mail, String id) {
-  userDetails['name'] = '$firstname $lastname';
-  userDetails['photo'] = profilePhoto;
-  userDetails['email'] = mail;
-  userDetails["id"] = id;
+void saveUserDetails(Map data) {
+  userDetails = data['details'];
 }
 
 Map<String, dynamic> getUserDetails() {

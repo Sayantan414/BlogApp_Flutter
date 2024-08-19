@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:blogapp/Profile/otherUserProfile.dart';
+import 'package:blogapp/Services/commentService.dart';
 import 'package:blogapp/Services/postService.dart';
 import 'package:blogapp/Services/userService.dart';
 import 'package:blogapp/Utils/functions.dart';
@@ -32,25 +33,31 @@ class _BlogState extends State<Blog> {
   bool dislike = false;
   bool followingButton = true;
   bool follow = false;
-  List<dynamic> data = [];
+  List<dynamic> comments = [];
   bool isLoading = false;
+  TextEditingController commentController = TextEditingController();
+  Map<String, dynamic> cmmntData = {};
+  bool circular = false;
+  bool cmmntIsUpdate = false;
+  int cmmntIndex = -1;
 
   @override
   void initState() {
     super.initState();
     // print(widget.post);
     userDetails = getUserDetails();
-    if (userDetails["id"] == widget.post["user"]["id"]) {
+    // print(userDetails);
+    if (userDetails["_id"] == widget.post["user"]["id"]) {
       setState(() {
         followingButton = false;
       });
     }
     // print(userDetails);
     viewDetailPost();
-    like = widget.post["likes"].contains(userDetails["id"]);
-    dislike = widget.post["dislikes"].contains(userDetails["id"]);
+    like = widget.post["likes"].contains(userDetails["_id"]);
+    dislike = widget.post["dislikes"].contains(userDetails["_id"]);
     // print(widget.post);
-    follow = widget.post["user"]["followers"].contains(userDetails["id"]);
+    follow = widget.post["user"]["followers"].contains(userDetails["_id"]);
     // print(follow);
     fetchAllComments();
   }
@@ -59,10 +66,10 @@ class _BlogState extends State<Blog> {
     try {
       isLoading = true;
       var responseData = await fetchComments(widget.post['_id']);
-      print(responseData);
 
       setState(() {
-        data = responseData;
+        comments = responseData;
+        // print(comments);
 
         isLoading = false;
       });
@@ -419,20 +426,67 @@ class _BlogState extends State<Blog> {
                     ),
                     const SizedBox(height: 8),
                     TextField(
-                      // controller: commentController,
+                      controller: commentController,
                       decoration: InputDecoration(
                         hintText: 'Add a comment...',
                         border: OutlineInputBorder(),
-                        suffixIcon: IconButton(
-                          color: Color.fromARGB(255, 4, 88, 36),
-                          icon: Icon(Icons.send),
-                          onPressed: () {
-                            setState(() {
-                              // comments.add(commentController.text);
-                              // commentController.clear();
-                            });
-                          },
-                        ),
+                        suffixIcon: circular
+                            ? Container(
+                                width: 5.0, // Set the desired width
+                                height: 5.0, // Set the desired height
+                                child: const CircularProgressIndicator(
+                                  value: null,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.green),
+                                ),
+                              )
+                            : IconButton(
+                                color: Color.fromARGB(255, 4, 88, 36),
+                                icon: Icon(Icons.send),
+                                onPressed: () async {
+                                  setState(() {
+                                    circular = true;
+                                  });
+                                  final commentPayload = {
+                                    'id': widget.post[
+                                        '_id'], // Replace with actual post ID
+                                    'description': commentController.text,
+                                  };
+                                  // print(commentPayload);
+                                  if (cmmntIsUpdate) {
+                                    try {
+                                      final response =
+                                          await updateComment(commentPayload);
+                                      cmmntData = response;
+                                      print('Comment created: $response');
+                                    } catch (error) {
+                                      print('Error: $error');
+                                    }
+                                    setState(() {
+                                      // comments.add(commentController.text);
+                                      commentController.clear();
+                                      comments.insert(
+                                          cmmntIndex, cmmntData['data']);
+                                      circular = false;
+                                    });
+                                  } else {
+                                    try {
+                                      final response =
+                                          await createComment(commentPayload);
+                                      cmmntData = response;
+                                      print('Comment created: $response');
+                                    } catch (error) {
+                                      print('Error: $error');
+                                    }
+                                    setState(() {
+                                      // comments.add(commentController.text);
+                                      commentController.clear();
+                                      comments.insert(0, cmmntData['data']);
+                                      circular = false;
+                                    });
+                                  }
+                                },
+                              ),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -444,7 +498,10 @@ class _BlogState extends State<Blog> {
                         : ListView(
                             shrinkWrap: true,
                             physics: NeverScrollableScrollPhysics(),
-                            children: data.map((comment) {
+                            children: comments.asMap().entries.map((entry) {
+                              int index = entry.key;
+                              var comment = entry.value;
+
                               return ListTile(
                                 leading: comment['user']['profilePhoto'] != null
                                     ? CircleAvatar(
@@ -467,7 +524,6 @@ class _BlogState extends State<Blog> {
                                       color: Color.fromARGB(255, 4, 88, 36)),
                                 ),
                                 subtitle: Text(
-                                  // "vrevgre jviurehniue hiorhndiouhvnoi huirhndui huirndiuohno hiuohio",
                                   comment['description'],
                                   style: GoogleFonts.lato(
                                     textStyle: const TextStyle(
@@ -491,12 +547,17 @@ class _BlogState extends State<Blog> {
                                             8), // Add spacing between text and icon
                                     GestureDetector(
                                       onTap: () {
+                                        // Do something with the index here
+                                        print(
+                                            "Tapped on comment at index: $index");
+
                                         showModalBottomSheet(
                                           context: context,
-                                          builder: ((builder) => bottomSheet()),
+                                          builder: (context) =>
+                                              bottomSheet(index),
                                         );
                                       },
-                                      child: Text(
+                                      child: const Text(
                                         "•••",
                                         style: TextStyle(
                                             fontSize: 14,
@@ -519,7 +580,7 @@ class _BlogState extends State<Blog> {
     );
   }
 
-  Widget bottomSheet() {
+  Widget bottomSheet(index) {
     return Container(
       height: 160.0,
       width: MediaQuery.of(context).size.width,
@@ -540,68 +601,93 @@ class _BlogState extends State<Blog> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Edit Comment',
-                            style: GoogleFonts.roboto(
-                              textStyle: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: Color.fromARGB(255, 4, 88, 36),
+                    GestureDetector(
+                      onTap: () {
+                        // Add your click event logic here
+                        print('Edit Row clicked');
+                        commentController.text = comments[index]['description'];
+                        cmmntIndex = index;
+                        cmmntIsUpdate = true;
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'Edit Comment',
+                                  style: GoogleFonts.roboto(
+                                    textStyle: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Color.fromARGB(255, 4, 88, 36),
+                                    ),
+                                  ),
+                                ),
                               ),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                size: 16,
+                                color: Colors.grey,
+                              ),
+                            ],
+                          ),
+                          Text(
+                            'Subtext 2',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
                             ),
                           ),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          size: 16,
-                          color: Colors.grey,
-                        ),
-                      ],
-                    ),
-                    Text(
-                      'Subtext 2',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
+                        ],
                       ),
                     ),
                     Divider(height: 20, color: Colors.grey[300]),
                     SizedBox(height: 16), // Space between pairs
 
                     // Text and Arrow Pair 3
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Delete Comment',
-                            style: GoogleFonts.roboto(
-                              textStyle: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: Color.fromARGB(255, 4, 88, 36),
+                    GestureDetector(
+                      onTap: () {
+                        // Add your click event logic here
+                        print('Delete Row clicked');
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'Delete Comment',
+                                  style: GoogleFonts.roboto(
+                                    textStyle: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Color.fromARGB(255, 4, 88, 36),
+                                    ),
+                                  ),
+                                ),
                               ),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                size: 16,
+                                color: Colors.grey,
+                              ),
+                            ],
+                          ),
+                          Text(
+                            'Subtext 2',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
                             ),
                           ),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          size: 16,
-                          color: Colors.grey,
-                        ),
-                      ],
-                    ),
-                    Text(
-                      'Subtext 3',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
+                        ],
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),

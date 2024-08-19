@@ -312,7 +312,7 @@ class _BlogsState extends State<Blogs> {
                                               ),
                                             )
                                           : Text(
-                                              userDetails['name'],
+                                              userDetails['fullname'],
                                               style: GoogleFonts.roboto(
                                                 textStyle: const TextStyle(
                                                   fontWeight: FontWeight.bold,

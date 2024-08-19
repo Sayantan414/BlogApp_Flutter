@@ -156,12 +156,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
                       // print(loginresponse);
                       saveValidtoken(loginresponse["data"]["token"]);
-                      saveUserDetails(
-                          loginresponse["data"]['firstname'],
-                          loginresponse["data"]['lastname'],
-                          loginresponse["data"]['profilePhoto'],
-                          loginresponse["data"]['email'],
-                          loginresponse["data"]['id']);
+                      saveUserDetails(loginresponse["data"]);
                     } catch (e) {
                       print(e);
                     }
