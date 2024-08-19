@@ -448,8 +448,8 @@ class _BlogState extends State<Blog> {
                                     circular = true;
                                   });
                                   final commentPayload = {
-                                    'id': widget.post[
-                                        '_id'], // Replace with actual post ID
+                                    'id': comments[cmmntIndex]
+                                        ['_id'], // Replace with actual post ID
                                     'description': commentController.text,
                                   };
                                   // print(commentPayload);
@@ -458,15 +458,14 @@ class _BlogState extends State<Blog> {
                                       final response =
                                           await updateComment(commentPayload);
                                       cmmntData = response;
-                                      print('Comment created: $response');
+                                      // print('Comment created: $response');
                                     } catch (error) {
                                       print('Error: $error');
                                     }
                                     setState(() {
                                       // comments.add(commentController.text);
                                       commentController.clear();
-                                      comments.insert(
-                                          cmmntIndex, cmmntData['data']);
+                                      comments[cmmntIndex] = cmmntData['data'];
                                       circular = false;
                                     });
                                   } else {
@@ -474,7 +473,7 @@ class _BlogState extends State<Blog> {
                                       final response =
                                           await createComment(commentPayload);
                                       cmmntData = response;
-                                      print('Comment created: $response');
+                                      // print('Comment created: $response');
                                     } catch (error) {
                                       print('Error: $error');
                                     }
