@@ -607,6 +607,7 @@ class _BlogState extends State<Blog> {
                         commentController.text = comments[index]['description'];
                         cmmntIndex = index;
                         cmmntIsUpdate = true;
+                        Navigator.pop(context);
                       },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
