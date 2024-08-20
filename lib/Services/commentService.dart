@@ -50,3 +50,27 @@ Future<Map<String, dynamic>> updateComment(Map<String, dynamic> payload) async {
     return Future.error('Failed to Update comment: ${response.reasonPhrase}');
   }
 }
+
+Future<String> deleteComment(String id) async {
+  try {
+    final response = await http.delete(
+      Uri.parse('$baseUrl/api/v1/comments/$id'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': token, // Assuming Bearer Token
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['data'];
+    } else if (response.statusCode == 403) {
+      throw Exception("You are not allowed to delete this comment");
+    } else {
+      throw Exception("Failed to delete comment: ${response.statusCode}");
+    }
+  } catch (e) {
+    print("Error: $e");
+    throw e; // Rethrow the exception to be handled elsewhere
+  }
+}

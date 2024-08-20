@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:blogapp/Profile/otherUserProfile.dart';
 import 'package:blogapp/Services/commentService.dart';
@@ -6,6 +7,7 @@ import 'package:blogapp/Services/postService.dart';
 import 'package:blogapp/Services/userService.dart';
 import 'package:blogapp/Utils/functions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:intl/intl.dart';
@@ -69,7 +71,7 @@ class _BlogState extends State<Blog> {
 
       setState(() {
         comments = responseData;
-        // print(comments);
+        // print(comments[0]);
 
         isLoading = false;
       });
@@ -99,7 +101,7 @@ class _BlogState extends State<Blog> {
 
   @override
   Widget build(BuildContext context) {
-    final DateFormat dateFormat = DateFormat('MMMM d, y h:mm a');
+    // final DateFormat dateFormat = DateFormat('MMMM d, y h:mm a');
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 225, 235, 225),
       appBar: AppBar(
@@ -353,12 +355,14 @@ class _BlogState extends State<Blog> {
                               },
                               style: OutlinedButton.styleFrom(
                                 side: const BorderSide(color: Colors.green),
+                                backgroundColor: Colors.green,
                               ),
                               child: const Text(
                                 'follow',
                                 style: TextStyle(
-                                    color: Color.fromARGB(255, 4, 88, 36),
-                                    fontSize: 12),
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold),
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),
@@ -425,68 +429,122 @@ class _BlogState extends State<Blog> {
                       )),
                     ),
                     const SizedBox(height: 8),
-                    TextField(
-                      controller: commentController,
-                      decoration: InputDecoration(
-                        hintText: 'Add a comment...',
-                        border: OutlineInputBorder(),
-                        suffixIcon: circular
-                            ? Container(
-                                width: 5.0, // Set the desired width
-                                height: 5.0, // Set the desired height
-                                child: const CircularProgressIndicator(
-                                  value: null,
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.green),
-                                ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment
+                          .end, // Aligns the buttons to the right
+                      children: [
+                        TextField(
+                          controller: commentController,
+                          decoration: InputDecoration(
+                            hintText: 'Add a comment...',
+                            border: const OutlineInputBorder(),
+                            suffixIcon: circular
+                                ? Container(
+                                    width: 5.0, // Set the desired width
+                                    height: 5.0, // Set the desired height
+                                    child: const CircularProgressIndicator(
+                                      value: null,
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.green),
+                                    ),
+                                  )
+                                : cmmntIsUpdate
+                                    ? IconButton(
+                                        color: Color.fromARGB(255, 4, 88, 36),
+                                        icon: Icon(Icons.update),
+                                        onPressed: () async {
+                                          try {
+                                            setState(() {
+                                              circular = true;
+                                            });
+                                            final commentPayload = {
+                                              'id': comments[cmmntIndex]['_id'],
+                                              'description':
+                                                  commentController.text,
+                                            };
+                                            final response =
+                                                await updateComment(
+                                                    commentPayload);
+                                            cmmntData = response;
+                                          } catch (error) {
+                                            print('Error: $error');
+                                          }
+                                          setState(() {
+                                            commentController.clear();
+                                            comments[cmmntIndex] =
+                                                cmmntData['data'];
+                                            circular = false;
+                                            cmmntIsUpdate = false;
+                                            cmmntIndex = -1;
+                                            FocusScope.of(context).unfocus();
+                                          });
+                                        },
+                                      )
+                                    : IconButton(
+                                        color: Color.fromARGB(255, 4, 88, 36),
+                                        icon: Icon(Icons.send),
+                                        onPressed: () async {
+                                          setState(() {
+                                            circular = true;
+                                          });
+                                          final commentPayload = {
+                                            'id': widget.post['_id'],
+                                            'description':
+                                                commentController.text,
+                                          };
+
+                                          try {
+                                            final response =
+                                                await createComment(
+                                                    commentPayload);
+                                            cmmntData = response;
+                                          } catch (error) {
+                                            print('Error: $error');
+                                          }
+                                          setState(() {
+                                            commentController.clear();
+                                            comments.insert(
+                                                0, cmmntData['data']);
+                                            circular = false;
+                                            FocusScope.of(context).unfocus();
+                                          });
+                                        },
+                                      ),
+                          ),
+                        ),
+                        const SizedBox(
+                            height: 8.0), // Space between TextField and buttons
+                        cmmntIsUpdate
+                            ? Row(
+                                mainAxisAlignment: MainAxisAlignment
+                                    .end, // Align buttons to the right
+                                children: [
+                                  OutlinedButton(
+                                    onPressed: () {
+                                      // Grey button action
+                                      setState(() {
+                                        cmmntIsUpdate = false;
+                                        cmmntIndex = -1;
+                                        commentController.clear();
+                                      });
+                                    },
+                                    style: OutlinedButton.styleFrom(
+                                      backgroundColor: const Color.fromARGB(
+                                          255, 222, 221, 221),
+                                      side: const BorderSide(
+                                          color: Color.fromARGB(
+                                              255, 222, 221, 221)),
+                                      // minimumSize: Size(50, 30), // Button size
+                                    ),
+                                    child: const Text('Cancel',
+                                        style: TextStyle(color: Colors.black)),
+                                  ),
+                                  const SizedBox(
+                                      width: 8.0), // Space between the buttons
+                                ],
                               )
-                            : IconButton(
-                                color: Color.fromARGB(255, 4, 88, 36),
-                                icon: Icon(Icons.send),
-                                onPressed: () async {
-                                  setState(() {
-                                    circular = true;
-                                  });
-                                  final commentPayload = {
-                                    'id': comments[cmmntIndex]
-                                        ['_id'], // Replace with actual post ID
-                                    'description': commentController.text,
-                                  };
-                                  // print(commentPayload);
-                                  if (cmmntIsUpdate) {
-                                    try {
-                                      final response =
-                                          await updateComment(commentPayload);
-                                      cmmntData = response;
-                                      // print('Comment created: $response');
-                                    } catch (error) {
-                                      print('Error: $error');
-                                    }
-                                    setState(() {
-                                      // comments.add(commentController.text);
-                                      commentController.clear();
-                                      comments[cmmntIndex] = cmmntData['data'];
-                                      circular = false;
-                                    });
-                                  } else {
-                                    try {
-                                      final response =
-                                          await createComment(commentPayload);
-                                      cmmntData = response;
-                                      // print('Comment created: $response');
-                                    } catch (error) {
-                                      print('Error: $error');
-                                    }
-                                    setState(() {
-                                      // comments.add(commentController.text);
-                                      commentController.clear();
-                                      comments.insert(0, cmmntData['data']);
-                                      circular = false;
-                                    });
-                                  }
-                                },
-                              ),
-                      ),
+                            : Container(),
+                      ],
                     ),
                     const SizedBox(height: 16),
                     isLoading
@@ -541,29 +599,31 @@ class _BlogState extends State<Blog> {
                                           color: Color.fromARGB(
                                               255, 143, 142, 142)),
                                     ),
-                                    const SizedBox(
-                                        width:
-                                            8), // Add spacing between text and icon
-                                    GestureDetector(
-                                      onTap: () {
-                                        // Do something with the index here
-                                        print(
-                                            "Tapped on comment at index: $index");
+                                    const SizedBox(width: 8),
+                                    // Add spacing between text and icon
+                                    if (comment['user']['_id'] ==
+                                            userDetails["_id"] ||
+                                        userDetails['isAdmin'])
+                                      GestureDetector(
+                                        onTap: () {
+                                          // Do something with the index here
+                                          print(
+                                              "Tapped on comment at index: $index");
 
-                                        showModalBottomSheet(
-                                          context: context,
-                                          builder: (context) =>
-                                              bottomSheet(index),
-                                        );
-                                      },
-                                      child: const Text(
-                                        "•••",
-                                        style: TextStyle(
-                                            fontSize: 14,
-                                            color:
-                                                Color.fromARGB(255, 4, 88, 36)),
+                                          showModalBottomSheet(
+                                            context: context,
+                                            builder: (context) => bottomSheet(
+                                                index, comment['_id']),
+                                          );
+                                        },
+                                        child: const Text(
+                                          "•••",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              color: Color.fromARGB(
+                                                  255, 4, 88, 36)),
+                                        ),
                                       ),
-                                    ),
                                   ],
                                 ),
                               );
@@ -579,7 +639,7 @@ class _BlogState extends State<Blog> {
     );
   }
 
-  Widget bottomSheet(index) {
+  Widget bottomSheet(index, id) {
     return Container(
       height: 160.0,
       width: MediaQuery.of(context).size.width,
@@ -604,9 +664,12 @@ class _BlogState extends State<Blog> {
                       onTap: () {
                         // Add your click event logic here
                         print('Edit Row clicked');
-                        commentController.text = comments[index]['description'];
-                        cmmntIndex = index;
-                        cmmntIsUpdate = true;
+                        setState(() {
+                          commentController.text =
+                              comments[index]['description'];
+                          cmmntIndex = index;
+                          cmmntIsUpdate = true;
+                        });
                         Navigator.pop(context);
                       },
                       child: Column(
@@ -652,6 +715,60 @@ class _BlogState extends State<Blog> {
                       onTap: () {
                         // Add your click event logic here
                         print('Delete Row clicked');
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                            child: AlertDialog(
+                              title: const Text(
+                                'Delete',
+                                style: TextStyle(
+                                  color: Color.fromARGB(255, 4, 88, 36),
+                                ),
+                              ),
+                              content: Text(
+                                'Do you want to delete this Comment?',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.pop(ctx);
+                                  },
+                                  child: const Text(
+                                    'No',
+                                    style: TextStyle(
+                                      color: Color.fromARGB(
+                                          255, 4, 88, 36), // Your green color
+                                    ),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    // await deleteAllUsersData();
+                                    var r = await deleteComment(id);
+                                    print(r);
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text(r)));
+
+                                    setState(() {
+                                      comments.removeAt(index);
+                                    });
+                                  },
+                                  child: const Text(
+                                    'Yes',
+                                    style: TextStyle(
+                                      color: Color.fromARGB(
+                                          255, 4, 88, 36), // Your green color
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
                       },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
