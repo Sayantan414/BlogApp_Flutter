@@ -477,33 +477,46 @@ class _BlogsState extends State<Blogs> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Text and Arrow Pair 1
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'View Post',
-                            style: GoogleFonts.roboto(
-                              textStyle: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: Color.fromARGB(255, 4, 88, 36),
+                    GestureDetector(
+                      onTap: () {
+                        // Add your click event logic here
+                        print('Edit Row clicked');
+
+                        Navigator.pop(context);
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  'View Post',
+                                  style: GoogleFonts.roboto(
+                                    textStyle: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Color.fromARGB(255, 4, 88, 36),
+                                    ),
+                                  ),
+                                ),
                               ),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                size: 16,
+                                color: Colors.grey,
+                              ),
+                            ],
+                          ),
+                          Text(
+                            'Subtext 2',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
                             ),
                           ),
-                        ),
-                        const Icon(
-                          Icons.arrow_forward_ios,
-                          size: 16,
-                          color: Colors.grey,
-                        ),
-                      ],
-                    ),
-                    const Text(
-                      'Subtext 1',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
+                        ],
                       ),
                     ),
                     Divider(height: 20, color: Colors.grey[300]),
