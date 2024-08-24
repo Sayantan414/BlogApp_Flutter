@@ -151,3 +151,45 @@ Future<void> createPost(
     print('Error: $e');
   }
 }
+
+Future<Map<String, dynamic>> updatePost(String title, String description,
+    String category, File? imageFile, String postId) async {
+  final url = Uri.parse('$baseUrl/api/v1/posts/$postId');
+  final request = http.MultipartRequest('PUT', url);
+
+  // Add headers
+  request.headers.addAll({
+    'Content-Type': 'application/json',
+    'Authorization': token // replace with your actual token
+  });
+
+  // Add fields
+  request.fields['title'] = title;
+  request.fields['description'] = description;
+  request.fields['category'] = category;
+  print(request.fields);
+  // Add image file if available
+  if (imageFile != null) {
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        'image',
+        imageFile.path,
+      ),
+    );
+  }
+
+  final response = await request.send();
+
+  // Read the response as a string
+  final responseData = await http.Response.fromStream(response);
+  // print(responseData.body);
+
+  final data = json.decode(responseData.body);
+  if (response.statusCode == 200) {
+    // print('Post created: ${data['data']}');
+    return data['data'];
+  } else {
+    print('Failed to create post: ${response.statusCode}');
+    return data['data'];
+  }
+}

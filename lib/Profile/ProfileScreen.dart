@@ -19,8 +19,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool isLoading = true;
   String dp = '';
   Map<String, dynamic> profileDetails = {};
-
   late Map<String, dynamic> responseData;
+  String medal = '';
 
   @override
   void initState() {
@@ -34,7 +34,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
       var responseData = await profile();
       profileDetails = responseData;
       // print(profileDetails);
-
+      if (profileDetails['userAward'] == "Bronze") {
+        setState(() {
+          medal = '🥉';
+        });
+      } else if (profileDetails['userAward'] == "Silver") {
+        setState(() {
+          medal = '🥈';
+        });
+      } else {
+        setState(() {
+          medal = '🥇';
+        });
+      }
       setState(() {
         data = profileDetails['posts'];
         circular = false;
@@ -57,15 +69,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: () {
               Navigator.of(context)
                   .push(MaterialPageRoute(
-                      builder: (context) =>
-                          CreateProfile(type: "Edit", data: responseData)))
-                  .then((value) => setState(() {
-                        if (value.runtimeType == String)
-                          dp = getDp();
-                        else
-                          responseData = value;
-                        dp = getDp();
-                      }));
+                      builder: (context) => CreateProfile(type: "Edit")))
+                  .then((value) => setState(() {}));
             },
             color: Colors.black,
           ),
@@ -183,12 +188,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
         crossAxisAlignment:
             CrossAxisAlignment.center, // Center content within the column
         children: <Widget>[
-          CircleAvatar(
-            radius: 50,
-            backgroundColor: Color.fromARGB(255, 225, 235, 225),
-            backgroundImage: profileDetails['profilePhoto'] != null
-                ? NetworkImage(profileDetails['profilePhoto'])
-                : AssetImage('assets/nouser.png') as ImageProvider,
+          Stack(
+            alignment:
+                Alignment.center, // Align the icon to the center of the Stack
+            children: [
+              CircleAvatar(
+                radius: 50,
+                backgroundColor: Color.fromARGB(255, 225, 235, 225),
+                backgroundImage: profileDetails['profilePhoto'] != null
+                    ? NetworkImage(profileDetails['profilePhoto'])
+                    : AssetImage('assets/nouser.png') as ImageProvider,
+              ),
+              Positioned(
+                bottom: 0, // Position the emoji at the bottom
+                right: -7, // Position the emoji to the right
+                child: Text(
+                  medal, // Medal emoji
+                  style: TextStyle(
+                    fontSize: 30, // Size of the emoji
+                    color: Colors.amber, // Color of the emoji
+                  ),
+                ),
+              ),
+            ],
           ),
 
           const SizedBox(height: 10), // Add space between avatar and text

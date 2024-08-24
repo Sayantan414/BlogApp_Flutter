@@ -1,5 +1,6 @@
 import 'package:blogapp/Blog/Blog.dart';
 import 'package:blogapp/Blog/OwnBlog.dart';
+import 'package:blogapp/Blog/addBlog.dart';
 
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:blogapp/Utils/functions.dart';
@@ -339,12 +340,14 @@ class _BlogsState extends State<Blogs> {
                                   padding: const EdgeInsets.all(6.0),
                                   child: GestureDetector(
                                     onTap: () {
+                                      print(item['_id']);
                                       showModalBottomSheet(
                                         context: context,
-                                        builder: ((builder) => bottomSheet()),
+                                        builder: ((builder) =>
+                                            bottomSheet(item['_id'])),
                                       );
                                     },
-                                    child: Text(
+                                    child: const Text(
                                       "•••",
                                       style: TextStyle(fontSize: 18.0),
                                     ),
@@ -455,7 +458,9 @@ class _BlogsState extends State<Blogs> {
         ));
   }
 
-  Widget bottomSheet() {
+  Widget bottomSheet(id) {
+    var foundPost = widget.posts.firstWhere((post) => post["_id"] == id);
+    // print(foundPost);
     return Container(
       height: 320.0,
       width: MediaQuery.of(context).size.width,
@@ -483,6 +488,10 @@ class _BlogsState extends State<Blogs> {
                         print('Edit Row clicked');
 
                         Navigator.pop(context);
+
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) =>
+                                AddBlog(action: "Edit", data: foundPost)));
                       },
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -492,7 +501,7 @@ class _BlogsState extends State<Blogs> {
                             children: [
                               Expanded(
                                 child: Text(
-                                  'View Post',
+                                  'Edit Post',
                                   style: GoogleFonts.roboto(
                                     textStyle: const TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -519,39 +528,8 @@ class _BlogsState extends State<Blogs> {
                         ],
                       ),
                     ),
-                    Divider(height: 20, color: Colors.grey[300]),
-                    SizedBox(height: 16), // Space between pairs
 
                     // Text and Arrow Pair 2
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Edit Post',
-                            style: GoogleFonts.roboto(
-                              textStyle: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: Color.fromARGB(255, 4, 88, 36),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          size: 16,
-                          color: Colors.grey,
-                        ),
-                      ],
-                    ),
-                    Text(
-                      'Subtext 2',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
-                    ),
                     Divider(height: 20, color: Colors.grey[300]),
                     SizedBox(height: 16), // Space between pairs
 

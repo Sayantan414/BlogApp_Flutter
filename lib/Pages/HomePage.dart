@@ -118,7 +118,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Color.fromARGB(255, 244, 245, 244),
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => AddBlog(type: "Add", data: const {})));
+              builder: (context) => AddBlog(action: "Add", data: const {})));
         },
         child: const Text(
           "+",

@@ -3,16 +3,17 @@ import 'dart:io';
 import 'package:blogapp/CustumWidget/OverlayCard.dart';
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:blogapp/Pages/HomePage.dart';
+import 'package:blogapp/Profile/ProfileScreen.dart';
 import 'package:blogapp/Services/categoryService.dart';
 import 'package:blogapp/Services/postService.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddBlog extends StatefulWidget {
-  const AddBlog({super.key, required this.type, required this.data});
+  const AddBlog({super.key, required this.action, required this.data});
 
-  final Map<String, dynamic> data;
-  final String type;
+  final Map data;
+  final String action;
 
   @override
   _AddBlogState createState() => _AddBlogState();
@@ -32,6 +33,20 @@ class _AddBlogState extends State<AddBlog> {
     // TODO: implement initState
     super.initState();
     fetchCategory();
+
+    // print(widget.data);
+
+    if (widget.action == "Edit") {
+      _title.text = widget.data['title'];
+      _body.text = widget.data['description'];
+      // _selectedCategory = widget.data['category'];
+      // _imageFile = widget.data['photo'];
+      if (widget.data['category'] is String) {
+        _selectedCategory = widget.data['category'];
+      } else {
+        _selectedCategory = widget.data['category']['_id'];
+      }
+    }
   }
 
   Future<void> _pickImage() async {
@@ -90,7 +105,8 @@ class _AddBlogState extends State<AddBlog> {
             SizedBox(
               height: 20,
             ),
-            addButton(),
+            if (widget.action == 'Add') addButton(),
+            if (widget.action == 'Edit') updateButton(),
             SizedBox(
               height: 20,
             ),
@@ -107,13 +123,28 @@ class _AddBlogState extends State<AddBlog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 10),
-          if (_imageFile == null)
+          if (widget.action == "Edit" &&
+              _imageFile == null &&
+              widget.data["photo"] != null)
             Center(
-              child: const Icon(Icons.image, size: 100, color: Colors.white),
+              child: Image.network(
+                widget.data["photo"],
+                height: 200,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+            )
+          else if (_imageFile != null)
+            Image.file(
+              _imageFile!,
+              height: 200,
+              width: double.infinity,
+              fit: BoxFit.cover,
             )
           else
-            Image.file(_imageFile!,
-                height: 200, width: double.infinity, fit: BoxFit.cover),
+            Center(
+              child: const Icon(Icons.image, size: 100, color: Colors.white),
+            ),
           SizedBox(height: 10),
           Center(
             child: ElevatedButton(
@@ -287,21 +318,16 @@ class _AddBlogState extends State<AddBlog> {
     return InkWell(
       onTap: () async {
         if (_globalkey.currentState!.validate()) {
-          // Map<String, String> data = {
-          //   "title": _title.text,
-          //   "body": _body.text,
-          // };
-
-          // var response = await networkHandler.put(
-          //     "/blogpost/update/${widget.data["_id"]}", data);
-          // print("Data : " + response.body);
-
-          // if (response.statusCode == 200 || response.statusCode == 201) {
-          //   Navigator.pushAndRemoveUntil(
-          //       context,
-          //       MaterialPageRoute(builder: (context) => HomePage()),
-          //       (route) => false);
-          // }
+          var r = await updatePost(_title.text, _body.text, _selectedCategory!,
+              _imageFile, widget.data['_id']);
+          if (r.isNotEmpty) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfileScreen(),
+              ),
+            );
+          }
         }
       },
       child: Center(

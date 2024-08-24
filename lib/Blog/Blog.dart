@@ -465,7 +465,8 @@ class _BlogState extends State<Blog> {
                                             final response =
                                                 await updateComment(
                                                     commentPayload);
-                                            cmmntData = response;
+                                            print(response);
+                                            // cmmntData = response;
                                           } catch (error) {
                                             print('Error: $error');
                                           }

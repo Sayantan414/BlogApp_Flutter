@@ -58,8 +58,7 @@ class _MainProfileState extends State<MainProfile> {
             onPressed: () {
               Navigator.of(context)
                   .push(MaterialPageRoute(
-                      builder: (context) =>
-                          CreateProfile(type: "Edit", data: responseData)))
+                      builder: (context) => CreateProfile(type: "Edit")))
                   .then((value) => setState(() {
                         if (value.runtimeType == String)
                           dp = getDp();

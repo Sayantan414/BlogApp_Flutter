@@ -7,10 +7,9 @@ import 'package:flutter/material.dart';
 // import 'package:image_picker/image_picker.dart';
 
 class CreateProfile extends StatefulWidget {
-  const CreateProfile({super.key, required this.type, required this.data});
+  const CreateProfile({super.key, required this.type});
 
   final String type;
-  final Map<String, dynamic> data;
 
   @override
   _CreateProfileState createState() => _CreateProfileState();
@@ -19,8 +18,6 @@ class CreateProfile extends StatefulWidget {
 class _CreateProfileState extends State<CreateProfile> {
   final networkHandler = NetworkHandler();
   bool circular = false;
-  bool updateDp = false;
-  // XFile? _imageFile;
 
   final _globalkey = GlobalKey<FormState>();
   TextEditingController _name = TextEditingController();
@@ -29,24 +26,10 @@ class _CreateProfileState extends State<CreateProfile> {
   TextEditingController _titleline = TextEditingController();
   TextEditingController _about = TextEditingController();
   // final ImagePicker _picker = ImagePicker();
-  String dp = "";
-  String username = "";
-  bool picFlag = false;
 
   @override
   void initState() {
     super.initState();
-    dp = getDp();
-
-    if (widget.data.isNotEmpty) {
-      print(widget.data);
-      username = widget.data["username"] ?? "";
-      _name.text = widget.data["name"] ?? "";
-      _profession.text = widget.data["profession"] ?? "";
-      _dob.text = widget.data["DOB"] ?? "";
-      _titleline.text = widget.data["titleline"] ?? "";
-      _about.text = widget.data["about"] ?? "";
-    }
   }
 
   @override
@@ -74,147 +57,80 @@ class _CreateProfileState extends State<CreateProfile> {
             const SizedBox(
               height: 20,
             ),
-            nameTextField(),
+            firstnameTextField(),
             const SizedBox(
-              height: 20,
+              height: 30,
             ),
-            professionTextField(),
+            lastnameTextField(),
             const SizedBox(
-              height: 20,
+              height: 30,
             ),
-            dobField(),
+            emailTextField(),
             const SizedBox(
-              height: 20,
+              height: 30,
             ),
-            titleTextField(),
+            passwordTextField(),
             const SizedBox(
-              height: 20,
+              height: 30,
             ),
-            aboutTextField(),
-            SizedBox(
-              height: 20,
+            conPasswordTextField(),
+            const SizedBox(
+              height: 30,
             ),
-            widget.type == "Add"
-                ? InkWell(
-                    onTap: () async {
-                      setState(() {
-                        circular = true;
-                      });
-                      if (_globalkey.currentState!.validate()) {
-                        Map<String, String> data = {
-                          "name": _name.text,
-                          "profession": _profession.text,
-                          "DOB": _dob.text,
-                          "titleline": _titleline.text,
-                          "about": _about.text,
-                        };
-                        var response =
-                            await networkHandler.post("/profile/add", data);
-                        if (response.statusCode == 200 ||
-                            response.statusCode == 201) {
-                          var responseData = json.decode(response.body);
-                          print(responseData['data']);
-                          // if (_imageFile?.path != null) {
-                          //   var imageResponse = await networkHandler.patchImage(
-                          //       "/profile/add/image", _imageFile!.path);
-                          //   if (imageResponse.statusCode == 200) {
-                          //     setState(() {
-                          //       circular = false;
-                          //     });
-                          //     Navigator.of(context).pushAndRemoveUntil(
-                          //         MaterialPageRoute(
-                          //             builder: (context) => HomePage()),
-                          //         (route) => false);
-                          //   }
-                          // } else {
-                          setState(() {
-                            circular = false;
-                          });
-                          Navigator.of(context).pop(responseData['data']);
-                          // }
-                        }
-                      }
-                    },
-                    child: Center(
-                      child: Container(
-                        width: 200,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(
-                          child: circular
-                              ? const CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white),
-                                )
-                              : const Text(
-                                  "Submit",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                        ),
-                      ),
-                    ),
-                  )
-                : InkWell(
-                    onTap: () async {
-                      setState(() {
-                        circular = true;
-                      });
-                      if (_globalkey.currentState!.validate()) {
-                        Map<String, String> data = {
-                          "name": _name.text,
-                          "profession": _profession.text,
-                          "DOB": _dob.text,
-                          "titleline": _titleline.text,
-                          "about": _about.text,
-                        };
-                        var response = await networkHandler.put(
-                            "/profile/update/${widget.data["_id"]}", data);
+            InkWell(
+              onTap: () async {
+                setState(() {
+                  circular = true;
+                });
+                if (_globalkey.currentState!.validate()) {
+                  Map<String, String> data = {
+                    "name": _name.text,
+                    "profession": _profession.text,
+                    "DOB": _dob.text,
+                    "titleline": _titleline.text,
+                    "about": _about.text,
+                  };
+                  // var response = await networkHandler.put(
+                  //     "/profile/update/${widget.data["_id"]}", data);
 
-                        if (response.statusCode == 200 ||
-                            response.statusCode == 201) {
-                          var responseData = json.decode(response.body);
-                          print(responseData['data']);
-                          setState(() {
-                            circular = false;
-                          });
-                          Navigator.of(context).pop(responseData['data']);
-                          // }
-                        }
-                      }
-                    },
-                    child: Center(
-                      child: Container(
-                        width: 200,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.green,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Center(
-                          child: circular
-                              ? const CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white),
-                                )
-                              : const Text(
-                                  "Update",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                        ),
-                      ),
-                    ),
+                  // if (response.statusCode == 200 ||
+                  //     response.statusCode == 201) {
+                  //   var responseData = json.decode(response.body);
+                  //   print(responseData['data']);
+                  //   setState(() {
+                  //     circular = false;
+                  //   });
+                  //   Navigator.of(context).pop(responseData['data']);
+                  //   // }
+                  // }
+                }
+              },
+              child: Center(
+                child: Container(
+                  width: 200,
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(10),
                   ),
+                  child: Center(
+                    child: circular
+                        ? const CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          )
+                        : const Text(
+                            "Update",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -228,23 +144,18 @@ class _CreateProfileState extends State<CreateProfile> {
           CircleAvatar(
             radius: 80.0,
             backgroundColor: Color.fromARGB(236, 211, 238, 196),
-            backgroundImage: !picFlag ? AssetImage("assets/${dp}") : null,
-            child: picFlag
-                ? const CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-                  )
-                : null,
+            backgroundImage: AssetImage('assets/nouser.png'),
+            // child: picFlag
+            //     ? const CircularProgressIndicator(
+            //         valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+            //       )
+            //     : null,
           ),
           Positioned(
             bottom: 20.0,
             right: 20.0,
             child: InkWell(
-              onTap: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: ((builder) => bottomSheet1()),
-                );
-              },
+              onTap: () {},
               child: const Icon(
                 Icons.camera_alt,
                 color: Colors.teal,
@@ -257,192 +168,11 @@ class _CreateProfileState extends State<CreateProfile> {
     );
   }
 
-  // Widget bottomSheet() {
-  //   return Container(
-  //     height: 100.0,
-  //     width: MediaQuery.of(context).size.width,
-  //     margin: EdgeInsets.symmetric(
-  //       horizontal: 20,
-  //       vertical: 20,
-  //     ),
-  //     child: Column(
-  //       children: <Widget>[
-  //         Text(
-  //           "Choose Profile photo",
-  //           style: TextStyle(
-  //             fontSize: 20.0,
-  //           ),
-  //         ),
-  //         SizedBox(
-  //           height: 20,
-  //         ),
-  //         Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
-  //           ElevatedButton.icon(
-  //             onPressed: () {
-  //               takePhoto(ImageSource.camera);
-  //             },
-  //             icon: Icon(Icons.camera),
-  //             label: Text("Camera"),
-  //           ),
-  //           ElevatedButton.icon(
-  //             onPressed: () {
-  //               takePhoto(ImageSource.gallery);
-  //             },
-  //             icon: Icon(Icons.image),
-  //             label: Text("Gallery"),
-  //           ),
-  //         ])
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  Widget bottomSheet1() {
-    return Container(
-      height: 370,
-      color: Color.fromARGB(98, 197, 222, 184),
-      width: MediaQuery.of(context).size.width,
-      child: Card(
-        color: Color.fromARGB(255, 222, 241, 222),
-        margin: const EdgeInsets.all(18),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  iconCreation(AssetImage("assets/lion.webp"), "lion.webp"),
-                  const SizedBox(
-                    width: 40,
-                  ),
-                  iconCreation(AssetImage("assets/nkn.webp"), "nkn.webp"),
-                  const SizedBox(
-                    width: 40,
-                  ),
-                  iconCreation(AssetImage("assets/angry.webp"), "angry.webp")
-                ],
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  iconCreation(AssetImage("assets/cat.webp"), "cat.webp"),
-                  const SizedBox(
-                    width: 40,
-                  ),
-                  iconCreation(
-                      AssetImage("assets/crocodile.webp"), "crocodile.webp"),
-                  const SizedBox(
-                    width: 40,
-                  ),
-                  iconCreation(AssetImage("assets/tiger.webp"), "tiger.webp")
-                ],
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    iconCreation(AssetImage("assets/panda.webp"), "panda.webp"),
-                    const SizedBox(
-                      width: 40,
-                    ),
-                    iconCreation(AssetImage("assets/owl.webp"), "owl.webp"),
-                    const SizedBox(
-                      width: 40,
-                    ),
-                    iconCreation(AssetImage("assets/dog.png"), "dog.png")
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget iconCreation(AssetImage image, String text) {
-    return InkWell(
-      onTap: () async {
-        Navigator.pop(context);
-        setState(() {
-          picFlag = true;
-        });
-        dp = text;
-        print(dp);
-        Map<String, String> data = {
-          "dp": dp,
-        };
-        var response =
-            await networkHandler.patch("/user/update/${username}", data);
-        print(data);
-        if (response.statusCode == 200 || response.statusCode == 201) {
-          saveDp(dp);
-          setState(() {
-            picFlag = false;
-          });
-          dp = getDp();
-        }
-      },
-      child: Stack(
-        children: [
-          Column(
-            children: [
-              CircleAvatar(
-                radius: 40,
-                backgroundColor: Color.fromARGB(255, 222, 241, 222),
-                child: ClipOval(
-                  child: Image(
-                    image: image,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          // Positioned(
-          //   bottom: 0,
-          //   right: 0,
-          //   child: Container(
-          //     decoration: BoxDecoration(
-          //       shape: BoxShape.circle,
-          //       color: Colors.teal,
-          //     ),
-          //     padding: EdgeInsets.all(2),
-          //     child: Icon(
-          //       Icons.check,
-          //       color: Colors.white,
-          //       size: 18.0,
-          //     ),
-          //   ),
-          // ),
-        ],
-      ),
-    );
-  }
-
-  // void takePhoto(ImageSource source) async {
-  //   final pickedFile = await _picker.pickImage(
-  //     source: source,
-  //   );
-  //   setState(() {
-  //     _imageFile =
-  //         (pickedFile != null ? File(pickedFile.path) : null) as XFile?;
-  //   });
-  // }
-
-  Widget nameTextField() {
+  Widget firstnameTextField() {
     return TextFormField(
       controller: _name,
       validator: (value) {
-        if (value!.isEmpty) return "Name can't be empty";
+        if (value!.isEmpty) return "Firstname can't be empty";
 
         return null;
       },
@@ -459,7 +189,7 @@ class _CreateProfileState extends State<CreateProfile> {
           borderRadius: BorderRadius.circular(10.0),
           borderSide: const BorderSide(
             color: Colors
-                .orange, // Change this to your desired color for focused state
+                .green, // Change this to your desired color for focused state
             width: 2,
           ),
         ),
@@ -467,9 +197,9 @@ class _CreateProfileState extends State<CreateProfile> {
           Icons.person,
           color: Colors.green,
         ),
-        labelText: "Name",
+        labelText: "Firstname",
         labelStyle: TextStyle(color: Colors.black),
-        hintText: "Enter your name",
+        hintText: "Enter your firstname",
         hintStyle: TextStyle(color: Colors.grey),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -480,11 +210,11 @@ class _CreateProfileState extends State<CreateProfile> {
     );
   }
 
-  Widget professionTextField() {
+  Widget lastnameTextField() {
     return TextFormField(
-      controller: _profession,
+      controller: _name,
       validator: (value) {
-        if (value!.isEmpty) return "Profession can't be empty";
+        if (value!.isEmpty) return "lastname can't be empty";
 
         return null;
       },
@@ -493,26 +223,26 @@ class _CreateProfileState extends State<CreateProfile> {
         fillColor: Colors.grey[200],
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(
-            color: Colors.teal,
+          borderSide: const BorderSide(
+            color: Color.fromARGB(255, 232, 250, 222), // Custom border color
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(
-            color: Colors.orange,
+          borderSide: const BorderSide(
+            color: Colors
+                .green, // Change this to your desired color for focused state
             width: 2,
           ),
         ),
-        prefixIcon: Icon(
-          Icons.work,
+        prefixIcon: const Icon(
+          Icons.person,
           color: Colors.green,
         ),
-        labelText: "Profession",
+        labelText: "Lastname",
         labelStyle: TextStyle(color: Colors.black),
-        hintText: "Enter your profession",
+        hintText: "Enter your lastname",
         hintStyle: TextStyle(color: Colors.grey),
-        helperText: "Profession can't be empty",
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: BorderSide(color: Colors.red, width: 1),
@@ -522,11 +252,11 @@ class _CreateProfileState extends State<CreateProfile> {
     );
   }
 
-  Widget dobField() {
+  Widget emailTextField() {
     return TextFormField(
-      controller: _dob,
+      controller: _name,
       validator: (value) {
-        if (value!.isEmpty) return "DOB can't be empty";
+        if (value!.isEmpty) return "email can't be empty";
 
         return null;
       },
@@ -535,26 +265,26 @@ class _CreateProfileState extends State<CreateProfile> {
         fillColor: Colors.grey[200],
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(
-            color: Colors.teal,
+          borderSide: const BorderSide(
+            color: Color.fromARGB(255, 232, 250, 222), // Custom border color
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(
-            color: Colors.orange,
+          borderSide: const BorderSide(
+            color: Colors
+                .green, // Change this to your desired color for focused state
             width: 2,
           ),
         ),
-        prefixIcon: Icon(
-          Icons.calendar_today,
+        prefixIcon: const Icon(
+          Icons.email_outlined,
           color: Colors.green,
         ),
-        labelText: "Date Of Birth",
+        labelText: "Email",
         labelStyle: TextStyle(color: Colors.black),
-        hintText: "Provide DOB on dd/mm/yyyy",
+        hintText: "Enter your email",
         hintStyle: TextStyle(color: Colors.grey),
-        helperText: "DOB can't be empty",
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: BorderSide(color: Colors.red, width: 1),
@@ -564,11 +294,11 @@ class _CreateProfileState extends State<CreateProfile> {
     );
   }
 
-  Widget titleTextField() {
+  Widget passwordTextField() {
     return TextFormField(
-      controller: _titleline,
+      controller: _name,
       validator: (value) {
-        if (value!.isEmpty) return "Title can't be empty";
+        if (value!.isEmpty) return "password can't be empty";
 
         return null;
       },
@@ -577,26 +307,26 @@ class _CreateProfileState extends State<CreateProfile> {
         fillColor: Colors.grey[200],
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(
-            color: Colors.teal,
+          borderSide: const BorderSide(
+            color: Color.fromARGB(255, 232, 250, 222), // Custom border color
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(
-            color: Colors.orange,
+          borderSide: const BorderSide(
+            color: Colors
+                .green, // Change this to your desired color for focused state
             width: 2,
           ),
         ),
-        prefixIcon: Icon(
-          Icons.title,
+        prefixIcon: const Icon(
+          Icons.password,
           color: Colors.green,
         ),
-        labelText: "Title",
+        labelText: "Password",
         labelStyle: TextStyle(color: Colors.black),
-        hintText: "Enter your title",
+        hintText: "Enter pasword",
         hintStyle: TextStyle(color: Colors.grey),
-        helperText: "Title can't be empty",
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: BorderSide(color: Colors.red, width: 1),
@@ -606,36 +336,39 @@ class _CreateProfileState extends State<CreateProfile> {
     );
   }
 
-  Widget aboutTextField() {
+  Widget conPasswordTextField() {
     return TextFormField(
-      controller: _about,
+      controller: _name,
       validator: (value) {
-        if (value!.isEmpty) return "About can't be empty";
+        if (value!.isEmpty) return "confirm your password";
 
         return null;
       },
-      maxLines: 4,
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.grey[200],
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(
-            color: Colors.teal,
+          borderSide: const BorderSide(
+            color: Color.fromARGB(255, 232, 250, 222), // Custom border color
           ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(
-            color: Colors.orange,
+          borderSide: const BorderSide(
+            color: Colors
+                .green, // Change this to your desired color for focused state
             width: 2,
           ),
         ),
-        labelText: "About",
+        prefixIcon: const Icon(
+          Icons.password,
+          color: Colors.green,
+        ),
+        labelText: "Confirm Password",
         labelStyle: TextStyle(color: Colors.black),
-        hintText: "Write about yourself",
+        hintText: "Confirm pasword",
         hintStyle: TextStyle(color: Colors.grey),
-        helperText: "About can't be empty",
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: BorderSide(color: Colors.red, width: 1),
