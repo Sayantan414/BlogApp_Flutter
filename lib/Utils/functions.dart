@@ -5,8 +5,8 @@ getBaseUrl() {
 var token = '';
 Map<String, dynamic> userDetails = {};
 
-void saveUserDetails(Map data) {
-  userDetails = data['details'];
+void saveUserDetails(Map<String, dynamic> data) {
+  userDetails = data;
 }
 
 Map<String, dynamic> getUserDetails() {

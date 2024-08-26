@@ -1,7 +1,6 @@
 import 'package:blogapp/Blog/Blog.dart';
 import 'package:blogapp/Blog/OwnBlog.dart';
 import 'package:blogapp/Blog/addBlog.dart';
-
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:blogapp/Utils/functions.dart';
 import 'package:flutter/material.dart';
@@ -154,7 +153,7 @@ class _BlogsState extends State<Blogs> {
                                   category; // Set the selected category on button click
                             });
                             filterPostsByCategory(category);
-                            print(category);
+                            // print(category);
                           },
                           child: Text(
                             category,
@@ -185,7 +184,7 @@ class _BlogsState extends State<Blogs> {
                         );
                       }).toList(),
                     )
-                  : SizedBox(
+                  : const SizedBox(
                       height: 0,
                     ),
               ...filteredData.map((item) => InkWell(
@@ -340,7 +339,7 @@ class _BlogsState extends State<Blogs> {
                                   padding: const EdgeInsets.all(6.0),
                                   child: GestureDetector(
                                     onTap: () {
-                                      print(item['_id']);
+                                      // print(item['_id']);
                                       showModalBottomSheet(
                                         context: context,
                                         builder: ((builder) =>
@@ -485,7 +484,7 @@ class _BlogsState extends State<Blogs> {
                     GestureDetector(
                       onTap: () {
                         // Add your click event logic here
-                        print('Edit Row clicked');
+                        // print('Edit Row clicked');
 
                         Navigator.pop(context);
 

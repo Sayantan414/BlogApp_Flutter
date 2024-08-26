@@ -119,7 +119,7 @@ class _SignInPageState extends State<SignInPage> {
 
                       // print(loginresponse);
                       saveValidtoken(loginresponse["data"]["token"]);
-                      saveUserDetails(loginresponse["data"]);
+                      saveUserDetails(loginresponse["data"]["details"]);
 
                       Navigator.pushAndRemoveUntil(
                           context,
