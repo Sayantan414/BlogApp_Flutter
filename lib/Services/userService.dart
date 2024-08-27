@@ -119,8 +119,8 @@ Future<Map<String, dynamic>> unfollow(String id) async {
   }
 }
 
-Future<void> uploadProfilePhoto(File imageFile) async {
-  final url = Uri.parse('$baseUrl/api/v1/posts');
+Future<Map<String, dynamic>> uploadProfilePhoto(File? imageFile) async {
+  final url = Uri.parse('$baseUrl/api/v1/users/profile-photo-upload');
   final request = http.MultipartRequest('POST', url);
 
   // Add headers
@@ -129,12 +129,11 @@ Future<void> uploadProfilePhoto(File imageFile) async {
     'Authorization': token // replace with your actual token
   });
 
-  print(request.fields);
   // Add image file if available
   if (imageFile != null) {
     request.files.add(
       await http.MultipartFile.fromPath(
-        'image',
+        'profile',
         imageFile.path,
       ),
     );
@@ -147,14 +146,9 @@ Future<void> uploadProfilePhoto(File imageFile) async {
     final responseData = await http.Response.fromStream(response);
     print(responseData.body);
 
-    if (response.statusCode == 200) {
-      final data = json.decode(responseData.body);
-      // print('Post created: ${data['data']}');
-    } else {
-      print('Failed to create post: ${response.statusCode}');
-      print('Response body: ${responseData.body}');
-    }
+    return jsonDecode(responseData.body);
   } catch (e) {
     print('Error: $e');
+    return Future.error(jsonDecode("An error occurred. Please try again."));
   }
 }

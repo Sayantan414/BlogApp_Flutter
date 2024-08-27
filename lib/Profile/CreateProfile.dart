@@ -32,7 +32,7 @@ class _CreateProfileState extends State<CreateProfile> {
   TextEditingController _password = TextEditingController();
   TextEditingController _conpassword = TextEditingController();
   bool _isConPasswordEnabled = false;
-
+  bool picFlag = false;
   @override
   void initState() {
     super.initState();
@@ -177,18 +177,23 @@ class _CreateProfileState extends State<CreateProfile> {
           CircleAvatar(
             radius: 80.0,
             backgroundColor: Color.fromARGB(236, 211, 238, 196),
-            backgroundImage: AssetImage('assets/nouser.png'),
-            // child: picFlag
-            //     ? const CircularProgressIndicator(
-            //         valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-            //       )
-            //     : null,
+            backgroundImage: userDetails['profilePhoto'] != null
+                ? NetworkImage(userDetails['profilePhoto'])
+                : AssetImage('assets/nouser.png') as ImageProvider,
+            child: picFlag
+                ? const CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                  )
+                : null, // No child if picFlag is false
           ),
           Positioned(
             bottom: 20.0,
             right: 20.0,
             child: InkWell(
               onTap: () async {
+                setState(() {
+                  picFlag = true;
+                });
                 final pickedFile =
                     await ImagePicker().pickImage(source: ImageSource.gallery);
 
@@ -200,7 +205,14 @@ class _CreateProfileState extends State<CreateProfile> {
                   }
                 });
 
-                // var response = await uploadProfilePhoto(_imageFile);
+                var response = await uploadProfilePhoto(_imageFile);
+                // print(response);
+                if (response['status'] == "success") {
+                  setState(() {
+                    userDetails["profilePhoto"] = response['data'];
+                    picFlag = false;
+                  });
+                }
               },
               child: const Icon(
                 Icons.camera_alt,
