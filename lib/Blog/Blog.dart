@@ -42,6 +42,7 @@ class _BlogState extends State<Blog> {
   bool circular = false;
   bool cmmntIsUpdate = false;
   int cmmntIndex = -1;
+  bool followcircular = false;
 
   @override
   void initState() {
@@ -314,58 +315,82 @@ class _BlogState extends State<Blog> {
                       // width: 100.0,
                       height: 30.0,
                       child: follow
-                          ? OutlinedButton(
-                              onPressed: () async {
-                                var response =
-                                    await unfollow(widget.post['user']['id']);
-                                // print(response);
-                                if (response['status'] == 'success') {
-                                  setState(() {
-                                    widget.post['user']['followers'] =
-                                        response['data']['followers'];
-                                    follow = false;
-                                  });
-                                  print(widget.post['user']['followers']);
-                                }
-                              },
-                              style: OutlinedButton.styleFrom(
-                                side: const BorderSide(color: Colors.green),
-                              ),
-                              child: const Text(
-                                'Unfollow',
-                                style: TextStyle(
-                                    color: Color.fromARGB(255, 4, 88, 36),
-                                    fontSize: 12),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            )
-                          : OutlinedButton(
-                              onPressed: () async {
-                                var response =
-                                    await following(widget.post['user']['id']);
-                                // print(response);
-                                if (response['status'] == 'success') {
-                                  setState(() {
-                                    widget.post['user']['followers'] =
-                                        response['data']['followers'];
-                                    follow = true;
-                                  });
-                                  print(widget.post['user']['followers']);
-                                }
-                              },
-                              style: OutlinedButton.styleFrom(
-                                side: const BorderSide(color: Colors.green),
-                                backgroundColor: Colors.green,
-                              ),
-                              child: const Text(
-                                'follow',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
+                          ? followcircular
+                              ? CircularProgressIndicator(
+                                  value: null,
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors
+                                      .green), // Color of the progress indicator
+                                )
+                              : OutlinedButton(
+                                  onPressed: () async {
+                                    setState(() {
+                                      followcircular = true;
+                                    });
+                                    var response = await unfollow(
+                                        widget.post['user']['id']);
+                                    // print(response);
+                                    if (response['status'] == 'success') {
+                                      setState(() {
+                                        widget.post['user']['followers'] =
+                                            response['data']['followers'];
+                                        follow = false;
+                                      });
+                                      print(widget.post['user']['followers']);
+                                      setState(() {
+                                        followcircular = false;
+                                      });
+                                    }
+                                  },
+                                  style: OutlinedButton.styleFrom(
+                                    side: const BorderSide(color: Colors.green),
+                                  ),
+                                  child: const Text(
+                                    'Unfollow',
+                                    style: TextStyle(
+                                        color: Color.fromARGB(255, 4, 88, 36),
+                                        fontSize: 12),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                )
+                          : followcircular
+                              ? CircularProgressIndicator(
+                                  value: null,
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors
+                                      .green), // Color of the progress indicator
+                                )
+                              : OutlinedButton(
+                                  onPressed: () async {
+                                    setState(() {
+                                      followcircular = true;
+                                    });
+                                    var response = await following(
+                                        widget.post['user']['id']);
+                                    // print(response);
+                                    if (response['status'] == 'success') {
+                                      setState(() {
+                                        widget.post['user']['followers'] =
+                                            response['data']['followers'];
+                                        follow = true;
+                                      });
+                                      print(widget.post['user']['followers']);
+                                      setState(() {
+                                        followcircular = false;
+                                      });
+                                    }
+                                  },
+                                  style: OutlinedButton.styleFrom(
+                                    side: const BorderSide(color: Colors.green),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                  child: const Text(
+                                    'follow',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
                     )
                     //  SizedBox(
                     //     width: 95.0,

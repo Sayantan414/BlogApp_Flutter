@@ -38,7 +38,7 @@ class _CreateProfileState extends State<CreateProfile> {
     super.initState();
 
     userDetails = getUserDetails();
-    print(userDetails);
+    // print(userDetails);
 
     _firstname.text = userDetails['firstname'];
     _lastname.text = userDetails['lastname'];
@@ -80,7 +80,7 @@ class _CreateProfileState extends State<CreateProfile> {
               color: Colors.black,
             ),
             onPressed: () {
-              Navigator.of(context).pop("pic");
+              Navigator.of(context).pop({'update': false});
             }),
       ),
       backgroundColor: Color.fromARGB(236, 211, 238, 196),
@@ -133,7 +133,7 @@ class _CreateProfileState extends State<CreateProfile> {
                     setState(() {
                       circular = false;
                     });
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop({'update': true});
                     // }
                   }
                 }
