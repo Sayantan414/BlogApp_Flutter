@@ -1,5 +1,6 @@
 import 'package:blogapp/Blog/Blogs.dart';
 import 'package:blogapp/Services/postService.dart';
+import 'package:blogapp/Utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -38,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 241, 246, 241),
+      backgroundColor: colorTheme(context)['primary'],
       body: SingleChildScrollView(
         child: Container(
           child:

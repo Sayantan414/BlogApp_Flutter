@@ -2,6 +2,7 @@ import 'package:blogapp/Blog/Blog.dart';
 import 'package:blogapp/Blog/OwnBlog.dart';
 import 'package:blogapp/Blog/addBlog.dart';
 import 'package:blogapp/NetworkHandler.dart';
+import 'package:blogapp/Utils/colors.dart';
 import 'package:blogapp/Utils/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -237,26 +238,27 @@ class _BlogsState extends State<Blogs> {
                           },
                     child: Container(
                       margin: EdgeInsets.symmetric(vertical: 4, horizontal: 2),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        gradient: const LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Color.fromARGB(255, 147, 222, 151), // Darker green
-                            Color.fromARGB(255, 173, 236, 178), // Medium green
-                            Color.fromARGB(255, 194, 239, 194), // Lighter green
-                          ],
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.2),
-                            spreadRadius: 5,
-                            blurRadius: 7,
-                            offset: Offset(0, 3), // changes position of shadow
-                          ),
-                        ],
-                      ),
+                      // decoration: BoxDecoration(
+                      //   borderRadius: BorderRadius.circular(12),
+                      //   gradient: const LinearGradient(
+                      //     begin: Alignment.topCenter,
+                      //     end: Alignment.bottomCenter,
+                      //     colors: [
+                      //       Color.fromARGB(255, 147, 222, 151), // Darker green
+                      //       Color.fromARGB(255, 173, 236, 178), // Medium green
+                      //       Color.fromARGB(255, 194, 239, 194), // Lighter green
+                      //     ],
+                      //   ),
+                      //   boxShadow: [
+                      //     BoxShadow(
+                      //       color: Colors.grey.withOpacity(0.2),
+                      //       spreadRadius: 5,
+                      //       blurRadius: 7,
+                      //       offset: Offset(0, 3), // changes position of shadow
+                      //     ),
+                      //   ],
+                      // ),
+                      color: colorTheme(context)['secondary'],
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:blogapp/Pages/HomePage.dart';
 import 'package:blogapp/Services/userService.dart';
+import 'package:blogapp/Utils/colors.dart';
 import 'package:blogapp/Utils/functions.dart';
 import "package:flutter/material.dart";
 
@@ -35,25 +36,26 @@ class _SignUpPageState extends State<SignUpPage> {
       body: Container(
         // height: MediaQuery.of(context).size.height,
         // width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                colors: [Colors.white, Colors.green],
-                begin: FractionalOffset(0.0, 1.0),
-                end: FractionalOffset(0.0, 1.0),
-                stops: [0.0, 1.0],
-                tileMode: TileMode.repeated)),
+        // decoration: const BoxDecoration(
+        //     gradient: LinearGradient(
+        //         colors: [Colors.white, Colors.green],
+        //         begin: FractionalOffset(0.0, 1.0),
+        //         end: FractionalOffset(0.0, 1.0),
+        //         stops: [0.0, 1.0],
+        //         tileMode: TileMode.repeated)),
+        color: colorTheme(context)['primary'],
         child: Form(
           key: _globalkey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 "Register",
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 2,
-                  color: Color(0xff00A86B),
+                  color: colorTheme(context)['text'],
                 ),
               ),
               const SizedBox(
@@ -170,13 +172,13 @@ class _SignUpPageState extends State<SignUpPage> {
                         width: 150,
                         height: 50,
                         decoration: BoxDecoration(
-                            color: Color(0xff00A86B),
+                            color: colorTheme(context)['button'],
                             borderRadius: BorderRadius.circular(10)),
-                        child: const Center(
+                        child: Center(
                           child: Text(
                             "Sign Up",
                             style: TextStyle(
-                                color: Colors.white,
+                                color: colorTheme(context)['buttonText'],
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -222,12 +224,12 @@ class _SignUpPageState extends State<SignUpPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "Firstname",
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: colorTheme(context)['text'],
             ),
           ),
           SizedBox(height: 8), // Add spacing between Text and TextFormField
@@ -238,7 +240,8 @@ class _SignUpPageState extends State<SignUpPage> {
               fillColor: Color.fromARGB(255, 226, 241, 221),
               errorText: validate ? null : errorText,
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black, width: 2),
+                borderSide:
+                    BorderSide(color: colorTheme(context)['text'], width: 2),
                 borderRadius: BorderRadius.circular(8),
               ),
               enabledBorder: OutlineInputBorder(
@@ -268,12 +271,12 @@ class _SignUpPageState extends State<SignUpPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "Lastname",
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: colorTheme(context)['text'],
             ),
           ),
           SizedBox(height: 8), // Add spacing between Text and TextFormField
@@ -284,7 +287,8 @@ class _SignUpPageState extends State<SignUpPage> {
               fillColor: Color.fromARGB(255, 226, 241, 221),
               errorText: validate ? null : errorText,
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black, width: 2),
+                borderSide:
+                    BorderSide(color: colorTheme(context)['text'], width: 2),
                 borderRadius: BorderRadius.circular(8),
               ),
               enabledBorder: OutlineInputBorder(
@@ -314,12 +318,12 @@ class _SignUpPageState extends State<SignUpPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "Email",
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: colorTheme(context)['text'],
             ),
           ),
           SizedBox(height: 8), // Add spacing between Text and TextFormField
@@ -338,7 +342,8 @@ class _SignUpPageState extends State<SignUpPage> {
               filled: true,
               fillColor: Color.fromARGB(255, 226, 241, 221),
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black, width: 2),
+                borderSide:
+                    BorderSide(color: colorTheme(context)['text'], width: 2),
                 borderRadius: BorderRadius.circular(8),
               ),
               enabledBorder: OutlineInputBorder(
@@ -368,12 +373,12 @@ class _SignUpPageState extends State<SignUpPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+          Text(
             "Password",
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: colorTheme(context)['text'],
             ),
           ),
           SizedBox(height: 8), // Add spacing between Text and TextFormField
@@ -403,7 +408,8 @@ class _SignUpPageState extends State<SignUpPage> {
               helperText: "**Password length should have >= 4",
               helperStyle: TextStyle(fontSize: 14),
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black, width: 2),
+                borderSide:
+                    BorderSide(color: colorTheme(context)['text'], width: 2),
                 borderRadius: BorderRadius.circular(8),
               ),
               enabledBorder: OutlineInputBorder(

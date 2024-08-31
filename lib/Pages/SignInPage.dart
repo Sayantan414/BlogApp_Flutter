@@ -4,6 +4,7 @@ import 'package:blogapp/NetworkHandler.dart';
 import 'package:blogapp/Pages/HomePage.dart';
 import 'package:blogapp/Pages/SignUpPage.dart';
 import 'package:blogapp/Services/userService.dart';
+import 'package:blogapp/Utils/colors.dart';
 import 'package:blogapp/Utils/functions.dart';
 import "package:flutter/material.dart";
 
@@ -32,13 +33,17 @@ class _SignInPageState extends State<SignInPage> {
       body: Container(
         // height: MediaQuery.of(context).size.height,
         // width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                colors: [Colors.white, Colors.green],
-                begin: FractionalOffset(0.0, 1.0),
-                end: FractionalOffset(0.0, 1.0),
-                stops: [0.0, 1.0],
-                tileMode: TileMode.repeated)),
+        // decoration: BoxDecoration(
+        //     gradient: LinearGradient(
+        //         colors: [
+        //           colorTheme(context)['primary'],
+        //           colorTheme(context)['tertiary'],
+        //         ],
+        //         begin: FractionalOffset(0.0, 1.0),
+        //         end: FractionalOffset(0.0, 1.0),
+        //         stops: [0.0, 1.0],
+        //         tileMode: TileMode.repeated)),
+        color: colorTheme(context)['primary'],
         child: Form(
           key: _globalkey,
           child: Padding(
@@ -46,13 +51,13 @@ class _SignInPageState extends State<SignInPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
+                Text(
                   "Sign In",
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 2,
-                    color: Color(0xff00A86B),
+                    color: colorTheme(context)['text'],
                   ),
                 ),
                 const SizedBox(
@@ -138,7 +143,7 @@ class _SignInPageState extends State<SignInPage> {
                     height: 50,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: const Color(0xff00A86B),
+                      color: colorTheme(context)['button'],
                     ),
                     child: Center(
                       child: circular
@@ -146,10 +151,10 @@ class _SignInPageState extends State<SignInPage> {
                               valueColor:
                                   AlwaysStoppedAnimation<Color>(Colors.white),
                             )
-                          : const Text(
+                          : Text(
                               "Log In",
                               style: TextStyle(
-                                color: Colors.white,
+                                color: colorTheme(context)['buttonText'],
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -169,12 +174,12 @@ class _SignInPageState extends State<SignInPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           "Email",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: colorTheme(context)['text'],
           ),
         ),
         const SizedBox(height: 8), // Add spacing between Text and TextFormField
@@ -216,12 +221,12 @@ class _SignInPageState extends State<SignInPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           "Password",
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: colorTheme(context)['text'],
           ),
         ),
         SizedBox(height: 8), // Add spacing between Text and TextFormField

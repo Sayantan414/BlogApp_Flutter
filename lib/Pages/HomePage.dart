@@ -2,6 +2,7 @@ import 'package:blogapp/Blog/addBlog.dart';
 import 'package:blogapp/Pages/WelcomePage.dart';
 import 'package:blogapp/Screen/HomeScreen.dart';
 import 'package:blogapp/Profile/ProfileScreen.dart';
+import 'package:blogapp/Utils/colors.dart';
 
 import 'package:flutter/material.dart';
 import 'package:blogapp/NetworkHandler.dart';
@@ -103,10 +104,12 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(255, 147, 222, 151),
+        backgroundColor: colorTheme(context)['primary'],
         title: Text(
           titleString[currentState],
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+            color: colorTheme(context)['text'],
+          ),
         ),
         centerTitle: true,
         actions: <Widget>[
@@ -115,19 +118,21 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Color.fromARGB(255, 244, 245, 244),
+        backgroundColor: colorTheme(context)['button'],
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => AddBlog(action: "Add", data: const {})));
         },
-        child: const Text(
+        child: Text(
           "+",
-          style:
-              TextStyle(fontSize: 40, color: Color.fromARGB(255, 4, 148, 54)),
+          style: TextStyle(
+            fontSize: 40,
+            color: colorTheme(context)['buttonText'],
+          ),
         ),
       ),
       bottomNavigationBar: BottomAppBar(
-        color: Color.fromARGB(255, 147, 222, 151),
+        color: colorTheme(context)['primary'],
         // shape: CircularNotchedRectangle(),
         notchMargin: 12,
         child: Container(
@@ -139,7 +144,9 @@ class _HomePageState extends State<HomePage> {
               children: <Widget>[
                 IconButton(
                   icon: Icon(Icons.home),
-                  color: currentState == 0 ? Colors.white : Colors.white54,
+                  color: currentState == 0
+                      ? colorTheme(context)['button']
+                      : colorTheme(context)['tertiary'],
                   onPressed: () {
                     setState(() {
                       currentState = 0;
@@ -149,7 +156,9 @@ class _HomePageState extends State<HomePage> {
                 ),
                 IconButton(
                   icon: Icon(Icons.person),
-                  color: currentState == 1 ? Colors.white : Colors.white54,
+                  color: currentState == 1
+                      ? colorTheme(context)['button']
+                      : colorTheme(context)['tertiary'],
                   onPressed: () {
                     setState(() {
                       currentState = 1;

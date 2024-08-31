@@ -1,5 +1,6 @@
 import 'package:blogapp/Pages/SignInPage.dart';
 import 'package:blogapp/Pages/SignUpPage.dart';
+import 'package:blogapp/Utils/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -50,25 +51,30 @@ class _WelcomePageState extends State<WelcomePage>
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.white, Colors.green],
-            begin: FractionalOffset(0.0, 1.0),
-            end: FractionalOffset(0.0, 1.0),
-            stops: [0.0, 1.0],
-            tileMode: TileMode.repeated,
-          ),
-        ),
+        color: colorTheme(context)['primary'],
+        // decoration: BoxDecoration(
+        //   gradient: LinearGradient(
+        //     colors: [
+        //       colorTheme(context)['primary'],
+        //       colorTheme(context)['secondary'],
+        //     ],
+        //     begin: FractionalOffset(0.0, 1.0),
+        //     end: FractionalOffset(0.0, 1.0),
+        //     stops: [0.0, 1.0],
+        //     tileMode: TileMode.repeated,
+        //   ),
+        // ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
           child: Column(
             children: [
               SlideTransition(
                 position: animation1,
-                child: const Text(
+                child: Text(
                   "Welcome",
                   style: TextStyle(
                     fontSize: 38,
+                    color: colorTheme(context)['text'],
                     fontWeight: FontWeight.w600,
                     letterSpacing: 2,
                   ),
@@ -79,10 +85,11 @@ class _WelcomePageState extends State<WelcomePage>
               ),
               SlideTransition(
                 position: animation1,
-                child: const Text(
+                child: Text(
                   "Great stories for great people",
                   textAlign: TextAlign.center,
                   style: TextStyle(
+                    color: colorTheme(context)['text'],
                     fontWeight: FontWeight.w600,
                     fontSize: 38,
                     letterSpacing: 2,
@@ -127,10 +134,10 @@ class _WelcomePageState extends State<WelcomePage>
                           builder: (context) => SignInPage(),
                         ));
                       },
-                      child: const Text(
+                      child: Text(
                         "Sign In",
                         style: TextStyle(
-                          color: Colors.green,
+                          color: colorTheme(context)['text'],
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
                         ),

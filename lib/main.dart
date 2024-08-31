@@ -40,14 +40,17 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        theme: _buildTheme(Brightness.light), home: WelcomePage());
-  }
-
-  ThemeData _buildTheme(brightness) {
-    var baseTheme = ThemeData(brightness: brightness);
-
-    return baseTheme.copyWith(
-      textTheme: GoogleFonts.openSansTextTheme(baseTheme.textTheme),
+      themeMode: ThemeMode
+          .system, // Change to ThemeMode.light or ThemeMode.dark as needed
+      theme: ThemeData(
+        brightness: Brightness.light,
+        textTheme: GoogleFonts.openSansTextTheme(),
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        textTheme: GoogleFonts.openSansTextTheme(),
+      ),
+      home: WelcomePage(),
     );
   }
 }
