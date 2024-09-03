@@ -103,7 +103,7 @@ class _BlogsState extends State<Blogs> {
                 padding: const EdgeInsets.only(top: 8.0, left: 5.0, right: 5.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Color.fromARGB(255, 235, 244, 235),
+                    color: colorTheme(context)['fillColor'],
                     borderRadius: BorderRadius.circular(20.0),
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -125,6 +125,7 @@ class _BlogsState extends State<Blogs> {
                         width: 35,
                         child: IconButton(
                           icon: const Icon(Icons.cancel),
+                          color: colorTheme(context)['button'],
                           onPressed: () {
                             _searchController.clear();
                             widget.type == "Public"
@@ -161,27 +162,25 @@ class _BlogsState extends State<Blogs> {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: isSelected
-                                  ? Colors.white
-                                  : Color.fromARGB(255, 54, 170, 85),
+                                  ? colorTheme(context)['buttonText']
+                                  : colorTheme(context)['button'],
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           style: OutlinedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 10),
-                            side: BorderSide(
-                              color: isSelected
-                                  ? Color.fromARGB(255, 148, 233,
-                                      171) // Outline color when selected
-                                  : Color.fromARGB(162, 111, 239,
-                                      145), // Outline color when not selected
-                            ),
-                            backgroundColor: isSelected
-                                ? Color.fromARGB(255, 148, 233, 171)
-                                : Colors.white,
-                            textStyle: TextStyle(fontSize: 14),
-                          ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 10),
+                              side: BorderSide(
+                                  color: isSelected
+                                      ? colorTheme(context)[
+                                          'button'] // Outline color when selected
+                                      : colorTheme(context)[
+                                          'tertiary'] // Outline color when not selected
+                                  ),
+                              backgroundColor: isSelected
+                                  ? colorTheme(context)['button']
+                                  : colorTheme(context)['buttonText']),
                         );
                       }).toList(),
                     )
@@ -305,32 +304,32 @@ class _BlogsState extends State<Blogs> {
                                           ? Text(
                                               item['user']['fullname'],
                                               style: GoogleFonts.roboto(
-                                                textStyle: const TextStyle(
+                                                textStyle: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 16,
-                                                  color: Color.fromARGB(
-                                                      255, 51, 51, 51),
+                                                  color: colorTheme(
+                                                      context)['text'],
                                                 ),
                                               ),
                                             )
                                           : Text(
                                               userDetails['fullname'],
                                               style: GoogleFonts.roboto(
-                                                textStyle: const TextStyle(
+                                                textStyle: TextStyle(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 16,
-                                                  color: Color.fromARGB(
-                                                      255, 51, 51, 51),
+                                                  color: colorTheme(
+                                                      context)['text'],
                                                 ),
                                               ),
                                             ),
                                       Text(
                                         item['daysAgo'],
                                         style: GoogleFonts.roboto(
-                                          textStyle: const TextStyle(
+                                          textStyle: TextStyle(
                                             fontSize: 12,
                                             color:
-                                                Color.fromARGB(255, 96, 95, 95),
+                                                colorTheme(context)['daysago'],
                                           ),
                                         ),
                                       ),
@@ -348,9 +347,12 @@ class _BlogsState extends State<Blogs> {
                                             bottomSheet(item['_id'])),
                                       );
                                     },
-                                    child: const Text(
+                                    child: Text(
                                       "•••",
-                                      style: TextStyle(fontSize: 18.0),
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        color: colorTheme(context)['text'],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -391,10 +393,10 @@ class _BlogsState extends State<Blogs> {
                                 item['title'],
                                 // "vyhfytfyt ftyfytfdytf fyfytytfy ftys4aarest tguyviugi",
                                 style: GoogleFonts.roboto(
-                                  textStyle: const TextStyle(
+                                  textStyle: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
-                                    color: Color.fromARGB(255, 56, 98, 67),
+                                    color: colorTheme(context)['text'],
                                   ),
                                 ),
                               ),
@@ -421,8 +423,8 @@ class _BlogsState extends State<Blogs> {
                                             8), // Space between icon and text
                                     Text(
                                       item['likesCount'].toString(),
-                                      style: const TextStyle(
-                                        color: Color.fromARGB(255, 1, 42, 19),
+                                      style: TextStyle(
+                                        color: colorTheme(context)['text'],
                                         fontSize: 14,
                                       ),
                                     ),
@@ -440,8 +442,8 @@ class _BlogsState extends State<Blogs> {
                                             8), // Space between icon and text
                                     Text(
                                       item['viewsCount'].toString(),
-                                      style: const TextStyle(
-                                        color: Color.fromARGB(255, 13, 13, 13),
+                                      style: TextStyle(
+                                        color: colorTheme(context)['text'],
                                         fontSize: 14,
                                       ),
                                     ),
