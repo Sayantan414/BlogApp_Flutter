@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:blogapp/Services/userService.dart';
+import 'package:blogapp/Utils/colors.dart';
 import 'package:blogapp/Utils/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -72,18 +73,18 @@ class _CreateProfileState extends State<CreateProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(236, 211, 238, 196),
+        backgroundColor: colorTheme(context)['primary'],
         elevation: 0,
         leading: IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.clear,
-              color: Colors.black,
+              color: colorTheme(context)['button'],
             ),
             onPressed: () {
               Navigator.of(context).pop({'update': false});
             }),
       ),
-      backgroundColor: Color.fromARGB(236, 211, 238, 196),
+      backgroundColor: colorTheme(context)['primary'],
       body: Form(
         key: _globalkey,
         child: ListView(
@@ -143,7 +144,7 @@ class _CreateProfileState extends State<CreateProfile> {
                   width: 200,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: Colors.green,
+                    color: colorTheme(context)['tertiary'],
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
@@ -152,10 +153,10 @@ class _CreateProfileState extends State<CreateProfile> {
                             valueColor:
                                 AlwaysStoppedAnimation<Color>(Colors.white),
                           )
-                        : const Text(
+                        : Text(
                             "Update",
                             style: TextStyle(
-                              color: Colors.white,
+                              color: colorTheme(context)['text'],
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
@@ -176,13 +177,15 @@ class _CreateProfileState extends State<CreateProfile> {
         children: <Widget>[
           CircleAvatar(
             radius: 80.0,
-            backgroundColor: Color.fromARGB(236, 211, 238, 196),
+            backgroundColor: colorTheme(context)['primary'],
             backgroundImage: userDetails['profilePhoto'] != null
                 ? NetworkImage(userDetails['profilePhoto'])
                 : AssetImage('assets/nouser.png') as ImageProvider,
             child: picFlag
-                ? const CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                ? CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      colorTheme(context)['tertiary'],
+                    ),
                   )
                 : null, // No child if picFlag is false
           ),
@@ -214,9 +217,9 @@ class _CreateProfileState extends State<CreateProfile> {
                   });
                 }
               },
-              child: const Icon(
+              child: Icon(
                 Icons.camera_alt,
-                color: Colors.teal,
+                color: colorTheme(context)['primary'],
                 size: 28.0,
               ),
             ),
@@ -245,15 +248,15 @@ class _CreateProfileState extends State<CreateProfile> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: const BorderSide(
-            color: Colors
-                .green, // Change this to your desired color for focused state
+          borderSide: BorderSide(
+            color: colorTheme(context)[
+                'tertiary'], // Change this to your desired color for focused state
             width: 2,
           ),
         ),
-        prefixIcon: const Icon(
+        prefixIcon: Icon(
           Icons.person,
-          color: Colors.green,
+          color: colorTheme(context)['tertiary'],
         ),
         labelText: "Firstname",
         labelStyle: TextStyle(color: Colors.black),
@@ -287,15 +290,15 @@ class _CreateProfileState extends State<CreateProfile> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: const BorderSide(
-            color: Colors
-                .green, // Change this to your desired color for focused state
+          borderSide: BorderSide(
+            color: colorTheme(context)[
+                'tertiary'], // Change this to your desired color for focused state
             width: 2,
           ),
         ),
-        prefixIcon: const Icon(
+        prefixIcon: Icon(
           Icons.person,
-          color: Colors.green,
+          color: colorTheme(context)['tertiary'],
         ),
         labelText: "Lastname",
         labelStyle: TextStyle(color: Colors.black),
@@ -329,15 +332,15 @@ class _CreateProfileState extends State<CreateProfile> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: const BorderSide(
-            color: Colors
-                .green, // Change this to your desired color for focused state
+          borderSide: BorderSide(
+            color: colorTheme(context)[
+                'tertiary'], // Change this to your desired color for focused state
             width: 2,
           ),
         ),
-        prefixIcon: const Icon(
+        prefixIcon: Icon(
           Icons.email_outlined,
-          color: Colors.green,
+          color: colorTheme(context)['tertiary'],
         ),
         labelText: "Email",
         labelStyle: TextStyle(color: Colors.black),
@@ -372,14 +375,14 @@ class _CreateProfileState extends State<CreateProfile> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: const BorderSide(
-            color: Colors.green,
+          borderSide: BorderSide(
+            color: colorTheme(context)['tertiary'],
             width: 2,
           ),
         ),
-        prefixIcon: const Icon(
+        prefixIcon: Icon(
           Icons.password,
-          color: Colors.green,
+          color: colorTheme(context)['tertiary'],
         ),
         labelText: "Password",
         labelStyle: TextStyle(color: Colors.black),
@@ -415,14 +418,14 @@ class _CreateProfileState extends State<CreateProfile> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: const BorderSide(
-            color: Colors.green,
+          borderSide: BorderSide(
+            color: colorTheme(context)['tertiary'],
             width: 2,
           ),
         ),
-        prefixIcon: const Icon(
+        prefixIcon: Icon(
           Icons.password,
-          color: Colors.green,
+          color: colorTheme(context)['tertiary'],
         ),
         labelText: "Confirm Password",
         labelStyle: TextStyle(color: Colors.black),

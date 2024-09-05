@@ -413,10 +413,10 @@ class _BlogsState extends State<Blogs> {
                                 // Likes text on the right
                                 Row(
                                   children: [
-                                    const Icon(
+                                    Icon(
                                       Icons.thumb_up,
                                       size: 22,
-                                      color: Colors.blue,
+                                      color: colorTheme(context)['tertiary'],
                                     ),
                                     const SizedBox(
                                         width:
@@ -432,10 +432,10 @@ class _BlogsState extends State<Blogs> {
                                 ),
                                 Row(
                                   children: [
-                                    const Icon(
+                                    Icon(
                                       Icons.visibility,
                                       size: 22,
-                                      color: Color.fromARGB(255, 255, 255, 255),
+                                      color: colorTheme(context)['tertiary'],
                                     ),
                                     const SizedBox(
                                         width:
@@ -465,7 +465,7 @@ class _BlogsState extends State<Blogs> {
     var foundPost = widget.posts.firstWhere((post) => post["_id"] == id);
     // print(foundPost);
     return Container(
-      height: 320.0,
+      height: 250.0,
       width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.symmetric(
         horizontal: 10,
@@ -475,7 +475,7 @@ class _BlogsState extends State<Blogs> {
         child: Column(
           children: [
             Card(
-              color: Color.fromARGB(255, 230, 251, 223),
+              color: colorTheme(context)['primary'],
               margin: const EdgeInsets.symmetric(vertical: 1.0),
               elevation: 4.0,
               child: Container(
@@ -506,10 +506,10 @@ class _BlogsState extends State<Blogs> {
                                 child: Text(
                                   'Edit Post',
                                   style: GoogleFonts.roboto(
-                                    textStyle: const TextStyle(
+                                    textStyle: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
-                                      color: Color.fromARGB(255, 4, 88, 36),
+                                      color: colorTheme(context)['tertiary'],
                                     ),
                                   ),
                                 ),
@@ -544,10 +544,10 @@ class _BlogsState extends State<Blogs> {
                           child: Text(
                             'Delete Post',
                             style: GoogleFonts.roboto(
-                              textStyle: const TextStyle(
+                              textStyle: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
-                                color: Color.fromARGB(255, 4, 88, 36),
+                                color: colorTheme(context)['tertiary'],
                               ),
                             ),
                           ),
@@ -577,10 +577,10 @@ class _BlogsState extends State<Blogs> {
                           child: Text(
                             'Block User',
                             style: GoogleFonts.roboto(
-                              textStyle: const TextStyle(
+                              textStyle: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18,
-                                color: Color.fromARGB(255, 4, 88, 36),
+                                color: colorTheme(context)['tertiary'],
                               ),
                             ),
                           ),

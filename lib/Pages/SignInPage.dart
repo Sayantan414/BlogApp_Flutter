@@ -43,7 +43,7 @@ class _SignInPageState extends State<SignInPage> {
         //         end: FractionalOffset(0.0, 1.0),
         //         stops: [0.0, 1.0],
         //         tileMode: TileMode.repeated)),
-        color: colorTheme(context)['primary'],
+        color: colorTheme(context)['secondary'],
         child: Form(
           key: _globalkey,
           child: Padding(
@@ -188,11 +188,13 @@ class _SignInPageState extends State<SignInPage> {
           style: TextStyle(color: Colors.black), // Set text color to black
           decoration: InputDecoration(
             hintText: "Enter your email",
-            hintStyle: TextStyle(color: Colors.grey), // Set hint text color
+            hintStyle: TextStyle(
+              color: colorTheme(context)['text'],
+            ), // Set hint text color
             errorText: validate ? null : errorText,
             filled: true, // Set to true to fill the box with color
             fillColor:
-                Color.fromARGB(255, 226, 241, 221), // Set box color to white
+                colorTheme(context)['fillColor'], // Set box color to white
             focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: Colors.blue, width: 2),
               borderRadius: BorderRadius.circular(8),
@@ -236,13 +238,15 @@ class _SignInPageState extends State<SignInPage> {
           style: TextStyle(color: Colors.black), // Set text color to black
           decoration: InputDecoration(
             hintText: "Enter your password",
-            hintStyle: TextStyle(color: Colors.grey),
+            hintStyle: TextStyle(
+              color: colorTheme(context)['text'],
+            ),
             filled: true,
-            fillColor:
-                Color.fromARGB(255, 226, 241, 221), // Set hint text color
+            fillColor: colorTheme(context)['fillColor'], // Set hint text color
             errorText: validate ? null : errorText,
             suffixIcon: IconButton(
               icon: Icon(vis ? Icons.visibility_off : Icons.visibility),
+              color: colorTheme(context)['tertiary'],
               onPressed: () {
                 setState(() {
                   vis = !vis;

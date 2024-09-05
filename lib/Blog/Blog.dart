@@ -12,6 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:intl/intl.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:blogapp/Utils/colors.dart';
 
 class Blog extends StatefulWidget {
   const Blog({super.key, required this.post});
@@ -104,7 +105,7 @@ class _BlogState extends State<Blog> {
   Widget build(BuildContext context) {
     // final DateFormat dateFormat = DateFormat('MMMM d, y h:mm a');
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 225, 235, 225),
+      backgroundColor: colorTheme(context)['primary'],
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -121,7 +122,7 @@ class _BlogState extends State<Blog> {
             });
           },
         ),
-        backgroundColor: const Color.fromARGB(255, 147, 222, 151),
+        backgroundColor: colorTheme(context)['primary'],
         title: const Text(
           'View',
           textAlign: TextAlign.center, // Align text at the center
@@ -149,10 +150,10 @@ class _BlogState extends State<Blog> {
                 child: Text(
                   widget.post['title'] ?? '',
                   style: GoogleFonts.roboto(
-                    textStyle: const TextStyle(
+                    textStyle: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
-                      color: Color.fromARGB(255, 4, 88, 36),
+                      color: colorTheme(context)['text'],
                     ),
                   ),
                 ),
@@ -170,9 +171,9 @@ class _BlogState extends State<Blog> {
                           _truncateText(
                               '• By ${widget.post['user']['fullname']}', 16),
                           style: GoogleFonts.lato(
-                            textStyle: const TextStyle(
+                            textStyle: TextStyle(
                               fontSize: 16,
-                              color: Colors.black,
+                              color: colorTheme(context)['daysago'],
                             ),
                           ),
                         )),
@@ -199,7 +200,14 @@ class _BlogState extends State<Blog> {
                       padding: const EdgeInsets.only(right: 20.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
-                        children: [Text("• ${widget.post['daysAgo']}")],
+                        children: [
+                          Text(
+                            "• ${widget.post['daysAgo']}",
+                            style: TextStyle(
+                              color: colorTheme(context)['daysago'],
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   ),
@@ -241,8 +249,8 @@ class _BlogState extends State<Blog> {
                             color: Colors.green),
                         label: Text(
                           widget.post['likesCount'].toString(),
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 12),
+                          style: TextStyle(
+                              color: colorTheme(context)['text'], fontSize: 12),
                           overflow: TextOverflow.ellipsis,
                         ),
                         style: OutlinedButton.styleFrom(
@@ -282,8 +290,8 @@ class _BlogState extends State<Blog> {
                             color: Colors.red),
                         label: Text(
                           widget.post['dislikesCount']?.toString() ?? "0",
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 12),
+                          style: TextStyle(
+                              color: colorTheme(context)['text'], fontSize: 12),
                           overflow: TextOverflow.ellipsis,
                         ),
                         style: OutlinedButton.styleFrom(
@@ -302,8 +310,8 @@ class _BlogState extends State<Blog> {
                             size: 22, color: Colors.blue),
                         label: Text(
                           widget.post['viewsCount'].toString(),
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 12),
+                          style: TextStyle(
+                              color: colorTheme(context)['text'], fontSize: 12),
                           overflow: TextOverflow.ellipsis,
                         ),
                         style: OutlinedButton.styleFrom(
@@ -318,8 +326,9 @@ class _BlogState extends State<Blog> {
                           ? followcircular
                               ? CircularProgressIndicator(
                                   value: null,
-                                  valueColor: AlwaysStoppedAnimation<Color>(Colors
-                                      .green), // Color of the progress indicator
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    colorTheme(context)['tertiary'],
+                                  ), // Color of the progress indicator
                                 )
                               : OutlinedButton(
                                   onPressed: () async {
@@ -344,10 +353,10 @@ class _BlogState extends State<Blog> {
                                   style: OutlinedButton.styleFrom(
                                     side: const BorderSide(color: Colors.green),
                                   ),
-                                  child: const Text(
+                                  child: Text(
                                     'Unfollow',
                                     style: TextStyle(
-                                        color: Color.fromARGB(255, 4, 88, 36),
+                                        color: colorTheme(context)['text'],
                                         fontSize: 12),
                                     overflow: TextOverflow.ellipsis,
                                   ),
@@ -355,8 +364,9 @@ class _BlogState extends State<Blog> {
                           : followcircular
                               ? CircularProgressIndicator(
                                   value: null,
-                                  valueColor: AlwaysStoppedAnimation<Color>(Colors
-                                      .green), // Color of the progress indicator
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    colorTheme(context)['tertiary'],
+                                  ), // Color of the progress indicator
                                 )
                               : OutlinedButton(
                                   onPressed: () async {
@@ -427,9 +437,9 @@ class _BlogState extends State<Blog> {
                   widget.post['description'] ?? '',
                   // "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida. Duis ac tellus et risus vulputate vehicula. Donec lobortis risus a elit. Etiam tempor. Ut ullamcorper, ligula eu tempor congue, eros est euismod turpis, id tincidunt sapien risus a quam. Maecenas fermentum consequat mi. Donec fermentum. Pellentesque malesuada nulla a mi. Duis sapien sem, aliquet nec, commodo eget, consequat quis, neque. Aliquam faucibus, elit ut dictum aliquet, felis nisl adipiscing sapien, sed malesuada diam lacus eget erat. Cras mollis scelerisque nunc. Nullam arcu. Aliquam consequat. Curabitur augue lorem, dapibus quis, laoreet et, pretium ac, nisi. Aenean magna nisl, mollis quis, molestie eu, feugiat in, orci. In hac habitasse platea dictumst.",
                   style: GoogleFonts.roboto(
-                    textStyle: const TextStyle(
+                    textStyle: TextStyle(
                       fontSize: 16,
-                      color: Colors.black,
+                      color: colorTheme(context)['text'],
                     ),
                   ),
                 ),
@@ -447,10 +457,10 @@ class _BlogState extends State<Blog> {
                     Text(
                       'Comments',
                       style: GoogleFonts.roboto(
-                          textStyle: const TextStyle(
+                          textStyle: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Color.fromARGB(255, 4, 88, 36),
+                        color: colorTheme(context)['text'],
                       )),
                     ),
                     const SizedBox(height: 8),
@@ -470,12 +480,12 @@ class _BlogState extends State<Blog> {
                                     child: const CircularProgressIndicator(
                                       value: null,
                                       valueColor: AlwaysStoppedAnimation<Color>(
-                                          Colors.green),
+                                          Colors.blue),
                                     ),
                                   )
                                 : cmmntIsUpdate
                                     ? IconButton(
-                                        color: Color.fromARGB(255, 4, 88, 36),
+                                        color: colorTheme(context)['button'],
                                         icon: Icon(Icons.update),
                                         onPressed: () async {
                                           try {
@@ -507,7 +517,7 @@ class _BlogState extends State<Blog> {
                                         },
                                       )
                                     : IconButton(
-                                        color: Color.fromARGB(255, 4, 88, 36),
+                                        color: colorTheme(context)['button'],
                                         icon: Icon(Icons.send),
                                         onPressed: () async {
                                           setState(() {
@@ -575,7 +585,7 @@ class _BlogState extends State<Blog> {
                     const SizedBox(height: 16),
                     isLoading
                         ? LoadingAnimationWidget.fourRotatingDots(
-                            color: const Color.fromARGB(230, 80, 208, 142),
+                            color: colorTheme(context)['tertiary'],
                             size: 50,
                           )
                         : ListView(
@@ -601,10 +611,11 @@ class _BlogState extends State<Blog> {
                                       ),
                                 title: Text(
                                   comment['user']['fullname'],
-                                  style: const TextStyle(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color.fromARGB(255, 4, 88, 36)),
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                    color: colorTheme(context)['text'],
+                                  ),
                                 ),
                                 subtitle: Text(
                                   comment['description'],
@@ -642,12 +653,13 @@ class _BlogState extends State<Blog> {
                                                 index, comment['_id']),
                                           );
                                         },
-                                        child: const Text(
+                                        child: Text(
                                           "•••",
                                           style: TextStyle(
-                                              fontSize: 14,
-                                              color: Color.fromARGB(
-                                                  255, 4, 88, 36)),
+                                            fontSize: 14,
+                                            color:
+                                                colorTheme(context)['button'],
+                                          ),
                                         ),
                                       ),
                                   ],
@@ -708,10 +720,10 @@ class _BlogState extends State<Blog> {
                                 child: Text(
                                   'Edit Comment',
                                   style: GoogleFonts.roboto(
-                                    textStyle: const TextStyle(
+                                    textStyle: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
-                                      color: Color.fromARGB(255, 4, 88, 36),
+                                      color: colorTheme(context)['tertiary'],
                                     ),
                                   ),
                                 ),
@@ -746,10 +758,10 @@ class _BlogState extends State<Blog> {
                           builder: (ctx) => BackdropFilter(
                             filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
                             child: AlertDialog(
-                              title: const Text(
+                              title: Text(
                                 'Delete',
                                 style: TextStyle(
-                                  color: Color.fromARGB(255, 4, 88, 36),
+                                  color: colorTheme(context)['tertiary'],
                                 ),
                               ),
                               content: Text(
@@ -760,11 +772,11 @@ class _BlogState extends State<Blog> {
                                   onPressed: () {
                                     Navigator.pop(ctx);
                                   },
-                                  child: const Text(
+                                  child: Text(
                                     'No',
                                     style: TextStyle(
-                                      color: Color.fromARGB(
-                                          255, 4, 88, 36), // Your green color
+                                      color: colorTheme(context)[
+                                          'tertiary'], // Your green color
                                     ),
                                   ),
                                 ),
@@ -783,11 +795,11 @@ class _BlogState extends State<Blog> {
                                       comments.removeAt(index);
                                     });
                                   },
-                                  child: const Text(
+                                  child: Text(
                                     'Yes',
                                     style: TextStyle(
-                                      color: Color.fromARGB(
-                                          255, 4, 88, 36), // Your green color
+                                      color: colorTheme(context)[
+                                          'tertiary'], // Your green color
                                     ),
                                   ),
                                 ),
@@ -806,10 +818,10 @@ class _BlogState extends State<Blog> {
                                 child: Text(
                                   'Delete Comment',
                                   style: GoogleFonts.roboto(
-                                    textStyle: const TextStyle(
+                                    textStyle: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
-                                      color: Color.fromARGB(255, 4, 88, 36),
+                                      color: colorTheme(context)['tertiary'],
                                     ),
                                   ),
                                 ),

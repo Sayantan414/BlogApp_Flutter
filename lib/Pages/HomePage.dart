@@ -44,16 +44,16 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           children: <Widget>[
             DrawerHeader(
-              decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 147, 222, 151),
+              decoration: BoxDecoration(
+                color: colorTheme(context)['primary'],
               ),
               child: Column(
                 children: <Widget>[
-                  profilePhoto = const CircleAvatar(
+                  profilePhoto = CircleAvatar(
                     backgroundImage: NetworkImage(
                         "https://res.cloudinary.com/djs5memx8/image/upload/v1721902294/blog-api/nrap6pousx3h8hn8d2sc.webp"),
                     radius: 50, // Adjust the radius as needed
-                    backgroundColor: Color.fromARGB(255, 147, 222, 151),
+                    backgroundColor: colorTheme(context)['primary'],
                   ),
 
                   // const CircleAvatar(
@@ -145,8 +145,8 @@ class _HomePageState extends State<HomePage> {
                 IconButton(
                   icon: Icon(Icons.home),
                   color: currentState == 0
-                      ? colorTheme(context)['button']
-                      : colorTheme(context)['tertiary'],
+                      ? colorTheme(context)['tertiary']
+                      : colorTheme(context)['inactiveState'],
                   onPressed: () {
                     setState(() {
                       currentState = 0;
@@ -157,8 +157,8 @@ class _HomePageState extends State<HomePage> {
                 IconButton(
                   icon: Icon(Icons.person),
                   color: currentState == 1
-                      ? colorTheme(context)['button']
-                      : colorTheme(context)['tertiary'],
+                      ? colorTheme(context)['tertiary']
+                      : colorTheme(context)["inactiveState"],
                   onPressed: () {
                     setState(() {
                       currentState = 1;

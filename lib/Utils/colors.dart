@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
 const lightColors = {
-  "primary": Color(0xFFFEFFDE),
-  "secondary": Color.fromARGB(255, 221, 255, 188),
-  "tertiary": Color(0xFF91C788),
-  "text": Color(0xFF52734D),
-  "button": Color(0xFF52734D),
+  "primary": Color(0xFFE4F9F5),
+  "secondary": Color.fromARGB(255, 199, 245, 236),
+  "tertiary": Color(0xFF11999E),
+  "text": Color(0xFF40514E),
+  "button": Color(0xFF11999E),
   "buttonText": Color.fromARGB(255, 247, 249, 247),
   "daysago": Color.fromARGB(255, 96, 95, 95),
-  "fillColor": Color.fromARGB(255, 223, 240, 206)
+  "fillColor": Color.fromARGB(255, 188, 231, 240),
+  "inactiveState": Color.fromARGB(255, 172, 201, 196),
 };
 
 const darkColors = {
@@ -20,6 +21,7 @@ const darkColors = {
   "buttonText": Color(0xFF1E201E),
   "daysago": Color.fromARGB(134, 236, 223, 204),
   "fillColor": Color.fromARGB(255, 97, 98, 93),
+  "inactiveState": Color(0xFF3C3D37),
 };
 
 colorTheme(context) {

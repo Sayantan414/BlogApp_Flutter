@@ -2,6 +2,7 @@ import 'package:blogapp/Blog/Blogs.dart';
 import 'package:blogapp/NetworkHandler.dart';
 import 'package:blogapp/Profile/CreateProfile.dart';
 import 'package:blogapp/Services/userService.dart';
+import 'package:blogapp/Utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -59,9 +60,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 241, 246, 241),
+      backgroundColor: colorTheme(context)['primary'],
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 241, 246, 241),
+        backgroundColor: colorTheme(context)['primary'],
         elevation: 0,
         actions: <Widget>[
           IconButton(
@@ -76,16 +77,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         }
                       }));
             },
-            color: Colors.black,
+            color: colorTheme(context)['tertiary'],
           ),
         ],
       ),
       body: circular
-          ? const Center(
+          ? Center(
               child: CircularProgressIndicator(
               value: null,
               valueColor: AlwaysStoppedAnimation<Color>(
-                  Colors.green), // Color of the progress indicator
+                colorTheme(context)['tertiary'],
+              ), // Color of the progress indicator
             ))
           : ListView(
               children: <Widget>[
@@ -167,7 +169,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Center(
       child: isLoading
           ? LoadingAnimationWidget.fourRotatingDots(
-              color: const Color.fromARGB(230, 80, 208, 142),
+              color: colorTheme(context)['tertiary'],
               size: 50,
             )
           : const Column(
@@ -220,10 +222,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 10), // Add space between avatar and text
           Text(
             profileDetails['fullname'],
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: colorTheme(context)['text'],
+            ),
           ),
           const SizedBox(height: 10), // Add space between texts
-          Text("titleLine"),
+          Text(
+            "titleLine",
+            style: TextStyle(
+              color: colorTheme(context)['text'],
+            ),
+          ),
         ],
       ),
     );

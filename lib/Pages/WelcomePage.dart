@@ -51,7 +51,7 @@ class _WelcomePageState extends State<WelcomePage>
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        color: colorTheme(context)['primary'],
+        color: colorTheme(context)['secondary'],
         // decoration: BoxDecoration(
         //   gradient: LinearGradient(
         //     colors: [
