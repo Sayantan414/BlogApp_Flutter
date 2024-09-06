@@ -6,6 +6,7 @@ import 'package:blogapp/Pages/HomePage.dart';
 import 'package:blogapp/Profile/ProfileScreen.dart';
 import 'package:blogapp/Services/categoryService.dart';
 import 'package:blogapp/Services/postService.dart';
+import 'package:blogapp/Utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -81,14 +82,14 @@ class _AddBlogState extends State<AddBlog> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(236, 211, 238, 196),
+      backgroundColor: colorTheme(context)['primary'],
       appBar: AppBar(
-        backgroundColor: Color.fromARGB(236, 211, 238, 196),
+        backgroundColor: colorTheme(context)['primary'],
         elevation: 0,
         leading: IconButton(
             icon: Icon(
               Icons.clear,
-              color: Colors.black,
+              color: colorTheme(context)['text'],
             ),
             onPressed: () {
               Navigator.pop(context);
@@ -143,15 +144,22 @@ class _AddBlogState extends State<AddBlog> {
             )
           else
             Center(
-              child: const Icon(Icons.image, size: 100, color: Colors.white),
+              child: Icon(Icons.image,
+                  size: 100, color: colorTheme(context)['text']),
             ),
           SizedBox(height: 10),
           Center(
             child: ElevatedButton(
               onPressed: _pickImage,
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    colorTheme(context)['button'], // Background color
+              ),
               child: Text(
                 'Choose a Image',
-                style: TextStyle(color: Colors.teal),
+                style: TextStyle(
+                  color: colorTheme(context)['buttonText'], // Text color
+                ),
               ),
             ),
           ),
@@ -168,6 +176,9 @@ class _AddBlogState extends State<AddBlog> {
       ),
       child: TextFormField(
         controller: _title,
+        style: TextStyle(
+          color: colorTheme(context)['text'],
+        ),
         validator: (value) {
           if (value!.isEmpty) {
             return "Title can't be empty";
@@ -178,22 +189,24 @@ class _AddBlogState extends State<AddBlog> {
         },
         decoration: InputDecoration(
           filled: true,
-          fillColor: Colors.grey[200],
+          fillColor: colorTheme(context)['fillColor'],
           border: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: Color.fromARGB(255, 45, 183, 52),
+            borderSide: BorderSide(
+              color: colorTheme(context)['tertiary'],
             ),
             borderRadius: BorderRadius.circular(10),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: Colors.blue,
+            borderSide: BorderSide(
+              color: colorTheme(context)['tertiary'],
               width: 2,
             ),
             borderRadius: BorderRadius.circular(10),
           ),
           labelText: "Add Blog Title",
-          labelStyle: const TextStyle(color: Colors.black),
+          labelStyle: TextStyle(
+            color: colorTheme(context)['text'],
+          ),
         ),
         maxLength: 100,
         maxLines: null,
@@ -222,23 +235,29 @@ class _AddBlogState extends State<AddBlog> {
         },
         decoration: InputDecoration(
           filled: true,
-          fillColor: Colors.grey[200],
+          fillColor: colorTheme(context)['fillColor'],
           border: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: Color.fromARGB(255, 147, 222, 151),
+            borderSide: BorderSide(
+              color: colorTheme(context)['tertiary'],
             ),
             borderRadius: BorderRadius.circular(10),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: Colors.blue,
+            borderSide: BorderSide(
+              color: colorTheme(context)['tertiary'],
               width: 2,
             ),
             borderRadius: BorderRadius.circular(10),
           ),
           labelText: "Select Category",
-          labelStyle: TextStyle(color: Colors.black),
+          labelStyle: TextStyle(color: colorTheme(context)['text']),
         ),
+        dropdownColor: colorTheme(
+            context)['tertiary'], // Set the background color of the dropdown
+        style: TextStyle(
+            color: colorTheme(context)[
+                'text'] // Set the color of the text in the dropdown options
+            ),
         items: categories.map<DropdownMenuItem<String>>((dynamic category) {
           return DropdownMenuItem<String>(
             value: category['_id'],
@@ -257,6 +276,9 @@ class _AddBlogState extends State<AddBlog> {
       ),
       child: TextFormField(
         controller: _body,
+        style: TextStyle(
+          color: colorTheme(context)['text'],
+        ),
         validator: (value) {
           if (value!.isEmpty) {
             return "Body can't be empty";
@@ -265,22 +287,22 @@ class _AddBlogState extends State<AddBlog> {
         },
         decoration: InputDecoration(
           filled: true,
-          fillColor: Colors.grey[200],
+          fillColor: colorTheme(context)['fillColor'],
           border: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: Color.fromARGB(255, 147, 222, 151),
+            borderSide: BorderSide(
+              color: colorTheme(context)['tertiary'],
             ),
             borderRadius: BorderRadius.circular(10),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: Colors.blue,
+            borderSide: BorderSide(
+              color: colorTheme(context)['tertiary'],
               width: 2,
             ),
             borderRadius: BorderRadius.circular(10),
           ),
           labelText: "Provide Body Your Blog",
-          labelStyle: TextStyle(color: Colors.black),
+          labelStyle: TextStyle(color: colorTheme(context)['text']),
         ),
         maxLines: null,
       ),
@@ -301,13 +323,15 @@ class _AddBlogState extends State<AddBlog> {
           width: 200,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: Color.fromARGB(255, 45, 183, 52),
+            color: colorTheme(context)['button'],
           ),
-          child: const Center(
+          child: Center(
               child: Text(
             "Add Blog",
             style: TextStyle(
-                color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                color: colorTheme(context)['buttonText'],
+                fontSize: 16,
+                fontWeight: FontWeight.bold),
           )),
         ),
       ),
@@ -336,13 +360,15 @@ class _AddBlogState extends State<AddBlog> {
           width: 200,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: Color.fromARGB(255, 45, 183, 52),
+            color: colorTheme(context)['button'],
           ),
-          child: const Center(
+          child: Center(
               child: Text(
             "Update Blog",
             style: TextStyle(
-                color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                color: colorTheme(context)['buttonText'],
+                fontSize: 16,
+                fontWeight: FontWeight.bold),
           )),
         ),
       ),

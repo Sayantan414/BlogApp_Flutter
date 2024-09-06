@@ -10,6 +10,9 @@ const lightColors = {
   "daysago": Color.fromARGB(255, 96, 95, 95),
   "fillColor": Color.fromARGB(255, 188, 231, 240),
   "inactiveState": Color.fromARGB(255, 172, 201, 196),
+  "loader": Color(0xFF11999E),
+  "like": Colors.blue,
+  "view": Colors.grey,
 };
 
 const darkColors = {
@@ -22,6 +25,9 @@ const darkColors = {
   "daysago": Color.fromARGB(134, 236, 223, 204),
   "fillColor": Color.fromARGB(255, 97, 98, 93),
   "inactiveState": Color(0xFF3C3D37),
+  "loader": Color(0xFFECDFCC),
+  "like": Color.fromARGB(255, 2, 119, 214),
+  "view": Color.fromARGB(255, 220, 219, 219),
 };
 
 colorTheme(context) {

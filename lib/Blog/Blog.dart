@@ -327,7 +327,7 @@ class _BlogState extends State<Blog> {
                               ? CircularProgressIndicator(
                                   value: null,
                                   valueColor: AlwaysStoppedAnimation<Color>(
-                                    colorTheme(context)['tertiary'],
+                                    colorTheme(context)['loader'],
                                   ), // Color of the progress indicator
                                 )
                               : OutlinedButton(
@@ -365,7 +365,7 @@ class _BlogState extends State<Blog> {
                               ? CircularProgressIndicator(
                                   value: null,
                                   valueColor: AlwaysStoppedAnimation<Color>(
-                                    colorTheme(context)['tertiary'],
+                                    colorTheme(context)['loader'],
                                   ), // Color of the progress indicator
                                 )
                               : OutlinedButton(
@@ -470,17 +470,23 @@ class _BlogState extends State<Blog> {
                       children: [
                         TextField(
                           controller: commentController,
+                          style: TextStyle(
+                            color: colorTheme(context)['text'],
+                          ),
                           decoration: InputDecoration(
+                            fillColor: colorTheme(context)['fillColor'],
+                            filled: true,
                             hintText: 'Add a comment...',
-                            border: const OutlineInputBorder(),
+                            border: OutlineInputBorder(),
                             suffixIcon: circular
                                 ? Container(
                                     width: 5.0, // Set the desired width
                                     height: 5.0, // Set the desired height
-                                    child: const CircularProgressIndicator(
+                                    child: CircularProgressIndicator(
                                       value: null,
                                       valueColor: AlwaysStoppedAnimation<Color>(
-                                          Colors.blue),
+                                        colorTheme(context)['loader'],
+                                      ),
                                     ),
                                   )
                                 : cmmntIsUpdate
@@ -585,7 +591,7 @@ class _BlogState extends State<Blog> {
                     const SizedBox(height: 16),
                     isLoading
                         ? LoadingAnimationWidget.fourRotatingDots(
-                            color: colorTheme(context)['tertiary'],
+                            color: colorTheme(context)['loader'],
                             size: 50,
                           )
                         : ListView(

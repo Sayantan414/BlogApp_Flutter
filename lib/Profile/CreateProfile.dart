@@ -144,19 +144,20 @@ class _CreateProfileState extends State<CreateProfile> {
                   width: 200,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: colorTheme(context)['tertiary'],
+                    color: colorTheme(context)['button'],
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
                     child: circular
-                        ? const CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.white),
+                        ? CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              colorTheme(context)['loader'],
+                            ),
                           )
                         : Text(
                             "Update",
                             style: TextStyle(
-                              color: colorTheme(context)['text'],
+                              color: colorTheme(context)['buttonText'],
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
@@ -184,7 +185,7 @@ class _CreateProfileState extends State<CreateProfile> {
             child: picFlag
                 ? CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation<Color>(
-                      colorTheme(context)['tertiary'],
+                      colorTheme(context)['loader'],
                     ),
                   )
                 : null, // No child if picFlag is false
@@ -232,6 +233,9 @@ class _CreateProfileState extends State<CreateProfile> {
   Widget firstnameTextField() {
     return TextFormField(
       controller: _firstname,
+      style: TextStyle(
+        color: colorTheme(context)['text'],
+      ),
       validator: (value) {
         if (value!.isEmpty) return "Firstname can't be empty";
 
@@ -239,11 +243,11 @@ class _CreateProfileState extends State<CreateProfile> {
       },
       decoration: InputDecoration(
         filled: true,
-        fillColor: Colors.grey[200],
+        fillColor: colorTheme(context)['fillColor'],
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 232, 250, 222), // Custom border color
+          borderSide: BorderSide(
+            color: colorTheme(context)['tertiary'], // Custom border color
           ),
         ),
         focusedBorder: OutlineInputBorder(
@@ -256,12 +260,12 @@ class _CreateProfileState extends State<CreateProfile> {
         ),
         prefixIcon: Icon(
           Icons.person,
-          color: colorTheme(context)['tertiary'],
+          color: colorTheme(context)['text'],
         ),
         labelText: "Firstname",
-        labelStyle: TextStyle(color: Colors.black),
+        labelStyle: TextStyle(color: colorTheme(context)['text']),
         hintText: "Enter your firstname",
-        hintStyle: TextStyle(color: Colors.grey),
+        hintStyle: TextStyle(color: colorTheme(context)['text']),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: BorderSide(color: Colors.red, width: 1),
@@ -274,6 +278,9 @@ class _CreateProfileState extends State<CreateProfile> {
   Widget lastnameTextField() {
     return TextFormField(
       controller: _lastname,
+      style: TextStyle(
+        color: colorTheme(context)['text'],
+      ),
       validator: (value) {
         if (value!.isEmpty) return "lastname can't be empty";
 
@@ -281,11 +288,11 @@ class _CreateProfileState extends State<CreateProfile> {
       },
       decoration: InputDecoration(
         filled: true,
-        fillColor: Colors.grey[200],
+        fillColor: colorTheme(context)['fillColor'],
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 232, 250, 222), // Custom border color
+          borderSide: BorderSide(
+            color: colorTheme(context)['tertiary'], // Custom border color
           ),
         ),
         focusedBorder: OutlineInputBorder(
@@ -298,12 +305,12 @@ class _CreateProfileState extends State<CreateProfile> {
         ),
         prefixIcon: Icon(
           Icons.person,
-          color: colorTheme(context)['tertiary'],
+          color: colorTheme(context)['text'],
         ),
         labelText: "Lastname",
-        labelStyle: TextStyle(color: Colors.black),
+        labelStyle: TextStyle(color: colorTheme(context)['text']),
         hintText: "Enter your lastname",
-        hintStyle: TextStyle(color: Colors.grey),
+        hintStyle: TextStyle(color: colorTheme(context)['text']),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: BorderSide(color: Colors.red, width: 1),
@@ -316,6 +323,9 @@ class _CreateProfileState extends State<CreateProfile> {
   Widget emailTextField() {
     return TextFormField(
       controller: _email,
+      style: TextStyle(
+        color: colorTheme(context)['text'],
+      ),
       validator: (value) {
         if (value!.isEmpty) return "email can't be empty";
 
@@ -323,11 +333,11 @@ class _CreateProfileState extends State<CreateProfile> {
       },
       decoration: InputDecoration(
         filled: true,
-        fillColor: Colors.grey[200],
+        fillColor: colorTheme(context)['fillColor'],
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 232, 250, 222), // Custom border color
+          borderSide: BorderSide(
+            color: colorTheme(context)['tertiary'], // Custom border color
           ),
         ),
         focusedBorder: OutlineInputBorder(
@@ -340,12 +350,12 @@ class _CreateProfileState extends State<CreateProfile> {
         ),
         prefixIcon: Icon(
           Icons.email_outlined,
-          color: colorTheme(context)['tertiary'],
+          color: colorTheme(context)['text'],
         ),
         labelText: "Email",
-        labelStyle: TextStyle(color: Colors.black),
+        labelStyle: TextStyle(color: colorTheme(context)['text']),
         hintText: "Enter your email",
-        hintStyle: TextStyle(color: Colors.grey),
+        hintStyle: TextStyle(color: colorTheme(context)['text']),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: BorderSide(color: Colors.red, width: 1),
@@ -358,6 +368,9 @@ class _CreateProfileState extends State<CreateProfile> {
   Widget passwordTextField() {
     return TextFormField(
       controller: _password,
+      style: TextStyle(
+        color: colorTheme(context)['text'],
+      ),
       validator: (value) {
         if (value!.isEmpty) return "Password can't be empty";
         if (value.length < 4) return "Password must be at least 4 characters";
@@ -366,11 +379,11 @@ class _CreateProfileState extends State<CreateProfile> {
       },
       decoration: InputDecoration(
         filled: true,
-        fillColor: Colors.grey[200],
+        fillColor: colorTheme(context)['fillColor'],
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 232, 250, 222), // Custom border color
+          borderSide: BorderSide(
+            color: colorTheme(context)['tertiary'], // Custom border color
           ),
         ),
         focusedBorder: OutlineInputBorder(
@@ -382,12 +395,12 @@ class _CreateProfileState extends State<CreateProfile> {
         ),
         prefixIcon: Icon(
           Icons.password,
-          color: colorTheme(context)['tertiary'],
+          color: colorTheme(context)['text'],
         ),
         labelText: "Password",
-        labelStyle: TextStyle(color: Colors.black),
+        labelStyle: TextStyle(color: colorTheme(context)['text']),
         hintText: "Enter password",
-        hintStyle: TextStyle(color: Colors.grey),
+        hintStyle: TextStyle(color: colorTheme(context)['text']),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: BorderSide(color: Colors.red, width: 1),
@@ -400,6 +413,9 @@ class _CreateProfileState extends State<CreateProfile> {
   Widget conPasswordTextField() {
     return TextFormField(
       controller: _conpassword,
+      style: TextStyle(
+        color: colorTheme(context)['text'],
+      ),
       enabled: _isConPasswordEnabled,
       validator: (value) {
         if (value!.isEmpty) return "Confirm your password";
@@ -409,11 +425,11 @@ class _CreateProfileState extends State<CreateProfile> {
       },
       decoration: InputDecoration(
         filled: true,
-        fillColor: Colors.grey[200],
+        fillColor: colorTheme(context)['fillColor'],
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: const BorderSide(
-            color: Color.fromARGB(255, 232, 250, 222), // Custom border color
+          borderSide: BorderSide(
+            color: colorTheme(context)['tertiary'], // Custom border color
           ),
         ),
         focusedBorder: OutlineInputBorder(
@@ -423,14 +439,11 @@ class _CreateProfileState extends State<CreateProfile> {
             width: 2,
           ),
         ),
-        prefixIcon: Icon(
-          Icons.password,
-          color: colorTheme(context)['tertiary'],
-        ),
+        prefixIcon: Icon(Icons.password, color: colorTheme(context)['text']),
         labelText: "Confirm Password",
-        labelStyle: TextStyle(color: Colors.black),
+        labelStyle: TextStyle(color: colorTheme(context)['text']),
         hintText: "Confirm password",
-        hintStyle: TextStyle(color: Colors.grey),
+        hintStyle: TextStyle(color: colorTheme(context)['text']),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
           borderSide: BorderSide(color: Colors.red, width: 1),

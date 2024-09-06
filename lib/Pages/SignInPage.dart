@@ -147,9 +147,10 @@ class _SignInPageState extends State<SignInPage> {
                     ),
                     child: Center(
                       child: circular
-                          ? const CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                          ? CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                colorTheme(context)['loader'],
+                              ),
                             )
                           : Text(
                               "Log In",

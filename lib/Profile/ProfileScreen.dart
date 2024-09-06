@@ -77,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         }
                       }));
             },
-            color: colorTheme(context)['tertiary'],
+            color: colorTheme(context)['button'],
           ),
         ],
       ),
@@ -86,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: CircularProgressIndicator(
               value: null,
               valueColor: AlwaysStoppedAnimation<Color>(
-                colorTheme(context)['tertiary'],
+                colorTheme(context)['loader'],
               ), // Color of the progress indicator
             ))
           : ListView(

@@ -416,7 +416,7 @@ class _BlogsState extends State<Blogs> {
                                     Icon(
                                       Icons.thumb_up,
                                       size: 22,
-                                      color: colorTheme(context)['tertiary'],
+                                      color: colorTheme(context)['like'],
                                     ),
                                     const SizedBox(
                                         width:
@@ -435,7 +435,7 @@ class _BlogsState extends State<Blogs> {
                                     Icon(
                                       Icons.visibility,
                                       size: 22,
-                                      color: colorTheme(context)['tertiary'],
+                                      color: colorTheme(context)['view'],
                                     ),
                                     const SizedBox(
                                         width:

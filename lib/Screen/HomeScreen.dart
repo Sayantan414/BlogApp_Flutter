@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Center(
       child: isLoading
           ? LoadingAnimationWidget.fourRotatingDots(
-              color: colorTheme(context)['tertiary'],
+              color: colorTheme(context)['loader'],
               size: 50,
             )
           : const Column(

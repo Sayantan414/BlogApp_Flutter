@@ -167,7 +167,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   }
                 },
                 child: circular
-                    ? const CircularProgressIndicator()
+                    ? CircularProgressIndicator(
+                        valueColor: colorTheme(context)['loader'],
+                      )
                     : Container(
                         width: 150,
                         height: 50,
