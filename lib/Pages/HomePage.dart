@@ -3,6 +3,7 @@ import 'package:blogapp/Pages/WelcomePage.dart';
 import 'package:blogapp/Screen/HomeScreen.dart';
 import 'package:blogapp/Profile/ProfileScreen.dart';
 import 'package:blogapp/Utils/colors.dart';
+import 'package:blogapp/Utils/functions.dart';
 
 import 'package:flutter/material.dart';
 import 'package:blogapp/NetworkHandler.dart';
@@ -18,6 +19,8 @@ class _HomePageState extends State<HomePage> {
   int currentState = 0;
   List<Widget> widgets = [HomeScreen(), ProfileScreen()];
   List<String> titleString = ["Home Page", "Profile Page"];
+  Map<String, dynamic> userDetails = {};
+
   // late Map<String, dynamic> responseData;
 
   Widget profilePhoto = Container(
@@ -33,6 +36,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    userDetails = getUserDetails();
   }
 
   @override
@@ -49,10 +53,11 @@ class _HomePageState extends State<HomePage> {
               ),
               child: Column(
                 children: <Widget>[
-                  profilePhoto = CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        "https://res.cloudinary.com/djs5memx8/image/upload/v1721902294/blog-api/nrap6pousx3h8hn8d2sc.webp"),
-                    radius: 50, // Adjust the radius as needed
+                  CircleAvatar(
+                    radius: 48.0,
+                    backgroundImage: userDetails['profilePhoto'] != null
+                        ? NetworkImage(userDetails['profilePhoto'])
+                        : AssetImage('assets/nouser.png') as ImageProvider,
                     backgroundColor: colorTheme(context)['primary'],
                   ),
 
@@ -66,9 +71,9 @@ class _HomePageState extends State<HomePage> {
                     height: 10,
                   ),
                   Text(
-                    username,
-                    style: const TextStyle(
-                      color: Colors.white,
+                    userDetails['fullname'],
+                    style: TextStyle(
+                      color: colorTheme(context)['text'],
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -81,18 +86,13 @@ class _HomePageState extends State<HomePage> {
               onTap: () {},
             ),
             ListTile(
-              title: Text("New Story"),
-              trailing: Icon(Icons.add),
-              onTap: () {},
-            ),
-            ListTile(
               title: Text("Settings"),
               trailing: Icon(Icons.settings),
               onTap: () {},
             ),
             ListTile(
-              title: Text("Feedback"),
-              trailing: Icon(Icons.feedback),
+              title: Text("Search Profile"),
+              trailing: Icon(Icons.search),
               onTap: () {},
             ),
             ListTile(

@@ -200,7 +200,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               CircleAvatar(
                 radius: 50,
-                backgroundColor: Color.fromARGB(255, 225, 235, 225),
+                backgroundColor: colorTheme(context)['primary'],
                 backgroundImage: profileDetails['profilePhoto'] != null
                     ? NetworkImage(profileDetails['profilePhoto'])
                     : AssetImage('assets/nouser.png') as ImageProvider,

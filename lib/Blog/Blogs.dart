@@ -139,50 +139,77 @@ class _BlogsState extends State<Blogs> {
                   ),
                 ),
               ),
+              // const SizedBox(
+              //   height: 3,
+              // ),
               widget.type == 'Public'
-                  ? Wrap(
-                      alignment: WrapAlignment
-                          .start, // Aligns the buttons to the start (left side)
-                      spacing: 8.0, // Horizontal spacing between buttons
-                      runSpacing: 4.0, // Vertical spacing between rows
-                      children: uniqueCategory.map((category) {
-                        final isSelected = selectedCategory ==
-                            category; // Check if this category is selected
-                        return OutlinedButton(
-                          onPressed: () {
-                            setState(() {
-                              selectedCategory =
-                                  category; // Set the selected category on button click
-                            });
-                            filterPostsByCategory(category);
-                            // print(category);
-                          },
-                          child: Text(
-                            category,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: isSelected
-                                  ? colorTheme(context)['buttonText']
-                                  : colorTheme(context)['button'],
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
+                  ? Padding(
+                      padding: const EdgeInsets.all(3),
+                      child: Align(
+                        alignment: Alignment
+                            .centerLeft, // Align to the left side of the screen
+                        child: IntrinsicWidth(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: colorTheme(context)[
+                                    'button'], // Border color similar to OutlinedButton
+                                width: 1.0, // Border width
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                  30.0), // Rounded corners like OutlinedButton
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 8.0, // Padding inside the dropdown
+                              vertical: 0.2,
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                value:
+                                    selectedCategory, // Currently selected category
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedCategory =
+                                        newValue!; // Set the selected category on change
+                                  });
+                                  filterPostsByCategory(
+                                      selectedCategory); // Call your filter function
+                                },
+                                items: uniqueCategory
+                                    .map<DropdownMenuItem<String>>((category) {
+                                  return DropdownMenuItem<String>(
+                                    value: category,
+                                    child: Text(
+                                      category,
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: selectedCategory == category
+                                            ? colorTheme(context)[
+                                                'text'] // Text color when selected
+                                            : colorTheme(context)[
+                                                'text'], // Text color when not selected
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                                dropdownColor: colorTheme(context)[
+                                    'buttonText'], // Dropdown background color
+                                style: TextStyle(
+                                  color: colorTheme(
+                                      context)['button'], // Dropdown text color
+                                ),
+                                icon: Icon(
+                                  Icons.arrow_drop_down,
+                                  color: colorTheme(context)[
+                                      'button'], // Dropdown arrow color
+                                ),
+                              ),
                             ),
                           ),
-                          style: OutlinedButton.styleFrom(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 10),
-                              side: BorderSide(
-                                  color: isSelected
-                                      ? colorTheme(context)[
-                                          'button'] // Outline color when selected
-                                      : colorTheme(context)[
-                                          'tertiary'] // Outline color when not selected
-                                  ),
-                              backgroundColor: isSelected
-                                  ? colorTheme(context)['button']
-                                  : colorTheme(context)['buttonText']),
-                        );
-                      }).toList(),
+                        ),
+                      ),
                     )
                   : const SizedBox(
                       height: 0,
